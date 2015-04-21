@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="PAF" targetNamespace="http://france-life-imaging.fr/api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://france-life-imaging.fr/api" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://france-life-imaging.fr/api" elementFormDefault="unqualified" targetNamespace="http://france-life-imaging.fr/api" version="1.0">
+      <xs:element name="authenticateHTTP" type="tns:authenticateHTTP"/>
+      <xs:element name="authenticateHTTPResponse" type="tns:authenticateHTTPResponse"/>
+      <xs:element name="authenticateSession" type="tns:authenticateSession"/>
+      <xs:element name="authenticateSessionResponse" type="tns:authenticateSessionResponse"/>
+      <xs:element name="deleteExecution" type="tns:deleteExecution"/>
+      <xs:element name="deleteExecutionResponse" type="tns:deleteExecutionResponse"/>
+      <xs:element name="getExecution" type="tns:getExecution"/>
+      <xs:element name="getExecutionResponse" type="tns:getExecutionResponse"/>
+      <xs:element name="getExecutionResults" type="tns:getExecutionResults"/>
+      <xs:element name="getExecutionResultsResponse" type="tns:getExecutionResultsResponse"/>
+      <xs:element name="getGlobalProperties" type="tns:getGlobalProperties"/>
+      <xs:element name="getGlobalPropertiesResponse" type="tns:getGlobalPropertiesResponse"/>
+      <xs:element name="getPipeline" type="tns:getPipeline"/>
+      <xs:element name="getPipelineResponse" type="tns:getPipelineResponse"/>
+      <xs:element name="initExecution" type="tns:initExecution"/>
+      <xs:element name="initExecutionResponse" type="tns:initExecutionResponse"/>
+      <xs:element name="killExecution" type="tns:killExecution"/>
+      <xs:element name="killExecutionResponse" type="tns:killExecutionResponse"/>
+      <xs:element name="listPipelines" type="tns:listPipelines"/>
+      <xs:element name="listPipelinesResponse" type="tns:listPipelinesResponse"/>
+      <xs:element name="logout" type="tns:logout"/>
+      <xs:element name="logoutResponse" type="tns:logoutResponse"/>
+      <xs:element name="playExecution" type="tns:playExecution"/>
+      <xs:element name="playExecutionResponse" type="tns:playExecutionResponse"/>
+      <xs:element name="updateExecution" type="tns:updateExecution"/>
+      <xs:element name="updateExecutionResponse" type="tns:updateExecutionResponse"/>
+      <xs:complexType name="authenticateSession">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="userName" type="xs:string"/>
+	  <xs:element minOccurs="0" name="password" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="authenticateSessionResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Response">
+	<xs:sequence>
+	  <xs:element name="statusCode" type="xs:int"/>
+	  <xs:element minOccurs="0" name="errorMessage" type="xs:string"/>
+	  <xs:element minOccurs="0" name="returnedValue" type="xs:anyType"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Object">
+	<xs:sequence>
+	  <xs:element name="identifier" type="xs:string"/>
+	  <xs:element name="name" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Execution">
+	<xs:complexContent>
+	  <xs:extension base="tns:Object">
+	    <xs:sequence>
+	      <xs:element name="pipelineIdentifier" type="xs:string"/>
+	      <xs:element name="timeout" type="xs:int"/>
+	      <xs:element name="status" type="tns:ExecutionStatus"/>
+	      <xs:element maxOccurs="unbounded" name="inputValues" type="tns:StringKeyParameterValuePair"/>
+	      <xs:element maxOccurs="unbounded" name="returnedFiles" type="tns:StringKeyParameterValuePair"/>
+	      <xs:element minOccurs="0" name="studyIdentifier" type="xs:string"/>
+	      <xs:element minOccurs="0" name="errorCode" type="xs:int"/>
+	      <xs:element minOccurs="0" name="stdout" type="xs:string"/>
+	      <xs:element minOccurs="0" name="stderr" type="xs:string"/>
+	      <xs:element minOccurs="0" name="startDate" type="xs:int"/>
+	      <xs:element minOccurs="0" name="endDate" type="xs:int"/>
+	    </xs:sequence>
+	  </xs:extension>
+	</xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="StringKeyParameterValuePair">
+	<xs:sequence>
+	  <xs:element name="key" type="xs:string"/>
+	  <xs:element name="value" type="tns:ParameterTypedValue"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ParameterTypedValue">
+	<xs:sequence>
+	  <xs:element name="type" type="tns:ParameterType"/>
+	  <xs:element name="value" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GlobalProperties">
+	<xs:complexContent>
+	  <xs:extension base="tns:Object">
+	    <xs:sequence>
+	      <xs:element maxOccurs="unbounded" minOccurs="0" name="APIErrorCodesAndMessages" type="tns:IntKeyStringValuePair"/>
+	      <xs:element maxOccurs="unbounded" name="supportedTransferProtocols" type="xs:string"/>
+	      <xs:element maxOccurs="unbounded" name="supportedModules" type="tns:Module"/>
+	      <xs:element minOccurs="0" name="email" type="xs:string"/>
+	      <xs:element minOccurs="0" name="platformDescription" type="xs:string"/>
+	      <xs:element name="minAuthorizedExecutionTimeout" type="xs:int"/>
+	      <xs:element name="maxAuthorizedExecutionTimeout" type="xs:int"/>
+	      <xs:element name="defaultExecutionTimeout" type="xs:int"/>
+	      <xs:element name="isKillExecutionSupported" type="xs:boolean"/>
+	      <xs:element minOccurs="0" name="defaultStudy" type="xs:string"/>
+	      <xs:element name="supportedAPIVersion" type="xs:string"/>
+	    </xs:sequence>
+	  </xs:extension>
+	</xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="IntKeyStringValuePair">
+	<xs:sequence>
+	  <xs:element name="key" type="xs:int"/>
+	  <xs:element name="value" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Pipeline">
+	<xs:complexContent>
+	  <xs:extension base="tns:Object">
+	    <xs:sequence>
+	      <xs:element name="description" type="xs:string"/>
+	      <xs:element name="version" type="xs:string"/>
+	      <xs:element maxOccurs="unbounded" name="parameters" type="tns:PipelineParameter"/>
+	      <xs:element maxOccurs="unbounded" minOccurs="0" name="errorCodesAndMessages" type="tns:IntKeyStringValuePair"/>
+	    </xs:sequence>
+	  </xs:extension>
+	</xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="PipelineParameter">
+	<xs:sequence>
+	  <xs:element name="name" type="xs:string"/>
+	  <xs:element name="type" type="tns:ParameterType"/>
+	  <xs:element name="isOptional" type="xs:boolean"/>
+	  <xs:element name="isReturnedValue" type="xs:boolean"/>
+	  <xs:element minOccurs="0" name="defaultValue" type="tns:ParameterTypedValue"/>
+	  <xs:element minOccurs="0" name="description" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="deleteExecution">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
+	  <xs:element minOccurs="0" name="deleteFiles" type="xs:boolean"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="deleteExecutionResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getPipeline">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="pipelineId" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getPipelineResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="authenticateHTTP">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="userName" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="authenticateHTTPResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="logout">
+	<xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="logoutResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="updateExecution">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
+	  <xs:element maxOccurs="unbounded" minOccurs="0" name="keyValuePairs" type="tns:StringKeyValuePair"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="StringKeyValuePair">
+	<xs:sequence>
+	  <xs:element name="key" type="xs:string"/>
+	  <xs:element name="value" type="xs:anyType"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="updateExecutionResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getGlobalProperties">
+	<xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="getGlobalPropertiesResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="initExecution">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="pipelineId" type="xs:string"/>
+	  <xs:element maxOccurs="unbounded" minOccurs="0" name="inputValues" type="tns:StringKeyParameterValuePair"/>
+	  <xs:element minOccurs="0" name="timeout" type="xs:int"/>
+	  <xs:element minOccurs="0" name="executionName" type="xs:string"/>
+	  <xs:element minOccurs="0" name="studyId" type="xs:string"/>
+	  <xs:element minOccurs="0" name="playExecution" type="xs:boolean"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="initExecutionResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getExecutionResults">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
+	  <xs:element minOccurs="0" name="protocol" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getExecutionResultsResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="killExecution">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="killExecutionResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getExecution">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getExecutionResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="playExecution">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="playExecutionResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="listPipelines">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="studyIdentifier" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="listPipelinesResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="ExecutionStatus">
+	<xs:restriction base="xs:string">
+	  <xs:enumeration value="Initializing"/>
+	  <xs:enumeration value="Ready"/>
+	  <xs:enumeration value="Running"/>
+	  <xs:enumeration value="Finished"/>
+	  <xs:enumeration value="InitializationFailed"/>
+	  <xs:enumeration value="ExecutionFailed"/>
+	  <xs:enumeration value="Unknown"/>
+	  <xs:enumeration value="Killed"/>
+	</xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="ParameterType">
+	<xs:restriction base="xs:string">
+	  <xs:enumeration value="File"/>
+	  <xs:enumeration value="String"/>
+	  <xs:enumeration value="Boolean"/>
+	  <xs:enumeration value="Int64"/>
+	  <xs:enumeration value="Double"/>
+	  <xs:enumeration value="List"/>
+	</xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="Module">
+	<xs:restriction base="xs:string">
+	  <xs:enumeration value="Processing"/>
+	  <xs:enumeration value="Data"/>
+	  <xs:enumeration value="Management"/>
+	  <xs:enumeration value="Commercial"/>
+	</xs:restriction>
+      </xs:simpleType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="playExecutionResponse">
+    <wsdl:part name="parameters" element="tns:playExecutionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="logout">
+    <wsdl:part name="parameters" element="tns:logout">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listPipelinesResponse">
+    <wsdl:part name="parameters" element="tns:listPipelinesResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="authenticateHTTPResponse">
+    <wsdl:part name="parameters" element="tns:authenticateHTTPResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateExecution">
+    <wsdl:part name="parameters" element="tns:updateExecution">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExecutionResults">
+    <wsdl:part name="parameters" element="tns:getExecutionResults">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="killExecution">
+    <wsdl:part name="parameters" element="tns:killExecution">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExecutionResultsResponse">
+    <wsdl:part name="parameters" element="tns:getExecutionResultsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExecution">
+    <wsdl:part name="parameters" element="tns:getExecution">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="logoutResponse">
+    <wsdl:part name="parameters" element="tns:logoutResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="killExecutionResponse">
+    <wsdl:part name="parameters" element="tns:killExecutionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="authenticateSessionResponse">
+    <wsdl:part name="parameters" element="tns:authenticateSessionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateExecutionResponse">
+    <wsdl:part name="parameters" element="tns:updateExecutionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteExecutionResponse">
+    <wsdl:part name="parameters" element="tns:deleteExecutionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="playExecution">
+    <wsdl:part name="parameters" element="tns:playExecution">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="initExecutionResponse">
+    <wsdl:part name="parameters" element="tns:initExecutionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listPipelines">
+    <wsdl:part name="parameters" element="tns:listPipelines">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="authenticateSession">
+    <wsdl:part name="parameters" element="tns:authenticateSession">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteExecution">
+    <wsdl:part name="parameters" element="tns:deleteExecution">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPipeline">
+    <wsdl:part name="parameters" element="tns:getPipeline">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="authenticateHTTP">
+    <wsdl:part name="parameters" element="tns:authenticateHTTP">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getGlobalPropertiesResponse">
+    <wsdl:part name="parameters" element="tns:getGlobalPropertiesResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getGlobalProperties">
+    <wsdl:part name="parameters" element="tns:getGlobalProperties">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="initExecution">
+    <wsdl:part name="parameters" element="tns:initExecution">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPipelineResponse">
+    <wsdl:part name="parameters" element="tns:getPipelineResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExecutionResponse">
+    <wsdl:part name="parameters" element="tns:getExecutionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="PAF">
+    <wsdl:operation name="authenticateSession">
+      <wsdl:input name="authenticateSession" message="tns:authenticateSession">
+      </wsdl:input>
+      <wsdl:output name="authenticateSessionResponse" message="tns:authenticateSessionResponse">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteExecution">
+      <wsdl:input name="deleteExecution" message="tns:deleteExecution">
+      </wsdl:input>
+      <wsdl:output name="deleteExecutionResponse" message="tns:deleteExecutionResponse">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPipeline">
+      <wsdl:input name="getPipeline" message="tns:getPipeline">
+      </wsdl:input>
+      <wsdl:output name="getPipelineResponse" message="tns:getPipelineResponse">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="authenticateHTTP">
+      <wsdl:input name="authenticateHTTP" message="tns:authenticateHTTP">
+      </wsdl:input>
+      <wsdl:output name="authenticateHTTPResponse" message="tns:authenticateHTTPResponse">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="logout">
+      <wsdl:input name="logout" message="tns:logout">
+      </wsdl:input>
+      <wsdl:output name="logoutResponse" message="tns:logoutResponse">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateExecution">
+      <wsdl:input name="updateExecution" message="tns:updateExecution">
+      </wsdl:input>
+      <wsdl:output name="updateExecutionResponse" message="tns:updateExecutionResponse">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGlobalProperties">
+      <wsdl:input name="getGlobalProperties" message="tns:getGlobalProperties">
+      </wsdl:input>
+      <wsdl:output name="getGlobalPropertiesResponse" message="tns:getGlobalPropertiesResponse">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="initExecution">
+      <wsdl:input name="initExecution" message="tns:initExecution">
+      </wsdl:input>
+      <wsdl:output name="initExecutionResponse" message="tns:initExecutionResponse">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExecutionResults">
+      <wsdl:input name="getExecutionResults" message="tns:getExecutionResults">
+      </wsdl:input>
+      <wsdl:output name="getExecutionResultsResponse" message="tns:getExecutionResultsResponse">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="killExecution">
+      <wsdl:input name="killExecution" message="tns:killExecution">
+      </wsdl:input>
+      <wsdl:output name="killExecutionResponse" message="tns:killExecutionResponse">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExecution">
+      <wsdl:input name="getExecution" message="tns:getExecution">
+      </wsdl:input>
+      <wsdl:output name="getExecutionResponse" message="tns:getExecutionResponse">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="playExecution">
+      <wsdl:input name="playExecution" message="tns:playExecution">
+      </wsdl:input>
+      <wsdl:output name="playExecutionResponse" message="tns:playExecutionResponse">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listPipelines">
+      <wsdl:input name="listPipelines" message="tns:listPipelines">
+      </wsdl:input>
+      <wsdl:output name="listPipelinesResponse" message="tns:listPipelinesResponse">
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="PAFSoapBinding" type="tns:PAF">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="authenticateSession">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="authenticateSession">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="authenticateSessionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteExecution">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteExecution">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteExecutionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPipeline">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getPipeline">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPipelineResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="authenticateHTTP">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="authenticateHTTP">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="authenticateHTTPResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="logout">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="logout">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="logoutResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateExecution">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="updateExecution">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateExecutionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGlobalProperties">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getGlobalProperties">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getGlobalPropertiesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="initExecution">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="initExecution">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="initExecutionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExecutionResults">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getExecutionResults">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getExecutionResultsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="killExecution">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="killExecution">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="killExecutionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExecution">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getExecution">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getExecutionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="playExecution">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="playExecution">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="playExecutionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listPipelines">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listPipelines">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listPipelinesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="PAF">
+    <wsdl:port name="PAFPort" binding="tns:PAFSoapBinding">
+      <soap:address location="http://localhost:9090/PAFPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
