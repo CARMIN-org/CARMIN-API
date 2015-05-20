@@ -83,7 +83,12 @@
       <xs:complexType name="ParameterTypedValue">
 	<xs:sequence>
 	  <xs:element name="type" type="tns:ParameterType"/>
-	  <xs:element name="value" type="xs:string"/>
+	  <xs:choice>
+	    <xs:element name="value" type="xs:string"/>
+	    <xs:element name="value" type="xs:boolean"/>
+	    <xs:element name="value" type="xs:int"/>
+	    <xs:element name="value" type="xs:double"/>
+	  </xs:choice>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="IntKeyStringValuePair">
@@ -196,7 +201,7 @@
 	    <xs:element name="value" type="xs:string"/>
 	    <xs:element name="value" type="xs:int"/>
 	    <xs:element name="value" type="tns:ExecutionStatus"/>
-	    <xs:element name="value" type="tns:ParameterType"/>
+	    <xs:element name="value" type="tns:ParameterTypedValue"/>
 	  </xs:choice>
 	</xs:sequence>
       </xs:complexType>
