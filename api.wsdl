@@ -47,15 +47,14 @@
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="Object">
-	<xs:sequence>
-	  <xs:element name="identifier" type="xs:string"/>
-	  <xs:element name="name" type="xs:string"/>
-	</xs:sequence>
+	<xs:sequence/>
       </xs:complexType>
       <xs:complexType name="Execution">
 	<xs:complexContent>
 	  <xs:extension base="tns:Object">
 	    <xs:sequence>
+	      <xs:element name="identifier" type="xs:string"/>
+	      <xs:element name="name" type="xs:string"/>
 	      <xs:element name="pipelineIdentifier" type="xs:string"/>
 	      <xs:element name="timeout" type="xs:int"/>
 	      <xs:element name="status" type="tns:ExecutionStatus"/>
@@ -112,6 +111,8 @@
 	<xs:complexContent>
 	  <xs:extension base="tns:Object">
 	    <xs:sequence>
+	      <xs:element name="identifier" type="xs:string"/>
+	      <xs:element name="name" type="xs:string"/>
 	      <xs:element name="description" type="xs:string"/>
 	      <xs:element name="version" type="xs:string"/>
 	      <xs:element maxOccurs="unbounded" name="parameters" type="tns:PipelineParameter"/>
