@@ -50,6 +50,7 @@
 	    <xs:element name="returnedValue" type="xs:string"/>
 	    <xs:element name="returnedValue" type="tns:ExecutionStatus"/>
 	    <xs:element name="returnedValue" type="tns:PipelineKeyBooleanValuePair"/>
+	    <xs:element name="returnedValue" type="tns:PairOfPipelineAndBooleanLists"/>
 	  </xs:choice>
 	</xs:sequence>
       </xs:complexType>
@@ -147,6 +148,12 @@
 	<xs:sequence>
 	  <xs:element name="key" type="tns:Pipeline"/>
 	  <xs:element name="value" type="xs:boolean"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="PairOfPipelineAndBooleanLists">
+	<xs:sequence>
+	  <xs:element maxOccurs="unbounded" name="pipelines" type="tns:Pipeline"/>
+	  <xs:element maxOccurs="unbounded" name="canExecute" type="xs:boolean"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="deleteExecution">
