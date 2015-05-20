@@ -192,7 +192,12 @@
       <xs:complexType name="StringKeyValuePair">
 	<xs:sequence>
 	  <xs:element name="key" type="xs:string"/>
-	  <xs:element name="value" type="xs:anyType"/>
+	  <xs:choice>
+	    <xs:element name="value" type="xs:string"/>
+	    <xs:element name="value" type="xs:int"/>
+	    <xs:element name="value" type="tns:ExecutionStatus"/>
+	    <xs:element name="value" type="tns:ParameterType"/>
+	  </xs:choice>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="updateExecutionResponse">
