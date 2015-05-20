@@ -43,11 +43,54 @@
 	<xs:sequence>
 	  <xs:element name="statusCode" type="xs:int"/>
 	  <xs:element minOccurs="0" name="errorMessage" type="xs:string"/>
-	  <xs:element minOccurs="0" name="returnedValue" type="xs:anyType"/>
+	  <xs:choice minOccurs="0">
+	    <xs:element name="returnedValue" type="tns:Pipeline"/>
+	    <xs:element name="returnedValue" type="tns:Execution"/>
+	    <xs:element name="returnedValue" type="tns:GlobalProperties"/>
+	    <xs:element name="returnedValue" type="xs:string"/>
+	    <xs:element name="returnedValue" type="tns:ExecutionStatus"/>
+	    <xs:element name="returnedValue" type="tns:PipelineKeyBooleanValuePair"/>
+	  </xs:choice>
 	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Pipeline">
+	<xs:complexContent>
+	  <xs:extension base="tns:Object">
+	    <xs:sequence>
+	      <xs:element name="identifier" type="xs:string"/>
+	      <xs:element name="name" type="xs:string"/>
+	      <xs:element name="description" type="xs:string"/>
+	      <xs:element name="version" type="xs:string"/>
+	      <xs:element maxOccurs="unbounded" name="parameters" type="tns:PipelineParameter"/>
+	      <xs:element maxOccurs="unbounded" minOccurs="0" name="errorCodesAndMessages" type="tns:IntKeyStringValuePair"/>
+	    </xs:sequence>
+	  </xs:extension>
+	</xs:complexContent>
       </xs:complexType>
       <xs:complexType name="Object">
 	<xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="PipelineParameter">
+	<xs:sequence>
+	  <xs:element name="name" type="xs:string"/>
+	  <xs:element name="type" type="tns:ParameterType"/>
+	  <xs:element name="isOptional" type="xs:boolean"/>
+	  <xs:element name="isReturnedValue" type="xs:boolean"/>
+	  <xs:element minOccurs="0" name="defaultValue" type="tns:ParameterTypedValue"/>
+	  <xs:element minOccurs="0" name="description" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ParameterTypedValue">
+	<xs:sequence>
+	  <xs:element name="type" type="tns:ParameterType"/>
+	  <xs:element name="value" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="IntKeyStringValuePair">
+	<xs:sequence>
+	  <xs:element name="key" type="xs:int"/>
+	  <xs:element name="value" type="xs:string"/>
+	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="Execution">
 	<xs:complexContent>
@@ -76,12 +119,6 @@
 	  <xs:element name="value" type="tns:ParameterTypedValue"/>
 	</xs:sequence>
       </xs:complexType>
-      <xs:complexType name="ParameterTypedValue">
-	<xs:sequence>
-	  <xs:element name="type" type="tns:ParameterType"/>
-	  <xs:element name="value" type="xs:string"/>
-	</xs:sequence>
-      </xs:complexType>
       <xs:complexType name="GlobalProperties">
 	<xs:complexContent>
 	  <xs:extension base="tns:Object">
@@ -101,34 +138,10 @@
 	  </xs:extension>
 	</xs:complexContent>
       </xs:complexType>
-      <xs:complexType name="IntKeyStringValuePair">
+      <xs:complexType name="PipelineKeyBooleanValuePair">
 	<xs:sequence>
-	  <xs:element name="key" type="xs:int"/>
-	  <xs:element name="value" type="xs:string"/>
-	</xs:sequence>
-      </xs:complexType>
-      <xs:complexType name="Pipeline">
-	<xs:complexContent>
-	  <xs:extension base="tns:Object">
-	    <xs:sequence>
-	      <xs:element name="identifier" type="xs:string"/>
-	      <xs:element name="name" type="xs:string"/>
-	      <xs:element name="description" type="xs:string"/>
-	      <xs:element name="version" type="xs:string"/>
-	      <xs:element maxOccurs="unbounded" name="parameters" type="tns:PipelineParameter"/>
-	      <xs:element maxOccurs="unbounded" minOccurs="0" name="errorCodesAndMessages" type="tns:IntKeyStringValuePair"/>
-	    </xs:sequence>
-	  </xs:extension>
-	</xs:complexContent>
-      </xs:complexType>
-      <xs:complexType name="PipelineParameter">
-	<xs:sequence>
-	  <xs:element name="name" type="xs:string"/>
-	  <xs:element name="type" type="tns:ParameterType"/>
-	  <xs:element name="isOptional" type="xs:boolean"/>
-	  <xs:element name="isReturnedValue" type="xs:boolean"/>
-	  <xs:element minOccurs="0" name="defaultValue" type="tns:ParameterTypedValue"/>
-	  <xs:element minOccurs="0" name="description" type="xs:string"/>
+	  <xs:element name="key" type="tns:Pipeline"/>
+	  <xs:element name="value" type="xs:boolean"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="deleteExecution">
@@ -261,6 +274,16 @@
 	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
+      <xs:simpleType name="ParameterType">
+	<xs:restriction base="xs:string">
+	  <xs:enumeration value="File"/>
+	  <xs:enumeration value="String"/>
+	  <xs:enumeration value="Boolean"/>
+	  <xs:enumeration value="Int64"/>
+	  <xs:enumeration value="Double"/>
+	  <xs:enumeration value="List"/>
+	</xs:restriction>
+      </xs:simpleType>
       <xs:simpleType name="ExecutionStatus">
 	<xs:restriction base="xs:string">
 	  <xs:enumeration value="Initializing"/>
@@ -271,16 +294,6 @@
 	  <xs:enumeration value="ExecutionFailed"/>
 	  <xs:enumeration value="Unknown"/>
 	  <xs:enumeration value="Killed"/>
-	</xs:restriction>
-      </xs:simpleType>
-      <xs:simpleType name="ParameterType">
-	<xs:restriction base="xs:string">
-	  <xs:enumeration value="File"/>
-	  <xs:enumeration value="String"/>
-	  <xs:enumeration value="Boolean"/>
-	  <xs:enumeration value="Int64"/>
-	  <xs:enumeration value="Double"/>
-	  <xs:enumeration value="List"/>
 	</xs:restriction>
       </xs:simpleType>
       <xs:simpleType name="Module">
