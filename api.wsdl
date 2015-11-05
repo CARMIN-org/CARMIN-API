@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="PAF" targetNamespace="http://france-life-imaging.fr/api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://france-life-imaging.fr/api" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<wsdl:definitions name="Carmin" targetNamespace="http://france-life-imaging.fr/api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://france-life-imaging.fr/api" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://france-life-imaging.fr/api" elementFormDefault="unqualified" targetNamespace="http://france-life-imaging.fr/api" version="1.0">
       <xs:element name="authenticateHTTP" type="tns:authenticateHTTP"/>
@@ -427,7 +427,7 @@
     <wsdl:part name="parameters" element="tns:getExecutionResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:portType name="PAF">
+  <wsdl:portType name="Carmin">
     <wsdl:operation name="authenticateSession">
       <wsdl:input name="authenticateSession" message="tns:authenticateSession">
       </wsdl:input>
@@ -507,7 +507,7 @@
       </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
-  <wsdl:binding name="PAFSoapBinding" type="tns:PAF">
+  <wsdl:binding name="CarminSoapBinding" type="tns:Carmin">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="authenticateSession">
       <soap:operation soapAction="" style="document"/>
@@ -627,9 +627,9 @@
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
-  <wsdl:service name="PAF">
-    <wsdl:port name="PAFPort" binding="tns:PAFSoapBinding">
-      <soap:address location="http://localhost:9090/PAFPort"/>
+  <wsdl:service name="Carmin">
+    <wsdl:port name="CarminPort" binding="tns:CarminSoapBinding">
+      <soap:address location="http://localhost:9999/tristan-7/api"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
