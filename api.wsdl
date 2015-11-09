@@ -30,13 +30,13 @@
       <xs:element name="updateExecutionResponse" type="tns:updateExecutionResponse"/>
       <xs:complexType name="authenticateSession">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="userName" type="xs:string"/>
-	  <xs:element minOccurs="0" name="password" type="xs:string"/>
+	  <xs:element minOccurs="1" name="userName" type="xs:string"/>
+	  <xs:element minOccurs="1" name="password" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="authenticateSessionResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="Response">
@@ -60,9 +60,9 @@
 	    <xs:sequence>
 	      <xs:element name="identifier" type="xs:string"/>
 	      <xs:element name="name" type="xs:string"/>
-	      <xs:element name="description" type="xs:string"/>
+	      <xs:element name="description" minOccurs="0" type="xs:string"/>
 	      <xs:element name="version" type="xs:string"/>
-	      <xs:element maxOccurs="unbounded" name="parameters" type="tns:PipelineParameter"/>
+	      <xs:element maxOccurs="unbounded" minOccurs="0" name="parameters" type="tns:PipelineParameter"/>
 	      <xs:element maxOccurs="unbounded" minOccurs="0" name="errorCodesAndMessages" type="tns:IntKeyStringValuePair"/>
 	    </xs:sequence>
 	  </xs:extension>
@@ -152,39 +152,39 @@
       </xs:complexType>
       <xs:complexType name="PairOfPipelineAndBooleanLists">
 	<xs:sequence>
-	  <xs:element maxOccurs="unbounded" name="pipelines" type="tns:Pipeline"/>
+	  <xs:element maxOccurs="unbounded" name="pipeline" type="tns:Pipeline"/>
 	  <xs:element maxOccurs="unbounded" name="canExecute" type="xs:boolean"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="deleteExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
-	  <xs:element minOccurs="0" name="deleteFiles" type="xs:boolean"/>
+	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
+	  <xs:element minOccurs="1" name="deleteFiles" type="xs:boolean"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="deleteExecutionResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getPipeline">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="pipelineId" type="xs:string"/>
+	  <xs:element minOccurs="1" name="pipelineId" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getPipelineResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="authenticateHTTP">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="userName" type="xs:string"/>
+	  <xs:element minOccurs="1" name="userName" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="authenticateHTTPResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="logout">
@@ -192,13 +192,13 @@
       </xs:complexType>
       <xs:complexType name="logoutResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="updateExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
-	  <xs:element maxOccurs="unbounded" minOccurs="0" name="keyValuePairs" type="tns:StringKeyValuePair"/>
+	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
+	  <xs:element maxOccurs="unbounded" minOccurs="1" name="keyValuePairs" type="tns:StringKeyValuePair"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="StringKeyValuePair">
@@ -214,7 +214,7 @@
       </xs:complexType>
       <xs:complexType name="updateExecutionResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getGlobalProperties">
@@ -222,13 +222,13 @@
       </xs:complexType>
       <xs:complexType name="getGlobalPropertiesResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="initExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="pipelineId" type="xs:string"/>
-	  <xs:element maxOccurs="unbounded" minOccurs="0" name="inputValues" type="tns:StringKeyParameterValuePair"/>
+	  <xs:element minOccurs="1" name="pipelineId" type="xs:string"/>
+	  <xs:element maxOccurs="unbounded" minOccurs="1" name="inputValues" type="tns:StringKeyParameterValuePair"/>
 	  <xs:element minOccurs="0" name="timeout" type="xs:int"/>
 	  <xs:element minOccurs="0" name="executionName" type="xs:string"/>
 	  <xs:element minOccurs="0" name="studyId" type="xs:string"/>
@@ -237,58 +237,58 @@
       </xs:complexType>
       <xs:complexType name="initExecutionResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getExecutionResults">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
+	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
 	  <xs:element minOccurs="0" name="protocol" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getExecutionResultsResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="killExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
+	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="killExecutionResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
+	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getExecutionResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="playExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
+	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="playExecutionResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="listPipelines">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="studyIdentifier" type="xs:string"/>
+	  <xs:element minOccurs="1" name="studyIdentifier" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="listPipelinesResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:simpleType name="ParameterType">
