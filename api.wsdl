@@ -94,7 +94,7 @@
       </xs:complexType>
       <xs:complexType name="IntKeyStringValuePair">
 	<xs:sequence>
-	  <xs:element name="key" type="xs:int"/>
+	  <xs:element name="name" type="xs:int"/>
 	  <xs:element name="value" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
@@ -121,7 +121,7 @@
       </xs:complexType>
       <xs:complexType name="StringKeyParameterValuePair">
 	<xs:sequence>
-	  <xs:element name="key" type="xs:string"/>
+	  <xs:element name="name" type="xs:string"/>
 	  <xs:element name="value" type="tns:ParameterTypedValue"/>
 	</xs:sequence>
       </xs:complexType>
@@ -146,7 +146,7 @@
       </xs:complexType>
       <xs:complexType name="PipelineKeyBooleanValuePair">
 	<xs:sequence>
-	  <xs:element name="key" type="tns:Pipeline"/>
+	  <xs:element name="name" type="tns:Pipeline"/>
 	  <xs:element name="value" type="xs:boolean"/>
 	</xs:sequence>
       </xs:complexType>
@@ -203,7 +203,7 @@
       </xs:complexType>
       <xs:complexType name="StringKeyValuePair">
 	<xs:sequence>
-	  <xs:element name="key" type="xs:string"/>
+	  <xs:element name="name" type="xs:string"/>
 	  <xs:choice>
 	    <xs:element name="valueStr" type="xs:string"/>
 	    <xs:element name="valueInt" type="xs:int"/>
