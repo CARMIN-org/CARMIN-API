@@ -113,8 +113,8 @@
 	      <xs:element minOccurs="0" name="errorCode" type="xs:int"/>
 	      <xs:element minOccurs="0" name="stdoutlog" type="xs:string"/>
 	      <xs:element minOccurs="0" name="stderrlog" type="xs:string"/>
-	      <xs:element minOccurs="0" name="startDate" type="xs:int"/>
-	      <xs:element minOccurs="0" name="endDate" type="xs:int"/>
+	      <xs:element minOccurs="0" name="startDate" type="xs:long"/>
+	      <xs:element minOccurs="0" name="endDate" type="xs:long"/>
 	    </xs:sequence>
 	  </xs:extension>
 	</xs:complexContent>
