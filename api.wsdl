@@ -107,8 +107,8 @@
 	      <xs:element name="pipelineIdentifier" type="xs:string"/>
 	      <xs:element name="timeout" type="xs:int"/>
 	      <xs:element name="status" type="tns:ExecutionStatus"/>
-	      <xs:element maxOccurs="unbounded" name="inputValues" type="tns:StringKeyParameterValuePair"/>
-	      <xs:element maxOccurs="unbounded" name="returnedFiles" type="tns:StringKeyParameterValuePair"/>
+	      <xs:element maxOccurs="unbounded" name="inputValue" type="tns:StringKeyParameterValuePair"/>
+	      <xs:element maxOccurs="unbounded" name="returnedFile" type="tns:StringKeyParameterValuePair"/>
 	      <xs:element minOccurs="0" name="studyIdentifier" type="xs:string"/>
 	      <xs:element minOccurs="0" name="errorCode" type="xs:int"/>
 	      <xs:element minOccurs="0" name="stdoutlog" type="xs:string"/>
@@ -130,8 +130,8 @@
 	  <xs:extension base="tns:Object">
 	    <xs:sequence>
 	      <xs:element maxOccurs="unbounded" minOccurs="0" name="APIErrorCodesAndMessages" type="tns:IntKeyStringValuePair"/>
-	      <xs:element maxOccurs="unbounded" name="supportedTransferProtocols" type="xs:string"/>
-	      <xs:element maxOccurs="unbounded" name="supportedModules" type="tns:Module"/>
+	      <xs:element maxOccurs="unbounded" name="supportedTransferProtocol" type="xs:string"/>
+	      <xs:element maxOccurs="unbounded" name="supportedModule" type="tns:Module"/>
 	      <xs:element minOccurs="0" name="email" type="xs:string"/>
 	      <xs:element minOccurs="0" name="platformDescription" type="xs:string"/>
 	      <xs:element name="minAuthorizedExecutionTimeout" type="xs:int"/>
@@ -228,7 +228,7 @@
       <xs:complexType name="initExecution">
 	<xs:sequence>
 	  <xs:element minOccurs="1" name="pipelineId" type="xs:string"/>
-	  <xs:element maxOccurs="unbounded" minOccurs="1" name="inputValues" type="tns:StringKeyParameterValuePair"/>
+	  <xs:element maxOccurs="unbounded" minOccurs="1" name="inputValue" type="tns:StringKeyParameterValuePair"/>
 	  <xs:element minOccurs="0" name="timeout" type="xs:int"/>
 	  <xs:element minOccurs="0" name="executionName" type="xs:string"/>
 	  <xs:element minOccurs="0" name="studyId" type="xs:string"/>
