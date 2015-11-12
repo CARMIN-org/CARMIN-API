@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="PAF" targetNamespace="http://france-life-imaging.fr/api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://france-life-imaging.fr/api" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<wsdl:definitions name="Carmin" targetNamespace="http://france-life-imaging.fr/api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://france-life-imaging.fr/api" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://france-life-imaging.fr/api" elementFormDefault="unqualified" targetNamespace="http://france-life-imaging.fr/api" version="1.0">
       <xs:element name="authenticateHTTP" type="tns:authenticateHTTP"/>
@@ -30,13 +30,13 @@
       <xs:element name="updateExecutionResponse" type="tns:updateExecutionResponse"/>
       <xs:complexType name="authenticateSession">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="userName" type="xs:string"/>
-	  <xs:element minOccurs="0" name="password" type="xs:string"/>
+	  <xs:element minOccurs="1" name="userName" type="xs:string"/>
+	  <xs:element minOccurs="1" name="password" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="authenticateSessionResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="Response">
@@ -48,6 +48,7 @@
 		<xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueExecution" 		type="tns:Execution"/>
 		<xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueGlobalProp" 		type="tns:GlobalProperties"/>
 		<xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueStr" 			type="xs:string"/>
+		<xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueListString" 			type="tns:ArrayOfString"/>
 		<xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueStatus" 			type="tns:ExecutionStatus"/>
 		<xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValuePairKey" 		type="tns:PipelineKeyBooleanValuePair"/>
 		<xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValuePairPipeline" 	type="tns:PairOfPipelineAndBooleanLists"/>
@@ -60,9 +61,9 @@
 	    <xs:sequence>
 	      <xs:element name="identifier" type="xs:string"/>
 	      <xs:element name="name" type="xs:string"/>
-	      <xs:element name="description" type="xs:string"/>
+	      <xs:element name="description" minOccurs="0" type="xs:string"/>
 	      <xs:element name="version" type="xs:string"/>
-	      <xs:element maxOccurs="unbounded" name="parameters" type="tns:PipelineParameter"/>
+	      <xs:element maxOccurs="unbounded" minOccurs="0" name="parameters" type="tns:PipelineParameter"/>
 	      <xs:element maxOccurs="unbounded" minOccurs="0" name="errorCodesAndMessages" type="tns:IntKeyStringValuePair"/>
 	    </xs:sequence>
 	  </xs:extension>
@@ -70,6 +71,11 @@
       </xs:complexType>
       <xs:complexType name="Object">
 	<xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name='ArrayOfString'>
+        <xs:sequence>
+          <xs:element name='item' type='xsd:string' maxOccurs='unbounded'/>
+        </xs:sequence>
       </xs:complexType>
       <xs:complexType name="PipelineParameter">
 	<xs:sequence>
@@ -94,7 +100,7 @@
       </xs:complexType>
       <xs:complexType name="IntKeyStringValuePair">
 	<xs:sequence>
-	  <xs:element name="key" type="xs:int"/>
+	  <xs:element name="name" type="xs:int"/>
 	  <xs:element name="value" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
@@ -107,21 +113,21 @@
 	      <xs:element name="pipelineIdentifier" type="xs:string"/>
 	      <xs:element name="timeout" type="xs:int"/>
 	      <xs:element name="status" type="tns:ExecutionStatus"/>
-	      <xs:element maxOccurs="unbounded" name="inputValues" type="tns:StringKeyParameterValuePair"/>
-	      <xs:element maxOccurs="unbounded" name="returnedFiles" type="tns:StringKeyParameterValuePair"/>
+	      <xs:element maxOccurs="unbounded" name="inputValue" type="tns:StringKeyParameterValuePair"/>
+	      <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedFile" type="tns:StringKeyParameterValuePair"/>
 	      <xs:element minOccurs="0" name="studyIdentifier" type="xs:string"/>
 	      <xs:element minOccurs="0" name="errorCode" type="xs:int"/>
 	      <xs:element minOccurs="0" name="stdoutlog" type="xs:string"/>
 	      <xs:element minOccurs="0" name="stderrlog" type="xs:string"/>
-	      <xs:element minOccurs="0" name="startDate" type="xs:int"/>
-	      <xs:element minOccurs="0" name="endDate" type="xs:int"/>
+	      <xs:element minOccurs="0" name="startDate" type="xs:long"/>
+	      <xs:element minOccurs="0" name="endDate" type="xs:long"/>
 	    </xs:sequence>
 	  </xs:extension>
 	</xs:complexContent>
       </xs:complexType>
       <xs:complexType name="StringKeyParameterValuePair">
 	<xs:sequence>
-	  <xs:element name="key" type="xs:string"/>
+	  <xs:element name="name" type="xs:string"/>
 	  <xs:element name="value" type="tns:ParameterTypedValue"/>
 	</xs:sequence>
       </xs:complexType>
@@ -130,8 +136,8 @@
 	  <xs:extension base="tns:Object">
 	    <xs:sequence>
 	      <xs:element maxOccurs="unbounded" minOccurs="0" name="APIErrorCodesAndMessages" type="tns:IntKeyStringValuePair"/>
-	      <xs:element maxOccurs="unbounded" name="supportedTransferProtocols" type="xs:string"/>
-	      <xs:element maxOccurs="unbounded" name="supportedModules" type="tns:Module"/>
+	      <xs:element maxOccurs="unbounded" name="supportedTransferProtocol" type="xs:string"/>
+	      <xs:element maxOccurs="unbounded" name="supportedModule" type="tns:Module"/>
 	      <xs:element minOccurs="0" name="email" type="xs:string"/>
 	      <xs:element minOccurs="0" name="platformDescription" type="xs:string"/>
 	      <xs:element name="minAuthorizedExecutionTimeout" type="xs:int"/>
@@ -146,45 +152,45 @@
       </xs:complexType>
       <xs:complexType name="PipelineKeyBooleanValuePair">
 	<xs:sequence>
-	  <xs:element name="key" type="tns:Pipeline"/>
+	  <xs:element name="name" type="tns:Pipeline"/>
 	  <xs:element name="value" type="xs:boolean"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="PairOfPipelineAndBooleanLists">
 	<xs:sequence>
-	  <xs:element maxOccurs="unbounded" name="pipelines" type="tns:Pipeline"/>
+	  <xs:element maxOccurs="unbounded" name="pipeline" type="tns:Pipeline"/>
 	  <xs:element maxOccurs="unbounded" name="canExecute" type="xs:boolean"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="deleteExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
-	  <xs:element minOccurs="0" name="deleteFiles" type="xs:boolean"/>
+	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
+	  <xs:element minOccurs="1" name="deleteFiles" type="xs:boolean"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="deleteExecutionResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getPipeline">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="pipelineId" type="xs:string"/>
+	  <xs:element minOccurs="1" name="pipelineId" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getPipelineResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="authenticateHTTP">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="userName" type="xs:string"/>
+	  <xs:element minOccurs="1" name="userName" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="authenticateHTTPResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="logout">
@@ -192,18 +198,18 @@
       </xs:complexType>
       <xs:complexType name="logoutResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="updateExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
-	  <xs:element maxOccurs="unbounded" minOccurs="0" name="keyValuePairs" type="tns:StringKeyValuePair"/>
+	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
+	  <xs:element maxOccurs="unbounded" minOccurs="1" name="keyValuePair" type="tns:StringKeyValuePair"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="StringKeyValuePair">
 	<xs:sequence>
-	  <xs:element name="key" type="xs:string"/>
+	  <xs:element name="name" type="xs:string"/>
 	  <xs:choice>
 	    <xs:element name="valueStr" type="xs:string"/>
 	    <xs:element name="valueInt" type="xs:int"/>
@@ -214,7 +220,7 @@
       </xs:complexType>
       <xs:complexType name="updateExecutionResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getGlobalProperties">
@@ -222,13 +228,13 @@
       </xs:complexType>
       <xs:complexType name="getGlobalPropertiesResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="initExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="pipelineId" type="xs:string"/>
-	  <xs:element maxOccurs="unbounded" minOccurs="0" name="inputValues" type="tns:StringKeyParameterValuePair"/>
+	  <xs:element minOccurs="1" name="pipelineId" type="xs:string"/>
+	  <xs:element maxOccurs="unbounded" minOccurs="1" name="inputValue" type="tns:StringKeyParameterValuePair"/>
 	  <xs:element minOccurs="0" name="timeout" type="xs:int"/>
 	  <xs:element minOccurs="0" name="executionName" type="xs:string"/>
 	  <xs:element minOccurs="0" name="studyId" type="xs:string"/>
@@ -237,58 +243,58 @@
       </xs:complexType>
       <xs:complexType name="initExecutionResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getExecutionResults">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
+	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
 	  <xs:element minOccurs="0" name="protocol" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getExecutionResultsResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="killExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
+	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="killExecutionResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
+	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getExecutionResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="playExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="executionId" type="xs:string"/>
+	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="playExecutionResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="listPipelines">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="studyIdentifier" type="xs:string"/>
+	  <xs:element minOccurs="1" name="studyIdentifier" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="listPipelinesResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="0" name="return" type="tns:Response"/>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:simpleType name="ParameterType">
@@ -427,7 +433,7 @@
     <wsdl:part name="parameters" element="tns:getExecutionResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:portType name="PAF">
+  <wsdl:portType name="Carmin">
     <wsdl:operation name="authenticateSession">
       <wsdl:input name="authenticateSession" message="tns:authenticateSession">
       </wsdl:input>
@@ -507,7 +513,7 @@
       </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
-  <wsdl:binding name="PAFSoapBinding" type="tns:PAF">
+  <wsdl:binding name="CarminSoapBinding" type="tns:Carmin">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="authenticateSession">
       <soap:operation soapAction="" style="document"/>
@@ -627,9 +633,9 @@
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
-  <wsdl:service name="PAF">
-    <wsdl:port name="PAFPort" binding="tns:PAFSoapBinding">
-      <soap:address location="http://localhost:9090/PAFPort"/>
+  <wsdl:service name="Carmin">
+    <wsdl:port name="CarminPort" binding="tns:CarminSoapBinding">
+      <soap:address location="http://localhost:9999/tristan-7/api"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
