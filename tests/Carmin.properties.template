@@ -1,0 +1,11 @@
+endpoint=http://localhost/api
+userName=change-me
+password=change-me
+pipelineId=testCarmin/0.1
+pipelineParam1=results-directory
+pipelineParam1Type=File
+pipelineParam1Value=/vip/Home
+pipelineParam2=input_string
+pipelineParam2Type=String
+pipelineParam2Value=Hello, World!
+completedExecutionId=changeMe
