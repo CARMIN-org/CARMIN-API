@@ -16,8 +16,9 @@ Contents:
 6. In Carmin TestSuite editor, click the green arrow.
 
 If all the tests succeed, the TestSuite editor should look like this:
+
 ![tests]
-(./images/tests/png)
+(./images/tests.png)
 
 # Tests
 
