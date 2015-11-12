@@ -48,6 +48,7 @@
 		<xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueExecution" 		type="tns:Execution"/>
 		<xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueGlobalProp" 		type="tns:GlobalProperties"/>
 		<xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueStr" 			type="xs:string"/>
+		<xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueListString" 			type="tns:ArrayOfString"/>
 		<xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueStatus" 			type="tns:ExecutionStatus"/>
 		<xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValuePairKey" 		type="tns:PipelineKeyBooleanValuePair"/>
 		<xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValuePairPipeline" 	type="tns:PairOfPipelineAndBooleanLists"/>
@@ -70,6 +71,11 @@
       </xs:complexType>
       <xs:complexType name="Object">
 	<xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name='ArrayOfString'>
+        <xs:sequence>
+          <xs:element name='item' type='xsd:string' maxOccurs='unbounded'/>
+        </xs:sequence>
       </xs:complexType>
       <xs:complexType name="PipelineParameter">
 	<xs:sequence>
@@ -108,7 +114,7 @@
 	      <xs:element name="timeout" type="xs:int"/>
 	      <xs:element name="status" type="tns:ExecutionStatus"/>
 	      <xs:element maxOccurs="unbounded" name="inputValue" type="tns:StringKeyParameterValuePair"/>
-	      <xs:element maxOccurs="unbounded" name="returnedFile" type="tns:StringKeyParameterValuePair"/>
+	      <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedFile" type="tns:StringKeyParameterValuePair"/>
 	      <xs:element minOccurs="0" name="studyIdentifier" type="xs:string"/>
 	      <xs:element minOccurs="0" name="errorCode" type="xs:int"/>
 	      <xs:element minOccurs="0" name="stdoutlog" type="xs:string"/>
@@ -198,7 +204,7 @@
       <xs:complexType name="updateExecution">
 	<xs:sequence>
 	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
-	  <xs:element maxOccurs="unbounded" minOccurs="1" name="keyValuePairs" type="tns:StringKeyValuePair"/>
+	  <xs:element maxOccurs="unbounded" minOccurs="1" name="keyValuePair" type="tns:StringKeyValuePair"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="StringKeyValuePair">
