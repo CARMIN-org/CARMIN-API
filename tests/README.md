@@ -40,6 +40,7 @@ within a TestCase.
 ## Assertions
 
 Each TestStep contains 4 assertions testing that:
+
 1. A valid SOAP response is returned;
 2. The SOAP response complies to the schema defined in the WSDL;
 3. No SOAP fault is returned;
