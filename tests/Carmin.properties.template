@@ -1,0 +1,25 @@
+# API endpoint,
+# used by all SOAP requests
+endpoint=http://localhost/api
+
+# Username and password,
+# used in Authentication TestCase
+userName=change-me
+password=change-me
+
+# Pipeline id,
+# used in Pipeline TestCase (getPipeline step)
+pipelineId=testCarmin/0.1
+
+# Parameters, types and values,
+# used in Execution TestCase (initExecutionWithPlay step)
+pipelineParam1=results-directory
+pipelineParam1Type=File
+pipelineParam1Value=/vip/Home
+pipelineParam2=input_string
+pipelineParam2Type=String
+pipelineParam2Value=Hello, World!
+
+# Execution id,
+# used in getExecutionResults TestCase (getExecutionResults step)
+completedExecutionId=changeMe
