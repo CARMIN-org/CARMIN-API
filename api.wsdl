@@ -18,8 +18,14 @@
       <xs:element name="getPipelineResponse" type="tns:getPipelineResponse"/>
       <xs:element name="initExecution" type="tns:initExecution"/>
       <xs:element name="initExecutionResponse" type="tns:initExecutionResponse"/>
+      <xs:element name="getStdOut" type="tns:getStdOut"/>
+      <xs:element name="getStdOutResponse" type="tns:getStdOutResponse"/>
+      <xs:element name="getStdErr" type="tns:getStdErr"/>
+      <xs:element name="getStdErrResponse" type="tns:getStdErrResponse"/>
       <xs:element name="killExecution" type="tns:killExecution"/>
       <xs:element name="killExecutionResponse" type="tns:killExecutionResponse"/>
+      <xs:element name="listExecutions" type="tns:listExecutions"/>
+      <xs:element name="listExecutionsResponse" type="tns:listExecutionsResponse"/>
       <xs:element name="listPipelines" type="tns:listPipelines"/>
       <xs:element name="listPipelinesResponse" type="tns:listPipelinesResponse"/>
       <xs:element name="logout" type="tns:logout"/>
@@ -44,14 +50,15 @@
 	  <xs:element name="statusCode" type="xs:int"/>
 	  <xs:element minOccurs="0" maxOccurs="1" name="errorMessage" type="xs:string"/>
 	  <xs:choice>
-		<xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValuePipeline" 		type="tns:Pipeline"/>
-		<xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueExecution" 		type="tns:Execution"/>
-		<xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueGlobalProp" 		type="tns:GlobalProperties"/>
-		<xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueStr" 			type="xs:string"/>
-		<xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueListString" 			type="tns:ArrayOfString"/>
-		<xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueStatus" 			type="tns:ExecutionStatus"/>
-		<xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValuePairKey" 		type="tns:PipelineKeyBooleanValuePair"/>
-		<xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValuePairPipeline" 	type="tns:PairOfPipelineAndBooleanLists"/>
+	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValuePipeline" 		type="tns:Pipeline"/>
+	    <xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueExecution" 		type="tns:Execution"/>
+	    <xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueGlobalProp" 		type="tns:GlobalProperties"/>
+	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueStr" 			type="xs:string"/>
+	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueListStrings" 			type="tns:ArrayOfStrings"/>
+	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueListExecutions" 			type="tns:ArrayOfExecutions"/>
+	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueListPipelines" 			type="tns:ArrayOfPipelines"/>
+	    <xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueStatus" 			type="tns:ExecutionStatus"/>
+	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValuePairKey" 		type="tns:PipelineKeyBooleanValuePair"/>
 	   </xs:choice>
 	</xs:sequence>
       </xs:complexType>
@@ -61,10 +68,11 @@
 	    <xs:sequence>
 	      <xs:element name="identifier" type="xs:string"/>
 	      <xs:element name="name" type="xs:string"/>
-	      <xs:element name="description" minOccurs="0" type="xs:string"/>
+              <xs:element minOccurs="0" name="description" type="xs:string"/>
 	      <xs:element name="version" type="xs:string"/>
 	      <xs:element maxOccurs="unbounded" minOccurs="0" name="parameters" type="tns:PipelineParameter"/>
 	      <xs:element maxOccurs="unbounded" minOccurs="0" name="errorCodesAndMessages" type="tns:IntKeyStringValuePair"/>
+              <xs:element minOccurs="0" name="canExecute" type="xs:boolean"/>
 	    </xs:sequence>
 	  </xs:extension>
 	</xs:complexContent>
@@ -72,11 +80,22 @@
       <xs:complexType name="Object">
 	<xs:sequence/>
       </xs:complexType>
-      <xs:complexType name='ArrayOfString'>
+      <xs:complexType name='ArrayOfStrings'>
         <xs:sequence>
-          <xs:element name='item' type='xsd:string' maxOccurs='unbounded'/>
+          <xs:element name='item' type='xsd:string' minOccurs="0" maxOccurs='unbounded'/>
         </xs:sequence>
       </xs:complexType>
+      <xs:complexType name='ArrayOfPipelines'>
+        <xs:sequence>
+          <xs:element name='item' type='tns:Pipeline' minOccurs="0" maxOccurs='unbounded'/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name='ArrayOfExecutions'>
+        <xs:sequence>
+          <xs:element name='item' type='tns:Execution' minOccurs="0" maxOccurs='unbounded'/>
+        </xs:sequence>
+      </xs:complexType>
+
       <xs:complexType name="PipelineParameter">
 	<xs:sequence>
 	  <xs:element name="name" type="xs:string"/>
@@ -111,14 +130,12 @@
 	      <xs:element name="identifier" type="xs:string"/>
 	      <xs:element name="name" type="xs:string"/>
 	      <xs:element name="pipelineIdentifier" type="xs:string"/>
-	      <xs:element name="timeout" type="xs:int"/>
+	      <xs:element minOccurs="0" name="timeout" type="xs:int"/>
 	      <xs:element name="status" type="tns:ExecutionStatus"/>
-	      <xs:element maxOccurs="unbounded" name="inputValue" type="tns:StringKeyParameterValuePair"/>
+	      <xs:element minOccurs="0" maxOccurs="unbounded" name="inputValue" type="tns:StringKeyParameterValuePair"/>
 	      <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedFile" type="tns:StringKeyParameterValuePair"/>
 	      <xs:element minOccurs="0" name="studyIdentifier" type="xs:string"/>
 	      <xs:element minOccurs="0" name="errorCode" type="xs:int"/>
-	      <xs:element minOccurs="0" name="stdoutlog" type="xs:string"/>
-	      <xs:element minOccurs="0" name="stderrlog" type="xs:string"/>
 	      <xs:element minOccurs="0" name="startDate" type="xs:long"/>
 	      <xs:element minOccurs="0" name="endDate" type="xs:long"/>
 	    </xs:sequence>
@@ -140,9 +157,9 @@
 	      <xs:element maxOccurs="unbounded" name="supportedModule" type="tns:Module"/>
 	      <xs:element minOccurs="0" name="email" type="xs:string"/>
 	      <xs:element minOccurs="0" name="platformDescription" type="xs:string"/>
-	      <xs:element name="minAuthorizedExecutionTimeout" type="xs:int"/>
-	      <xs:element name="maxAuthorizedExecutionTimeout" type="xs:int"/>
-	      <xs:element name="defaultExecutionTimeout" type="xs:int"/>
+	      <xs:element minOccurs="0" name="minAuthorizedExecutionTimeout" type="xs:int"/>
+	      <xs:element minOccurs="0" name="maxAuthorizedExecutionTimeout" type="xs:int"/>
+	      <xs:element minOccurs="0" name="defaultExecutionTimeout" type="xs:int"/>
 	      <xs:element name="isKillExecutionSupported" type="xs:boolean"/>
 	      <xs:element minOccurs="0" name="defaultStudy" type="xs:string"/>
 	      <xs:element name="supportedAPIVersion" type="xs:string"/>
@@ -154,12 +171,6 @@
 	<xs:sequence>
 	  <xs:element name="name" type="tns:Pipeline"/>
 	  <xs:element name="value" type="xs:boolean"/>
-	</xs:sequence>
-      </xs:complexType>
-      <xs:complexType name="PairOfPipelineAndBooleanLists">
-	<xs:sequence>
-	  <xs:element maxOccurs="unbounded" name="pipeline" type="tns:Pipeline"/>
-	  <xs:element maxOccurs="unbounded" name="canExecute" type="xs:boolean"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="deleteExecution">
@@ -249,7 +260,6 @@
       <xs:complexType name="getExecutionResults">
 	<xs:sequence>
 	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
-	  <xs:element minOccurs="0" name="protocol" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getExecutionResultsResponse">
@@ -260,6 +270,26 @@
       <xs:complexType name="killExecution">
 	<xs:sequence>
 	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getStdOut">
+	<xs:sequence>
+	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getStdOutResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getStdErr">
+	<xs:sequence>
+	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getStdErrResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="killExecutionResponse">
@@ -293,6 +323,16 @@
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="listPipelinesResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="listExecutions">
+	<xs:sequence>
+	  <xs:element minOccurs="1" name="studyIdentifier" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="listExecutionsResponse">
 	<xs:sequence>
 	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
@@ -339,6 +379,10 @@
   </wsdl:message>
   <wsdl:message name="listPipelinesResponse">
     <wsdl:part name="parameters" element="tns:listPipelinesResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listExecutionsResponse">
+    <wsdl:part name="parameters" element="tns:listExecutionsResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="authenticateHTTPResponse">
@@ -393,8 +437,20 @@
     <wsdl:part name="parameters" element="tns:initExecutionResponse">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getStdOutResponse">
+    <wsdl:part name="parameters" element="tns:getStdOutResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getStdErrResponse">
+    <wsdl:part name="parameters" element="tns:getStdErrResponse">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="listPipelines">
     <wsdl:part name="parameters" element="tns:listPipelines">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listExecutions">
+    <wsdl:part name="parameters" element="tns:listExecutions">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="authenticateSession">
@@ -423,6 +479,14 @@
   </wsdl:message>
   <wsdl:message name="initExecution">
     <wsdl:part name="parameters" element="tns:initExecution">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getStdOut">
+    <wsdl:part name="parameters" element="tns:getStdOut">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getStdErr">
+    <wsdl:part name="parameters" element="tns:getStdErr">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getPipelineResponse">
@@ -482,6 +546,18 @@
       <wsdl:output name="initExecutionResponse" message="tns:initExecutionResponse">
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getStdOut">
+      <wsdl:input name="getStdOut" message="tns:getStdOut">
+      </wsdl:input>
+      <wsdl:output name="getStdOutResponse" message="tns:getStdOutResponse">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getStdErr">
+      <wsdl:input name="getStdErr" message="tns:getStdErr">
+      </wsdl:input>
+      <wsdl:output name="getStdErrResponse" message="tns:getStdErrResponse">
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getExecutionResults">
       <wsdl:input name="getExecutionResults" message="tns:getExecutionResults">
       </wsdl:input>
@@ -510,6 +586,12 @@
       <wsdl:input name="listPipelines" message="tns:listPipelines">
       </wsdl:input>
       <wsdl:output name="listPipelinesResponse" message="tns:listPipelinesResponse">
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listExecutions">
+      <wsdl:input name="listExecutions" message="tns:listExecutions">
+      </wsdl:input>
+      <wsdl:output name="listExecutionsResponse" message="tns:listExecutionsResponse">
       </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
@@ -587,6 +669,24 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="getStdOut">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getStdOut">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getStdOutResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getStdErr">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getStdErr">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getStdErrResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getExecutionResults">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getExecutionResults">
@@ -629,6 +729,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="listPipelinesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listExecutions">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listExecutions">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listExecutionsResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
