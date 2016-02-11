@@ -1,0 +1,111 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: CARMIN a Common web API for Remote pipeline INvocation
+  description: FLI/IAM REST API for exchanging data and remote calling pipelines.
+  #termsOfService: http://helloreverb.com/terms/
+  #contact:
+    #name: Swagger API team
+    #email: foo@example.com
+    #url: http://swagger.io
+  #license:
+    #name: MIT
+    #url: http://opensource.org/licenses/MIT
+#host: petstore.swagger.io
+#basePath: /api
+#schemes:
+  #- http
+consumes:
+  - application/json
+produces:
+  - application/json
+  
+paths:
+  /platform:
+    get:
+      description: Returns information about the platform
+      operationId: getPlatformProperties
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: succesful response
+          schema:
+            $ref: '#/definitions/platformProperties'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodeAndMessage'
+
+definitions:
+  platformProperties:
+    type: object
+    required:
+      - platformName
+      - supportedTransferProtocols
+      - supportedModules
+      - defaultLimitListExecutions
+      - unsupportedMethods
+      - supportedAPIVersion
+    properties:
+      platformName:
+        type: string
+        description: Name of the platform.
+      APIErrorCodesAndMessages:
+        type: array
+        items:
+          $ref: '#/definitions/errorCodeAndMessage'
+      supportedTransferProtocols:
+        type: array
+        items:
+          type: string
+        description: Used in getExecutionResults and getAccessURL. Protocol names must be URL prefixes (e.g. “http”, “https”, “ftp”, “sftp”, “ftps”, “scp”, “webdav”). 
+      supportedModules:
+        type: array
+        items:
+          type: string # TODO: How to define an enum in Swagger ?
+      defaultLimitListExecutions:
+        type: integer
+        format: int64
+        description: The number of Executions returned by Execution.listExecution when limit is not specified.
+      email:
+        type: string
+        format: utf8 # TODO: I do not know if utf8 is valid here.
+      platformDescription:
+        type: string
+        format: utf8
+      minAuthorizedExecutionTimeout:
+        type: integer
+        format: int64
+      maxAuthorizedExecutionTimeout:
+        type: integer
+        format: int64
+        description: 0 or absent means no max timeout. max has to be greater or equal to the min.
+      defaultExecutionTimeout:
+        type: integer
+        format: int64
+      unsupportedMethods:
+        type: array
+        items:
+          type: string
+        description: List of optional methods that are not supported by the platform.
+      maxSizeDirectTransfer:
+        type: integer
+        format: int64
+        description: The maximal size of files and directories that can be transferred by methods Path.uploadPath and Path.downloadPath.
+      defaultStudy:
+        type: string
+      supportedAPIVersion:
+        type: string
+  errorCodeAndMessage:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+    
