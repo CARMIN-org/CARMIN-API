@@ -3,6 +3,7 @@ info:
   version: '1.0.0'
   title: CARMIN a Common web API for Remote pipeline INvocation
   description: FLI/IAM REST API for exchanging data and remote calling pipelines.
+    
   #termsOfService: http://helloreverb.com/terms/
   #contact:
     #name: Swagger API team
@@ -13,14 +14,62 @@ info:
     #url: http://opensource.org/licenses/MIT
 #host: petstore.swagger.io
 #basePath: /api
-#schemes:
-  #- http
+security: 
+  - {basicAuth:[]}
+  - {apiKey:[]}
+schemes:
+  - http
+  - https
 consumes:
   - application/json
 produces:
   - application/json
-  
+
+securityDefinitions:
+  basicAuth:
+    type: basic
+    description: If supported by the platfrom, it is possible to use HTTP
+      Basic Authentication but one must call `/login_basic_http` before 
+      calling any API service.
+  apiKey:
+      # TODO: Should we replace cookie authentication (not supported by Swagger)
+      # by apiKey authentication ?
+      type: apiKey
+      name: api_key
+      in: header
+      description: If HTTP Basic authentication is not supported, calling
+        `/login` allows for password checking and coockie based authentication.
+
 paths:
+  /login:
+    get:
+      description: |
+        Check username and password and allow access to the API in case of 
+        success by setting a cookie that must be used in any subsequent API
+        calls.
+      operationId: authenticateSession
+      parameters:
+        - name: username
+          in: query
+          description: Name of the user account.
+          required: true
+          type: string
+          format: utf8
+        - name: password
+          in: query
+          description: Password to verify.
+          required: true
+          type: string
+          format: password
+      responses:
+        '200':
+          description: Returns `success` if login is succesful or `failure`
+            if login and/or password is incorrect.
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodeAndMessage'
+      
   /platform:
     get:
       description: Returns information about the platform
