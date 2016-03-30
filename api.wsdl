@@ -145,7 +145,7 @@
       <xs:complexType name="StringKeyParameterValuePair">
 	<xs:sequence>
 	  <xs:element name="name" type="xs:string"/>
-	  <xs:element name="value" type="tns:ParameterTypedValue"/>
+	  <xs:element minOccurs="1" maxOccurs="unbounded" name="value" type="tns:ParameterTypedValue"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="GlobalProperties">
