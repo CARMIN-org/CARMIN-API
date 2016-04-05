@@ -39,7 +39,6 @@ securityDefinitions:
       in: header
       description: If HTTP Basic authentication is not supported, calling
         `/login` allows for password checking and coockie based authentication.
-
 paths:
   /login:
     get:
@@ -68,8 +67,7 @@ paths:
         default:
           description: unexpected error
           schema:
-            $ref: '#/definitions/errorCodeAndMessage'
-      
+            $ref: '#/definitions/errorCodesAndMessage'
   /platform:
     get:
       description: Returns information about the platform
@@ -84,8 +82,158 @@ paths:
         default:
           description: unexpected error
           schema:
-            $ref: '#/definitions/errorCodeAndMessage'
-
+            $ref: '#/definitions/errorCodesAndMessage'
+  /executions:
+    get:
+      description: list all execution Ids in the platform
+      operationId: getExecutions
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/executionIds'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /studies/{study}/executions:
+    get:
+      description: list all execution Ids in the study called {study}
+      operationId: getStudyExecutions
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/executionIds'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+    post:
+      description: |
+        initialize a new execution. All necessary data must have already been
+        transferred to the platform. The execution may not start immediately 
+        (according to a parameter). The user gets the role {execution}_owner.
+      operationId: postStudyExecutions
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: |
+            An array of key value pairs. The definition is defined as below
+          required: true
+          schema:
+            # it is defined by the pipeline definition.
+            # The name denotes the name of parameter in pipeline
+            # and the value denotes the value of parameter.
+            $ref: '#/definitions/newExecution'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/executionId'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /studies/{study}/executions/{execution}:
+    get:
+      description: get information about an execution
+      operationId: getStudyExecutionsExecution
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/execution'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+    put:
+      description: |
+        Modify some parameters (i.e. name, timeout) and/or the status of an
+        execution (i.e. perform an action of starting or killing an execution).
+      operationId: putStudyExecutionsExecution
+      consumes:
+        - application/json
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: to modify a parameter
+          required: true
+          schema:
+            $ref: '#/definitions/keyValuePair'
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+    delete:
+      description: |
+        Delete an execution. This will kill the underlying processes (if possible)
+        and free all resources associated with this execution.
+      operationId: deleteStudyExecutionsExecution
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
 definitions:
   platformProperties:
     type: object
@@ -103,7 +251,7 @@ definitions:
       APIErrorCodesAndMessages:
         type: array
         items:
-          $ref: '#/definitions/errorCodeAndMessage'
+          $ref: '#/definitions/errorCodesAndMessage'
       supportedTransferProtocols:
         type: array
         items:
@@ -146,7 +294,7 @@ definitions:
         type: string
       supportedAPIVersion:
         type: string
-  errorCodeAndMessage:
+  errorCodesAndMessage:
     type: object
     required:
       - code
@@ -157,4 +305,63 @@ definitions:
         format: int32
       message:
         type: string
-    
+  execution:
+    type: object
+    required:
+      - name
+      - pipelineIdentifer
+      - status
+    properties:
+      name:
+        type: string
+        description: execution name
+      pipelineIdentifer:
+        type: string
+        description: which pipeline start this execution
+      status:
+        type: string
+        "enum": ["initializing",
+          "ready",
+          "running",
+          "finished",
+          "initialization_failed",
+          "execution_failed",
+          "unknown",
+          "killed"]
+  newExecution:
+    type: object
+    required:
+      - name
+      - pipelineIdentifer
+      - timeout
+      - inputValues
+    properties:
+      name:
+        type: string
+        description: name to display to users
+      pipelineIdentifer:
+        type: string
+      timeout:
+        type: integer
+        description: timeout in seconds
+      inputValues:
+        type: array
+        items:
+          $ref: '#/definitions/keyValuePair'
+  executionId:
+    type: string
+  executionIds:
+    type: array
+    items:
+      type: string
+  keyValuePair:
+    type: object
+    required:
+      - key
+      - value
+    properties:
+      key:
+        type: string
+        description: the key value
+      value: ## type is ignored here since it could be any type, such as integer, string, list, etc.
+        description: the value associated with key
