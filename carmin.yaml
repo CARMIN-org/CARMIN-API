@@ -308,7 +308,6 @@ definitions:
   execution:
     type: object
     required:
-      - name
       - pipelineIdentifer
       - status
     properties:
@@ -317,7 +316,7 @@ definitions:
         description: execution name
       pipelineIdentifer:
         type: string
-        description: which pipeline start this execution
+        description: which pipeline that started this execution
       status:
         type: string
         "enum": ["initializing",
@@ -333,7 +332,6 @@ definitions:
     required:
       - name
       - pipelineIdentifer
-      - timeout
       - inputValues
     properties:
       name:
