@@ -3,7 +3,7 @@ info:
   version: '1.0.0'
   title: CARMIN a Common web API for Remote pipeline INvocation
   description: FLI/IAM REST API for exchanging data and remote calling pipelines.
-    
+
   #termsOfService: http://helloreverb.com/terms/
   #contact:
     #name: Swagger API team
@@ -28,7 +28,7 @@ produces:
 securityDefinitions:
   basicAuth:
     type: basic
-    description: If supported by the platfrom, it is possible to use HTTP
+    description: If supported by the platform, it is possible to use HTTP
       Basic Authentication but one must call `/login_basic_http` before 
       calling any API service.
   apiKey:
@@ -38,7 +38,8 @@ securityDefinitions:
       name: api_key
       in: header
       description: If HTTP Basic authentication is not supported, calling
-        `/login` allows for password checking and coockie based authentication.
+        `/login` allows for password checking and cookie based authentication.
+
 paths:
   /login:
     get:
@@ -62,7 +63,7 @@ paths:
           format: password
       responses:
         '200':
-          description: Returns `success` if login is succesful or `failure`
+          description: Returns `success` if login is successful or `failure`
             if login and/or password is incorrect.
         default:
           description: unexpected error
@@ -76,9 +77,111 @@ paths:
         - application/json
       responses:
         '200':
-          description: succesful response
+          description: successful response
           schema:
             $ref: '#/definitions/platformProperties'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /studies:
+    get:
+      description: List all the allowed studies in terms of user right
+      operationId: getStudies
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/studies'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+    post:
+      description: Create a new study. The user gets {study}_manager role.
+        Returns all the information of {study} including platform-created `identifier`.
+      operationId: postStudy
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          description: study to add in the database
+          required: true
+          schema:
+            $ref: '#/definitions/newStudy'
+      responses:
+        '200':
+          description: successfully create a new study
+          schema:
+            $ref: '#/definitions/study'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /studies/{study_name}:
+    get:
+      description: get study information by study name
+      operationId: getStudy
+      produces:
+        - application/json
+      parameters:
+        - name: study_name
+          in: path
+          description: study name
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/study'
+    put:
+      description: modify some properties of a study
+      operationId: putStudy
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          description: modify a value in the study by keyValuePair,
+            i.e. description, contactEmail, base_path.
+            The study name and the identifier cannot be changed.
+          required: true
+          schema:
+            $ref: '#/definitions/keyValuePair'
+        - name: study_name
+          in: path
+          description: study name
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successfully modify a study.
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+    delete:
+      description: remove a study
+      operationId: deleteStudy
+      parameters:
+        - name: study_name
+          in: path
+          description: study name
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful response
         default:
           description: unexpected error
           schema:
@@ -235,6 +338,54 @@ paths:
           schema:
             $ref: '#/definitions/errorCodesAndMessage'
 definitions:
+  studies:
+    type: array
+    items:
+      $ref: '#/definitions/study'
+  newStudy:
+    type: object
+    required:
+      - name
+      - description
+      - contactEmail
+      - base_path
+    properties:
+      name:
+        type: string
+        description: study name
+      description:
+        type: string
+        description: information about the study
+      contactEmail:
+        type: string
+        description: email of someone that knows about this study in the platform
+      base_path:
+        type: string
+        description: all files starting with base_path will be declared as belonging to the study
+  study:
+    type: object
+    required:
+      - name
+      - identifier
+      - description
+      - contactEmail
+      - base_path
+    properties:
+      name:
+        type: string
+        description: study name
+      identifier:
+        type: string
+        description: study unique identifier
+      description:
+        type: string
+        description: information about the study
+      contactEmail:
+        type: string
+        description: email of someone that knows about this study in the platform
+      base_path:
+        type: string
+        description: all files starting with base_path will be declared as belonging to the study
   platformProperties:
     type: object
     required:
@@ -308,13 +459,13 @@ definitions:
   execution:
     type: object
     required:
-      - pipelineIdentifer
+      - pipelineIdentifier
       - status
     properties:
       name:
         type: string
         description: execution name
-      pipelineIdentifer:
+      pipelineIdentifier:
         type: string
         description: which pipeline that started this execution
       status:
@@ -331,13 +482,13 @@ definitions:
     type: object
     required:
       - name
-      - pipelineIdentifer
+      - pipelineIdentifier
       - inputValues
     properties:
       name:
         type: string
         description: name to display to users
-      pipelineIdentifer:
+      pipelineIdentifier:
         type: string
       timeout:
         type: integer
