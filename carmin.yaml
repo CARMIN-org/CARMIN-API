@@ -285,8 +285,7 @@ paths:
             $ref: '#/definitions/errorCodesAndMessage'
     put:
       description: |
-        Modify some parameters (i.e. name, timeout) and/or the status of an
-        execution (i.e. perform an action of starting or killing an execution).
+        Modify some parameters (i.e. name and timeout).
       operationId: putStudyExecutionsExecution
       consumes:
         - application/json
@@ -303,8 +302,10 @@ paths:
           type: string
         - name: body
           in: body
-          description: to modify a parameter
-          required: true
+          description: |
+            For example, you can modify name 
+            as key= "name" and value="execution name"
+          required: false
           schema:
             $ref: '#/definitions/keyValuePair'
       responses:
@@ -319,6 +320,94 @@ paths:
         Delete an execution. This will kill the underlying processes (if possible)
         and free all resources associated with this execution.
       operationId: deleteStudyExecutionsExecution
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /studies/{study}/executions/{execution}/play:
+    get:
+      description: play an execution
+      operationId: getStudyExecutionsExecutionPlay
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /studies/{study}/executions/{execution}/kill:
+    get:
+      description: kill an execution
+      operationId: getStudyExecutionsExecutionKill
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /studies/{study}/executions/{execution}/stdout:
+    get:
+      description: get stdout of an execution
+      operationId: getStudyExecutionsExecutionStdout
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /studies/{study}/executions/{execution}/stderr:
+    get:
+      description: get stderr of an execution
+      operationId: getStudyExecutionsExecutionStderr
       parameters:
         - name: study
           in: path
