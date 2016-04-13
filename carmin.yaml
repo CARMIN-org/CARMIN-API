@@ -426,6 +426,23 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/errorCodesAndMessage'
+  /pipelines:
+    get:
+      description: Returns a list of available pipelines
+      operationId: listPipelines
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: succesful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Pipeline'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodeAndMessage'
 definitions:
   studies:
     type: array
@@ -534,6 +551,46 @@ definitions:
         type: string
       supportedAPIVersion:
         type: string
+  PipelineParameter:
+    type: object
+    required:
+      - name
+      - paramType
+      - isOptional
+      - isReturnedValue
+    properties:
+      name:
+        type: string
+      paramType:
+        type: string
+      isOptional:
+        type: boolean
+      isReturnedValue:
+        type: boolean
+      defaultValue:
+        type: string
+      description:
+        type: string
+        format: utf8
+  Pipeline:
+    type: object
+    required:
+      - identifier
+      - name
+      - version
+    properties:
+      identifier:
+        type: string
+      name:
+        type: string
+        format: utf8
+      version:
+        type: string
+      description:
+        type: string
+        format: utf8
+      canExecute:
+        type: boolean
   errorCodesAndMessage:
     type: object
     required:
