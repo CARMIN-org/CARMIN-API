@@ -188,7 +188,8 @@ paths:
             $ref: '#/definitions/errorCodesAndMessage'
   /executions:
     get:
-      description: list all execution Ids in the platform
+      description: |
+        list all execution Ids in the platform which are ordered in decreasing submission time.
       operationId: getExecutions
       produces:
         - application/json
@@ -529,7 +530,7 @@ definitions:
       defaultLimitListExecutions:
         type: integer
         format: int64
-        description: The number of Executions returned by Execution.listExecution when limit is not specified.
+        description: The number of Executions returned by getExecutions and getStudyExecutions when limit is not specified.
       email:
         type: string
         format: utf8 # TODO: I do not know if utf8 is valid here.
@@ -578,7 +579,7 @@ definitions:
       isReturnedValue:
         type: boolean
       defaultValue:
-        type: string
+        description: Default value. It can be any type.
       description:
         type: string
         format: utf8
@@ -588,6 +589,7 @@ definitions:
       - identifier
       - name
       - version
+      - parameters
     properties:
       identifier:
         type: string
@@ -601,6 +603,10 @@ definitions:
         format: utf8
       canExecute:
         type: boolean
+      parameters:
+        type: array
+        items:
+          $ref: '#/definitions/PipelineParameter'
   errorCodesAndMessage:
     type: object
     required:
