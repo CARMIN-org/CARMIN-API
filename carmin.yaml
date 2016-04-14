@@ -186,6 +186,269 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/errorCodesAndMessage'
+  /executions:
+    get:
+      description: |
+        list all execution Ids in the platform which are ordered in decreasing submission time.
+      operationId: getExecutions
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/executionIds'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /studies/{study}/executions:
+    get:
+      description: list all execution Ids in the study called {study}
+      operationId: getStudyExecutions
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/executionIds'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+    post:
+      description: |
+        initialize a new execution. All necessary data must have already been
+        transferred to the platform. The execution may not start immediately 
+        (according to a parameter). The user gets the role {execution}_owner.
+      operationId: postStudyExecutions
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: |
+            An array of key value pairs. The definition is defined as below
+          required: true
+          schema:
+            # it is defined by the pipeline definition.
+            # The name denotes the name of parameter in pipeline
+            # and the value denotes the value of parameter.
+            $ref: '#/definitions/newExecution'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/executionId'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /studies/{study}/executions/{execution}:
+    get:
+      description: get information about an execution
+      operationId: getStudyExecutionsExecution
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/execution'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+    put:
+      description: |
+        Modify some parameters (i.e. name and timeout).
+      operationId: putStudyExecutionsExecution
+      consumes:
+        - application/json
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: |
+            For example, you can modify name 
+            as key= "name" and value="execution name"
+          required: false
+          schema:
+            $ref: '#/definitions/keyValuePair'
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+    delete:
+      description: |
+        Delete an execution. This will kill the underlying processes (if possible)
+        and free all resources associated with this execution.
+      operationId: deleteStudyExecutionsExecution
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /studies/{study}/executions/{execution}/play:
+    get:
+      description: play an execution
+      operationId: getStudyExecutionsExecutionPlay
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /studies/{study}/executions/{execution}/kill:
+    get:
+      description: kill an execution
+      operationId: getStudyExecutionsExecutionKill
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /studies/{study}/executions/{execution}/stdout:
+    get:
+      description: get stdout of an execution
+      operationId: getStudyExecutionsExecutionStdout
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /studies/{study}/executions/{execution}/stderr:
+    get:
+      description: get stderr of an execution
+      operationId: getStudyExecutionsExecutionStderr
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /pipelines:
+    get:
+      description: |
+        All the pipelines that the user can execute must be returned.
+        It is up to the platform to return pipelines that the user cannot execute.
+        When studyIdentifier is present, all the pipelines that the user can execute
+        in the study must be returned. In this case, execution rights denote the rights
+        to execute the pipeline in the study.
+      operationId: listPipelines
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Pipeline'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
 definitions:
   studies:
     type: array
@@ -235,18 +498,6 @@ definitions:
       base_path:
         type: string
         description: all files starting with base_path will be declared as belonging to the study
-  keyValuePair:
-    type: object
-    required:
-      - key
-      - value
-    properties:
-      key:
-        type: string
-        description: the key value
-      value:
-        type: string ## TODO: in fact, it could be any type?
-        description: the value associated with key
   platformProperties:
     type: object
     required:
@@ -268,15 +519,18 @@ definitions:
         type: array
         items:
           type: string
-        description: Used in getExecutionResults and getAccessURL. Protocol names must be URL prefixes (e.g. “http”, “https”, “ftp”, “sftp”, “ftps”, “scp”, “webdav”). 
+        description: |
+          Used in getExecutionResults and getAccessURL.
+          Protocol names must be URL prefixes (e.g. "http", "https", "ftp", "sftp", "ftps", "scp", "webdav"). 
       supportedModules:
         type: array
         items:
-          type: string # TODO: How to define an enum in Swagger ?
+          type: string
+          enum: ["http", "https", "ftp", "sftp", "ftps", "scp", "webdav"]
       defaultLimitListExecutions:
         type: integer
         format: int64
-        description: The number of Executions returned by Execution.listExecution when limit is not specified.
+        description: The number of Executions returned by getExecutions and getStudyExecutions when limit is not specified.
       email:
         type: string
         format: utf8 # TODO: I do not know if utf8 is valid here.
@@ -301,11 +555,58 @@ definitions:
       maxSizeDirectTransfer:
         type: integer
         format: int64
-        description: The maximal size of files and directories that can be transferred by methods Path.uploadPath and Path.downloadPath.
+        description: |
+          The maximal size of files and directories that can be transferred
+          by methods Path.uploadPath and Path.downloadPath.
       defaultStudy:
         type: string
       supportedAPIVersion:
         type: string
+  PipelineParameter:
+    type: object
+    required:
+      - name
+      - type
+      - isOptional
+      - isReturnedValue
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+      isOptional:
+        type: boolean
+      isReturnedValue:
+        type: boolean
+      defaultValue:
+        description: Default value. It can be any type.
+      description:
+        type: string
+        format: utf8
+  Pipeline:
+    type: object
+    required:
+      - identifier
+      - name
+      - version
+      - parameters
+    properties:
+      identifier:
+        type: string
+      name:
+        type: string
+        format: utf8
+      version:
+        type: string
+      description:
+        type: string
+        format: utf8
+      canExecute:
+        type: boolean
+      parameters:
+        type: array
+        items:
+          $ref: '#/definitions/PipelineParameter'
   errorCodesAndMessage:
     type: object
     required:
@@ -317,3 +618,61 @@ definitions:
         format: int32
       message:
         type: string
+  execution:
+    type: object
+    required:
+      - pipelineIdentifier
+      - status
+    properties:
+      name:
+        type: string
+        description: execution name
+      pipelineIdentifier:
+        type: string
+        description: which pipeline that started this execution
+      status:
+        type: string
+        "enum": ["initializing",
+          "ready",
+          "running",
+          "finished",
+          "initialization_failed",
+          "execution_failed",
+          "unknown",
+          "killed"]
+  newExecution:
+    type: object
+    required:
+      - name
+      - pipelineIdentifier
+      - inputValues
+    properties:
+      name:
+        type: string
+        description: name to display to users
+      pipelineIdentifier:
+        type: string
+      timeout:
+        type: integer
+        description: timeout in seconds
+      inputValues:
+        type: array
+        items:
+          $ref: '#/definitions/keyValuePair'
+  executionId:
+    type: string
+  executionIds:
+    type: array
+    items:
+      type: string
+  keyValuePair:
+    type: object
+    required:
+      - key
+      - value
+    properties:
+      key:
+        type: string
+        description: the key value
+      value: ## type is ignored here since it could be any type, such as integer, string, list, etc.
+        description: the value associated with key
