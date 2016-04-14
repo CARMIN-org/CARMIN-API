@@ -521,7 +521,7 @@ definitions:
           type: string
         description: |
           Used in getExecutionResults and getAccessURL.
-          Protocol names must be URL prefixes (e.g. “http”, “https”, “ftp”, “sftp”, “ftps”, “scp”, “webdav”). 
+          Protocol names must be URL prefixes (e.g. "http", "https", "ftp", "sftp", "ftps", "scp", "webdav"). 
       supportedModules:
         type: array
         items:
