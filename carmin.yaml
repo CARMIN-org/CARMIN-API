@@ -13,13 +13,12 @@ info:
     #name: MIT
     #url: http://opensource.org/licenses/MIT
 #host: petstore.swagger.io
-#basePath: /api
+basePath: /api/1
 security: 
   - {basicAuth:[]}
   - {apiKey:[]}
 schemes:
   - http
-  - https
 consumes:
   - application/json
 produces:
@@ -519,6 +518,7 @@ definitions:
         type: array
         items:
           type: string
+          enum: ["http", "https", "ftp", "sftp", "ftps", "scp", "webdav"]
         description: |
           Used in getExecutionResults and getAccessURL.
           Protocol names must be URL prefixes (e.g. "http", "https", "ftp", "sftp", "ftps", "scp", "webdav"). 
@@ -526,7 +526,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: ["http", "https", "ftp", "sftp", "ftps", "scp", "webdav"]
+          enum: ["Processing", "Data", "Management", "Commercial", ]
       defaultLimitListExecutions:
         type: integer
         format: int64
