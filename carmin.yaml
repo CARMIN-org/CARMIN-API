@@ -122,14 +122,14 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/errorCodesAndMessage'
-  /studies/{study_name}:
+  /studies/{study}:
     get:
       description: get study information by study name
       operationId: getStudy
       produces:
         - application/json
       parameters:
-        - name: study_name
+        - name: study
           in: path
           description: study name
           required: true
@@ -139,6 +139,10 @@ paths:
           description: successful response
           schema:
             $ref: '#/definitions/study'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
     put:
       description: modify some properties of a study
       operationId: putStudy
@@ -155,7 +159,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/keyValuePair'
-        - name: study_name
+        - name: study
           in: path
           description: study name
           required: true
@@ -171,7 +175,7 @@ paths:
       description: remove a study
       operationId: deleteStudy
       parameters:
-        - name: study_name
+        - name: study
           in: path
           description: study name
           required: true
@@ -196,7 +200,7 @@ paths:
         '200':
           description: successful response
           schema:
-            $ref: '#/definitions/executionIds'
+            $ref: '#/definitions/executions'
         default:
           description: unexpected error
           schema:
@@ -219,7 +223,7 @@ paths:
         '200':
           description: successful response
           schema:
-            $ref: '#/definitions/executionIds'
+            $ref: '#/definitions/executions'
         default:
           description: unexpected error
           schema:
@@ -400,6 +404,8 @@ paths:
       responses:
         '200':
           description: successful response
+          schema:
+            $ref: '#/definitions/message'
         default:
           description: unexpected error
           schema:
@@ -422,6 +428,8 @@ paths:
       responses:
         '200':
           description: successful response
+          schema:
+            $ref: '#/definitions/message'
         default:
           description: unexpected error
           schema:
@@ -444,6 +452,28 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Pipeline'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /pipelines/{pipeline}:
+    get:
+      description: |
+        Show the definition of a given pipeline name
+      operationId: getPipeline
+      produces:
+        - application/json
+      parameters:
+        - name: pipeline
+          in: path
+          description: pipeline name
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/Pipeline'
         default:
           description: unexpected error
           schema:
@@ -621,15 +651,22 @@ definitions:
   execution:
     type: object
     required:
+      - executionId
       - pipelineIdentifier
       - status
     properties:
+      executionId:
+        type: string
+        description: execution id
       name:
         type: string
         description: execution name
       pipelineIdentifier:
         type: string
         description: which pipeline that started this execution
+      pipelineName:
+        type: string
+        description: pipeline name
       status:
         type: string
         "enum": ["initializing",
@@ -640,10 +677,13 @@ definitions:
           "execution_failed",
           "unknown",
           "killed"]
+  executions:
+    type: array
+    items:
+      $ref: '#/definitions/execution'
   newExecution:
     type: object
     required:
-      - name
       - pipelineIdentifier
       - inputValues
     properties:
@@ -661,10 +701,6 @@ definitions:
           $ref: '#/definitions/keyValuePair'
   executionId:
     type: string
-  executionIds:
-    type: array
-    items:
-      type: string
   keyValuePair:
     type: object
     required:
@@ -674,5 +710,9 @@ definitions:
       key:
         type: string
         description: the key value
-      value: ## type is ignored here since it could be any type, such as integer, string, list, etc.
+      value: ### I don't know how to define a mixed type, so I put an object
+        type: object
         description: the value associated with key
+  message:
+    type: string
+
