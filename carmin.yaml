@@ -13,7 +13,7 @@ info:
     #name: MIT
     #url: http://opensource.org/licenses/MIT
 #host: petstore.swagger.io
-basePath: /api/1
+basePath: /api/carmin
 security: 
   - {basicAuth:[]}
   - {apiKey:[]}
@@ -205,6 +205,177 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/errorCodesAndMessage'
+  /executions/{execution}:
+    get:
+      description: get information about an execution
+      operationId: getStudyExecutionsExecution
+      parameters:
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/execution'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+    put:
+      description: |
+        Modify some parameters (i.e. name and timeout).
+      operationId: putStudyExecutionsExecution
+      consumes:
+        - application/json
+      parameters:
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: |
+            For example, you can modify name 
+            as key= "name" and value="execution name"
+          required: false
+          schema:
+            $ref: '#/definitions/keyValuePair'
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+    delete:
+      description: |
+        Delete an execution. This will kill the underlying processes (if possible)
+        and free all resources associated with this execution.
+      operationId: deleteStudyExecutionsExecution
+      parameters:
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: delete configuration
+          schema:
+            $ref: '#/definitions/delConfig'
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /executions/{execution}/stdout:
+    get:
+      description: get stdout of an execution
+      operationId: getStudyExecutionsExecutionStdout
+      parameters:
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/message'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /executions/{execution}/stderr:
+    get:
+      description: get stderr of an execution
+      operationId: getStudyExecutionsExecutionStderr
+      parameters:
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/message'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /executions/{execution}/play:
+    get:
+      description: play an execution
+      operationId: getStudyExecutionsExecutionPlay
+      parameters:
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /executions/{execution}/kill:
+    get:
+      description: kill an execution
+      operationId: getStudyExecutionsExecutionKill
+      parameters:
+        - name: execution
+          in: path
+          description: execution id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful response
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
+  /studies/{study}/pipelines:
+    get:
+      description: |
+        All the pipelines that the user can execute must be returned.
+        It is up to the platform to return pipelines that the user cannot execute.
+        When studyIdentifier is present, all the pipelines that the user can execute
+        in the study must be returned. In this case, execution rights denote the rights
+        to execute the pipeline in the study.
+      operationId: listStudyPipelines
+      parameters:
+        - name: study
+          in: path
+          description: study name
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Pipeline'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorCodesAndMessage'
   /studies/{study}/executions:
     get:
       description: list all execution Ids in the study called {study}
@@ -335,6 +506,11 @@ paths:
           description: execution id
           required: true
           type: string
+        - name: body
+          in: body
+          description: delete configuration
+          schema:
+            $ref: '#/definitions/delConfig'
       responses:
         '200':
           description: successful response
@@ -590,6 +766,8 @@ definitions:
           by methods Path.uploadPath and Path.downloadPath.
       defaultStudy:
         type: string
+      isKillExecutionSupported:
+        type: boolean
       supportedAPIVersion:
         type: string
   PipelineParameter:
@@ -677,6 +855,12 @@ definitions:
           "execution_failed",
           "unknown",
           "killed"]
+  delConfig:
+    type: object
+    properties:
+      deleteFiles:
+        type: boolean
+        description: delete files or not
   executions:
     type: array
     items:
