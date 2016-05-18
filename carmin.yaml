@@ -208,7 +208,7 @@ paths:
   /executions/{execution}:
     get:
       description: get information about an execution
-      operationId: getStudyExecutionsExecution
+      operationId: getExecutionsExecution
       parameters:
         - name: execution
           in: path
@@ -229,7 +229,7 @@ paths:
     put:
       description: |
         Modify some parameters (i.e. name and timeout).
-      operationId: putStudyExecutionsExecution
+      operationId: putExecutionsExecution
       consumes:
         - application/json
       parameters:
@@ -257,7 +257,7 @@ paths:
       description: |
         Delete an execution. This will kill the underlying processes (if possible)
         and free all resources associated with this execution.
-      operationId: deleteStudyExecutionsExecution
+      operationId: deleteExecutionsExecution
       parameters:
         - name: execution
           in: path
@@ -279,7 +279,7 @@ paths:
   /executions/{execution}/stdout:
     get:
       description: get stdout of an execution
-      operationId: getStudyExecutionsExecutionStdout
+      operationId: getExecutionsExecutionStdout
       parameters:
         - name: execution
           in: path
@@ -298,7 +298,7 @@ paths:
   /executions/{execution}/stderr:
     get:
       description: get stderr of an execution
-      operationId: getStudyExecutionsExecutionStderr
+      operationId: getExecutionsExecutionStderr
       parameters:
         - name: execution
           in: path
@@ -521,7 +521,7 @@ paths:
   /studies/{study}/executions/{execution}/play:
     get:
       description: play an execution
-      operationId: getStudyExecutionsExecutionPlay
+      operationId: getExecutionsExecutionPlay
       parameters:
         - name: study
           in: path
@@ -543,7 +543,7 @@ paths:
   /studies/{study}/executions/{execution}/kill:
     get:
       description: kill an execution
-      operationId: getStudyExecutionsExecutionKill
+      operationId: getExecutionsExecutionKill
       parameters:
         - name: study
           in: path
