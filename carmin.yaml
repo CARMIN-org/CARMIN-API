@@ -70,6 +70,24 @@ paths:
             $ref: '#/definitions/Execution'
         default:
           $ref: '#/responses/GenericError'
+  /executions/create-and-start:
+    post:
+      description:
+        Initializes an execution and start it.
+      operationId: initAndStartExecution
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Execution'
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/Execution'
+        default:
+          $ref: '#/responses/GenericError'
   /executions/{executionIdentifier}:
     parameters:
       - name: executionIdentifier
@@ -424,8 +442,10 @@ definitions:
       returnedFiles:
         type: object
         additionalProperties:
-          type: string
-          format: url
+          type: array
+          items: 
+            type: string
+            format: url
         description: absent when not available (e.g. execution still running). Empty if no returned file is produced
       studyIdentifier:
         type: string
