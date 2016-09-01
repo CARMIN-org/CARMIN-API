@@ -55,7 +55,7 @@ paths:
           $ref: '#/responses/GenericError'
     post:
       description:
-        Initializes an execution. Does not start it.
+        Initializes an execution. Does not start it. The successful response must contain the execution identifier.
       operationId: initExecution
       parameters:
         - name: body
@@ -73,7 +73,7 @@ paths:
   /executions/create-and-start:
     post:
       description:
-        Initializes an execution and start it.
+        Initializes an execution and start it. The successful response must contain the execution identifier.
       operationId: initAndStartExecution
       parameters:
         - name: body
@@ -418,7 +418,7 @@ definitions:
         type: string
         format: ascii
         readOnly: true
-        description: execution id
+        description: execution id. Must always be present in responses.
       name:
         type: string
         description: execution name
@@ -434,6 +434,7 @@ definitions:
         type: string
         enum: [initializing,ready,running,finished,initialization_failed,execution_failed,unknown,killed]
         readOnly: true
+        description: The status of the execution. Must always be present in responses.
       inputValues:
         type: object
         additionalProperties: true
@@ -446,6 +447,7 @@ definitions:
           items: 
             type: string
             format: url
+        readOnly: true
         description: absent when not available (e.g. execution still running). Empty if no returned file is produced
       studyIdentifier:
         type: string
@@ -453,14 +455,17 @@ definitions:
       errorCode:
         type: integer
         format: int64
+        readOnly: true
       startDate:
         type: integer
         format: int64
         description: epoch in seconds
+        readOnly: true
       endDate:
         type: integer
         format: int64
         description: epoch in seconds
+        readOnly: true
   DeleteExecutionConfiguration:
     type: object
     required: [deleteFiles]
