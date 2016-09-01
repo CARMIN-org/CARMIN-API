@@ -42,7 +42,7 @@ paths:
       description:
         list all execution Ids in the platform which are ordered in decreasing submission time.
         All the executions that were launched by the user must be returned. It is up to the platform to return executions that the user did not launch.
-        When studyIdentifier is present, all the executions that the user launched in the study must be returne
+        When studyIdentifier is present, all the executions that the user launched in the study must be returned.
       operationId: listExecutions
       responses:
         '200':
@@ -459,12 +459,12 @@ definitions:
       startDate:
         type: integer
         format: int64
-        description: epoch in seconds
+        description: Time in seconds since Unix epoch
         readOnly: true
       endDate:
         type: integer
         format: int64
-        description: epoch in seconds
+        description: Time in seconds since Unix epoch
         readOnly: true
   DeleteExecutionConfiguration:
     type: object
