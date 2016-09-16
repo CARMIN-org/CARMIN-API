@@ -3,9 +3,13 @@ info:
   version: '1.0.0'
   title: CARMIN a Common web API for Remote pipeline INvocation
   description: FLI/IAM REST API for exchanging data and remote calling pipelines.
-  # license TODO ?
-  # termsOfService TODO ?
-  # contact TODO ?
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  contact:
+    name: CARMIN mailing list
+    url: https://groups.google.com/d/forum/carmin
+    email: carmin@googlegroups.com
 schemes:
   - https 
 consumes:
@@ -116,7 +120,7 @@ paths:
           schema:
             $ref: '#/definitions/Execution'
       responses:
-        '200':
+        '204':
           description: successful response
         default:
           $ref: '#/responses/GenericError'
@@ -197,7 +201,7 @@ paths:
         type: string
         format: ascii
       responses:
-        '200':
+        '204':
           description: successful response
         default:
           $ref: '#/responses/GenericError'
@@ -212,7 +216,7 @@ paths:
         type: string
         format: ascii
       responses:
-        '200':
+        '204':
           description: successful response
         default:
           $ref: '#/responses/GenericError'
@@ -233,7 +237,7 @@ paths:
           schema:
             $ref: '#/definitions/DeleteExecutionConfiguration'
       responses:
-        '200':
+        '204':
           description: successful response
         default:
           $ref: '#/responses/GenericError'
