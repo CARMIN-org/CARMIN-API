@@ -4,8 +4,8 @@ info:
   title: CARMIN a Common web API for Remote pipeline INvocation
   description: FLI/IAM REST API for exchanging data and remote calling pipelines.
   license:
-    name: GPLv3
-    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
   contact:
     name: CARMIN mailing list
     url: https://groups.google.com/d/forum/carmin
