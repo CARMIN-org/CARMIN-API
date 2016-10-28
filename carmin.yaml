@@ -284,7 +284,7 @@ responses:
   GenericError:
     description: An functional or internal error occured processing the request
     schema:
-      $ref: '#/definitions/ErrorCodesAndMessage'
+      $ref: '#/definitions/ErrorCodeAndMessage'
 definitions:
   PlatformProperties:
     type: object
@@ -300,7 +300,7 @@ definitions:
       APIErrorCodesAndMessages:
         type: array
         items:
-          $ref: '#/definitions/ErrorCodesAndMessage'
+          $ref: '#/definitions/ErrorCodeAndMessage'
       supportedTransferProtocols:
         type: array
         items:
@@ -375,7 +375,7 @@ definitions:
       errorCodesAndMessages:
         type: array
         items:
-          $ref: '#/definitions/ErrorCodesAndMessage'
+          $ref: '#/definitions/ErrorCodeAndMessage'
   PipelineParameter:
     type: object
     required:
@@ -400,7 +400,7 @@ definitions:
   ParameterType:
     type: string
     enum: [File,String,Boolean,Int64,Double,List]
-  ErrorCodesAndMessage:
+  ErrorCodeAndMessage:
     type: object
     required:
       - code
