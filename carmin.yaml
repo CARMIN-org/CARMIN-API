@@ -3,126 +3,325 @@ info:
   version: '1.0.0'
   title: CARMIN a Common web API for Remote pipeline INvocation
   description: FLI/IAM REST API for exchanging data and remote calling pipelines.
-    
-  #termsOfService: http://helloreverb.com/terms/
-  #contact:
-    #name: Swagger API team
-    #email: foo@example.com
-    #url: http://swagger.io
-  #license:
-    #name: MIT
-    #url: http://opensource.org/licenses/MIT
-#host: petstore.swagger.io
-#basePath: /api
-security: 
-  - {basicAuth:[]}
-  - {apiKey:[]}
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  contact:
+    name: CARMIN mailing list
+    url: https://groups.google.com/d/forum/carmin
+    email: carmin@googlegroups.com
 schemes:
-  - http
-  - https
+  - https 
 consumes:
   - application/json
 produces:
   - application/json
 
 securityDefinitions:
-  basicAuth:
-    type: basic
-    description: If supported by the platfrom, it is possible to use HTTP
-      Basic Authentication but one must call `/login_basic_http` before 
-      calling any API service.
   apiKey:
-      # TODO: Should we replace cookie authentication (not supported by Swagger)
-      # by apiKey authentication ?
       type: apiKey
-      name: api_key
+      name: apikey
       in: header
-      description: If HTTP Basic authentication is not supported, calling
-        `/login` allows for password checking and coockie based authentication.
+      description: An API key that must be provided by the platform.
+security: 
+  - apiKey: []
 
 paths:
-  /login:
-    get:
-      description: |
-        Check username and password and allow access to the API in case of 
-        success by setting a cookie that must be used in any subsequent API
-        calls.
-      operationId: authenticateSession
-      parameters:
-        - name: username
-          in: query
-          description: Name of the user account.
-          required: true
-          type: string
-          format: utf8
-        - name: password
-          in: query
-          description: Password to verify.
-          required: true
-          type: string
-          format: password
-      responses:
-        '200':
-          description: Returns `success` if login is succesful or `failure`
-            if login and/or password is incorrect.
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodeAndMessage'
-      
   /platform:
     get:
-      description: Returns information about the platform
+      description: 
+        Returns information about the platform.
+        https must be supported in the list of the supported protocols.
       operationId: getPlatformProperties
-      produces:
-        - application/json
+      security: []
       responses:
         '200':
-          description: succesful response
+          description: successful response
           schema:
-            $ref: '#/definitions/platformProperties'
+            $ref: '#/definitions/PlatformProperties'
         default:
-          description: unexpected error
+          $ref: '#/responses/GenericError'
+  /executions:
+    get:
+      description:
+        list all execution Ids in the platform which are ordered in decreasing submission time.
+        All the executions that were launched by the user must be returned. It is up to the platform to return executions that the user did not launch.
+        When studyIdentifier is present, all the executions that the user launched in the study must be returned.
+      operationId: listExecutions
+      responses:
+        '200':
+          description: successful response
           schema:
-            $ref: '#/definitions/errorCodeAndMessage'
-
+            type: array
+            items:
+              $ref: '#/definitions/Execution'
+        default:
+          $ref: '#/responses/GenericError'
+    post:
+      description:
+        Initializes an execution. Does not start it. The successful response must contain the execution identifier.
+      operationId: initExecution
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Execution'
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/Execution'
+        default:
+          $ref: '#/responses/GenericError'
+  /executions/create-and-start:
+    post:
+      description:
+        Initializes an execution and start it. The successful response must contain the execution identifier.
+      operationId: initAndStartExecution
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Execution'
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/Execution'
+        default:
+          $ref: '#/responses/GenericError'
+  /executions/{executionIdentifier}:
+    parameters:
+      - name: executionIdentifier
+        in: path
+        required: true      
+        type: string
+        format: ascii
+    get:
+      description: get information about an execution
+      operationId: getExecution
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/Execution'
+        default:
+          $ref: '#/responses/GenericError'
+    put:
+      description:
+        Modify an execution. Only the name and the timeout of the execution can be modified. Changes to the identifier or the status will raise errors. Changes to the other properties will be ignored.
+      operationId: updateExecution
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Execution'
+      responses:
+        '204':
+          description: successful response
+        default:
+          $ref: '#/responses/GenericError'
+  /executions/{executionIdentifier}/results:
+    get:
+      description: get the result files of the execution
+      operationId: getExecutionResults
+      produces:
+      - application/json
+      parameters:
+      - name: executionIdentifier
+        in: path
+        required: true
+        type: string
+        format: ascii
+      - name: protocol
+        in: query
+        type: string
+        description: if not specified the default protocol is https
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: array
+            items:
+              type: string
+              format: url
+        default:
+          $ref: '#/responses/GenericError'
+  /executions/{executionIdentifier}/stdout:
+    get:
+      description: get stdout of an execution
+      operationId: getStdout
+      produces:
+      - text/plain
+      - application/json
+      parameters:
+      - name: executionIdentifier
+        in: path
+        required: true
+        type: string
+        format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/GenericError'
+  /executions/{executionIdentifier}/stderr:
+    get:
+      description: get stderr of an execution
+      operationId: getStderr
+      produces:
+      - text/plain
+      - application/json
+      parameters:
+      - name: executionIdentifier
+        in: path
+        required: true
+        type: string
+        format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/GenericError'
+  /executions/{executionIdentifier}/play:
+    put:
+      description: play an execution
+      operationId: playExecution
+      parameters:
+      - name: executionIdentifier
+        in: path
+        required: true      
+        type: string
+        format: ascii
+      responses:
+        '204':
+          description: successful response
+        default:
+          $ref: '#/responses/GenericError'
+  /executions/{executionIdentifier}/kill:
+    put:
+      description: kill an execution
+      operationId: killExecution
+      parameters:
+      - name: executionIdentifier
+        in: path
+        required: true      
+        type: string
+        format: ascii
+      responses:
+        '204':
+          description: successful response
+        default:
+          $ref: '#/responses/GenericError'
+  /executions/{executionIdentifier}/delete:
+    put:
+      description:
+        Delete an execution. This will kill the underlying processes (if possible) and free all resources associated with this execution (depending of the configuration given in as body input).
+      operationId: deleteExecution
+      parameters:
+        - name: executionIdentifier
+          in: path
+          required: true      
+          type: string
+          format: ascii
+        - name: body
+          in: body
+          description: delete configuration
+          schema:
+            $ref: '#/definitions/DeleteExecutionConfiguration'
+      responses:
+        '204':
+          description: successful response
+        default:
+          $ref: '#/responses/GenericError'
+  /pipelines:
+    get:
+      description:
+        All the pipelines that the user can execute must be returned.
+        It is up to the platform to return pipelines that the user cannot execute.
+        When studyIdentifier is present, all the pipelines that the user can execute in the study must be returned. In this case, execution rights denote the rights to execute the pipeline in the study.
+      operationId: listPipelines
+      parameters:
+        - name: studyIdentifier
+          in: query
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Pipeline'
+        default:
+          $ref: '#/responses/GenericError'
+  /pipelines/{pipelineIdentifier}:
+    get:
+      description: Show the definition of a given pipeline
+      operationId: getPipeline
+      parameters:
+        - name: pipelineIdentifier
+          in: path
+          required: true
+          description: pipeline identifier
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/Pipeline'
+        default: 
+          $ref: '#/responses/GenericError'
+responses:
+  GenericError:
+    description: An functional or internal error occured processing the request
+    schema:
+      $ref: '#/definitions/ErrorCodeAndMessage'
 definitions:
-  platformProperties:
+  PlatformProperties:
     type: object
     required:
-      - platformName
       - supportedTransferProtocols
       - supportedModules
-      - defaultLimitListExecutions
-      - unsupportedMethods
+      - isKillExecutionSupported
       - supportedAPIVersion
     properties:
-      platformName:
+      platformName: # not present in 0.2 version, keep it as optional
         type: string
         description: Name of the platform.
       APIErrorCodesAndMessages:
         type: array
         items:
-          $ref: '#/definitions/errorCodeAndMessage'
+          $ref: '#/definitions/ErrorCodeAndMessage'
       supportedTransferProtocols:
         type: array
         items:
           type: string
-        description: Used in getExecutionResults and getAccessURL. Protocol names must be URL prefixes (e.g. “http”, “https”, “ftp”, “sftp”, “ftps”, “scp”, “webdav”). 
+          enum: ["http", "https", "ftp", "sftp", "ftps", "scp", "webdav"]
+        description:
+          Protocol names must be URL prefixes (e.g. "http", "https", "ftp", "sftp", "ftps", "scp", "webdav"). 
       supportedModules:
         type: array
         items:
-          type: string # TODO: How to define an enum in Swagger ?
-      defaultLimitListExecutions:
+          type: string
+          enum: ["Processing", "Data", "Management", "Commercial", ]
+      defaultLimitListExecutions: # not present in 0.2, keep it as optional
         type: integer
         format: int64
-        description: The number of Executions returned by Execution.listExecution when limit is not specified.
+        description: The number of Executions returned by getExecutions
       email:
         type: string
-        format: utf8 # TODO: I do not know if utf8 is valid here.
+        format: email
       platformDescription:
         type: string
-        format: utf8
       minAuthorizedExecutionTimeout:
         type: integer
         format: int64
@@ -133,20 +332,75 @@ definitions:
       defaultExecutionTimeout:
         type: integer
         format: int64
-      unsupportedMethods:
+      isKillExecutionSupported:
+        type: boolean
+      unsupportedMethods: 
+      # not present in 0.2, keep it as optional
         type: array
         items:
           type: string
-        description: List of optional methods that are not supported by the platform.
-      maxSizeDirectTransfer:
-        type: integer
-        format: int64
-        description: The maximal size of files and directories that can be transferred by methods Path.uploadPath and Path.downloadPath.
+        description: List of optional methods that are not supported by the platform. Must be consistent with the "isKillExecutionSupported" property.
       defaultStudy:
         type: string
+        format: ascii
       supportedAPIVersion:
         type: string
-  errorCodeAndMessage:
+        format: ascii
+    additionalProperties: true # allow extensions
+  Pipeline:
+    type: object
+    required:
+      - identifier
+      - name
+      - version
+      # - parameters optional in 0.2
+    properties:
+      identifier:
+        type: string
+        format: ascii
+      name:
+        type: string
+      version:
+        type: string
+        format: ascii
+      description:
+        type: string
+      canExecute:
+        type: boolean
+        description: true if the user who requested the pipeline can execute it
+      parameters:
+        type: array
+        items:
+          $ref: '#/definitions/PipelineParameter'
+      errorCodesAndMessages:
+        type: array
+        items:
+          $ref: '#/definitions/ErrorCodeAndMessage'
+  PipelineParameter:
+    type: object
+    required:
+      - name
+      - type
+      - isOptional
+      - isReturnedValue
+    properties:
+      name:
+        type: string
+        format: ascii
+      type:
+        $ref: '#/definitions/ParameterType'
+      isOptional:
+        type: boolean
+      isReturnedValue:
+        type: boolean
+      defaultValue:
+        description: Default value. It must be consistent with the parameter type.
+      description:
+        type: string
+  ParameterType:
+    type: string
+    enum: [File,String,Boolean,Int64,Double,List]
+  ErrorCodeAndMessage:
     type: object
     required:
       - code
@@ -154,7 +408,71 @@ definitions:
     properties:
       code:
         type: integer
-        format: int32
+        format: int64
       message:
         type: string
-    
+  Execution:
+    type: object
+    required:
+      - name
+      - pipelineIdentifier
+      - inputValues
+    properties:
+      identifier:
+        type: string
+        format: ascii
+        readOnly: true
+        description: execution id. Must always be present in responses.
+      name:
+        type: string
+        description: execution name
+      pipelineIdentifier:
+        type: string
+        format: ascii
+        description: which pipeline that started this execution
+      timeout:
+        type: integer
+        format: int64
+        description: The timeout in seconds until which the execution is killed and deleted with all its files. 0 or absense means no timeout
+      status:
+        type: string
+        enum: [initializing,ready,running,finished,initialization_failed,execution_failed,unknown,killed]
+        readOnly: true
+        description: The status of the execution. Must always be present in responses.
+      inputValues:
+        type: object
+        additionalProperties: true
+        description:
+          Represents the input as a key/value object. The types should respect the parameters of the pipeline used for the execution.
+      returnedFiles:
+        type: object
+        additionalProperties:
+          type: array
+          items: 
+            type: string
+            format: url
+        readOnly: true
+        description: absent when not available (e.g. execution still running). Empty if no returned file is produced
+      studyIdentifier:
+        type: string
+        format: ascii
+      errorCode:
+        type: integer
+        format: int64
+        readOnly: true
+      startDate:
+        type: integer
+        format: int64
+        description: Time in seconds since Unix epoch
+        readOnly: true
+      endDate:
+        type: integer
+        format: int64
+        description: Time in seconds since Unix epoch
+        readOnly: true
+  DeleteExecutionConfiguration:
+    type: object
+    required: [deleteFiles]
+    properties:
+      deleteFiles:
+        type: boolean
