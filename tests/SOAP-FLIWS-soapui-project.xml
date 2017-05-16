@@ -1,0 +1,1535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="6dca969b-4011-4473-a3d8-148395517ef4" activeEnvironment="Default" name="FLIWS Carmin" resourceRoot="" soapui-version="5.3.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="eddebe64-33fe-4c4a-a2b1-556cdd2cbfe2" wsaVersion="NONE" name="CarminSoapBinding" type="wsdl" bindingName="{http://france-life-imaging.fr/api}CarminSoapBinding" soapVersion="1_1" anonymous="optional" definition="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart=""><con:part><con:url></con:url><con:content><![CDATA[<wsdl:definitions name="Carmin" targetNamespace="http://france-life-imaging.fr/api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://france-life-imaging.fr/api" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xs:schema elementFormDefault="unqualified" targetNamespace="http://france-life-imaging.fr/api" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="authenticateHTTP" type="tns:authenticateHTTP"/>
+      <xs:element name="authenticateHTTPResponse" type="tns:authenticateHTTPResponse"/>
+      <xs:element name="authenticateSession" type="tns:authenticateSession"/>
+      <xs:element name="authenticateSessionResponse" type="tns:authenticateSessionResponse"/>
+      <xs:element name="deleteExecution" type="tns:deleteExecution"/>
+      <xs:element name="deleteExecutionResponse" type="tns:deleteExecutionResponse"/>
+      <xs:element name="getExecution" type="tns:getExecution"/>
+      <xs:element name="getExecutionResponse" type="tns:getExecutionResponse"/>
+      <xs:element name="getExecutionResults" type="tns:getExecutionResults"/>
+      <xs:element name="getExecutionResultsResponse" type="tns:getExecutionResultsResponse"/>
+      <xs:element name="getGlobalProperties" type="tns:getGlobalProperties"/>
+      <xs:element name="getGlobalPropertiesResponse" type="tns:getGlobalPropertiesResponse"/>
+      <xs:element name="getPipeline" type="tns:getPipeline"/>
+      <xs:element name="getPipelineResponse" type="tns:getPipelineResponse"/>
+      <xs:element name="initExecution" type="tns:initExecution"/>
+      <xs:element name="initExecutionResponse" type="tns:initExecutionResponse"/>
+      <xs:element name="getStdOut" type="tns:getStdOut"/>
+      <xs:element name="getStdOutResponse" type="tns:getStdOutResponse"/>
+      <xs:element name="getStdErr" type="tns:getStdErr"/>
+      <xs:element name="getStdErrResponse" type="tns:getStdErrResponse"/>
+      <xs:element name="killExecution" type="tns:killExecution"/>
+      <xs:element name="killExecutionResponse" type="tns:killExecutionResponse"/>
+      <xs:element name="listExecutions" type="tns:listExecutions"/>
+      <xs:element name="listExecutionsResponse" type="tns:listExecutionsResponse"/>
+      <xs:element name="listPipelines" type="tns:listPipelines"/>
+      <xs:element name="listPipelinesResponse" type="tns:listPipelinesResponse"/>
+      <xs:element name="logout" type="tns:logout"/>
+      <xs:element name="logoutResponse" type="tns:logoutResponse"/>
+      <xs:element name="playExecution" type="tns:playExecution"/>
+      <xs:element name="playExecutionResponse" type="tns:playExecutionResponse"/>
+      <xs:element name="updateExecution" type="tns:updateExecution"/>
+      <xs:element name="updateExecutionResponse" type="tns:updateExecutionResponse"/>
+      <xs:complexType name="authenticateSession">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="userName" type="xs:string"/>
+          <xs:element minOccurs="1" name="password" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="authenticateSessionResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Response">
+        <xs:sequence>
+          <xs:element name="statusCode" type="xs:int"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="errorMessage" type="xs:string"/>
+          <xs:choice>
+            <xs:element minOccurs="0" maxOccurs="1" name="returnedValuePipeline" type="tns:Pipeline"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="returnedValueExecution" type="tns:Execution"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="returnedValueGlobalProp" type="tns:GlobalProperties"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="returnedValueStr" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="returnedValueListStrings" type="tns:ArrayOfStrings"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="returnedValueListExecutions" type="tns:ArrayOfExecutions"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="returnedValueListPipelines" type="tns:ArrayOfPipelines"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="returnedValueStatus" type="tns:ExecutionStatus"/>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValuePairKey" type="tns:PipelineKeyBooleanValuePair"/>
+          </xs:choice>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Pipeline">
+        <xs:complexContent>
+          <xs:extension base="tns:Object">
+            <xs:sequence>
+              <xs:element name="identifier" type="xs:string"/>
+              <xs:element name="name" type="xs:string"/>
+              <xs:element minOccurs="0" name="description" type="xs:string"/>
+              <xs:element name="version" type="xs:string"/>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="parameters" type="tns:PipelineParameter"/>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="errorCodesAndMessages" type="tns:IntKeyStringValuePair"/>
+              <xs:element minOccurs="0" name="canExecute" type="xs:boolean"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="Object">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="ArrayOfStrings">
+        <xs:sequence>
+          <xs:element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ArrayOfPipelines">
+        <xs:sequence>
+          <xs:element name="item" type="tns:Pipeline" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ArrayOfExecutions">
+        <xs:sequence>
+          <xs:element name="item" type="tns:Execution" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="PipelineParameter">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element name="type" type="tns:ParameterType"/>
+          <xs:element name="isOptional" type="xs:boolean"/>
+          <xs:element name="isReturnedValue" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="defaultValue" type="tns:ParameterTypedValue"/>
+          <xs:element minOccurs="0" name="description" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ParameterTypedValue">
+        <xs:sequence>
+          <xs:element name="type" type="tns:ParameterType"/>
+          <xs:choice>
+            <xs:element name="valueStr" type="xs:string"/>
+            <xs:element name="valueBool" type="xs:boolean"/>
+            <xs:element name="valueInt" type="xs:int"/>
+            <xs:element name="valueDouble" type="xs:double"/>
+          </xs:choice>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="IntKeyStringValuePair">
+        <xs:sequence>
+          <xs:element name="name" type="xs:int"/>
+          <xs:element name="value" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Execution">
+        <xs:complexContent>
+          <xs:extension base="tns:Object">
+            <xs:sequence>
+              <xs:element name="identifier" type="xs:string"/>
+              <xs:element name="name" type="xs:string"/>
+              <xs:element name="pipelineIdentifier" type="xs:string"/>
+              <xs:element minOccurs="0" name="timeout" type="xs:int"/>
+              <xs:element name="status" type="tns:ExecutionStatus"/>
+              <xs:element minOccurs="0" maxOccurs="unbounded" name="inputValue" type="tns:StringKeyParameterValuePair"/>
+              <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedFile" type="tns:StringKeyParameterValuePair"/>
+              <xs:element minOccurs="0" name="studyIdentifier" type="xs:string"/>
+              <xs:element minOccurs="0" name="errorCode" type="xs:int"/>
+              <xs:element minOccurs="0" name="startDate" type="xs:long"/>
+              <xs:element minOccurs="0" name="endDate" type="xs:long"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="StringKeyParameterValuePair">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element minOccurs="1" maxOccurs="unbounded" name="value" type="tns:ParameterTypedValue"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="GlobalProperties">
+        <xs:complexContent>
+          <xs:extension base="tns:Object">
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="APIErrorCodesAndMessages" type="tns:IntKeyStringValuePair"/>
+              <xs:element maxOccurs="unbounded" name="supportedTransferProtocol" type="xs:string"/>
+              <xs:element maxOccurs="unbounded" name="supportedModule" type="tns:Module"/>
+              <xs:element minOccurs="0" name="email" type="xs:string"/>
+              <xs:element minOccurs="0" name="platformDescription" type="xs:string"/>
+              <xs:element minOccurs="0" name="minAuthorizedExecutionTimeout" type="xs:int"/>
+              <xs:element minOccurs="0" name="maxAuthorizedExecutionTimeout" type="xs:int"/>
+              <xs:element minOccurs="0" name="defaultExecutionTimeout" type="xs:int"/>
+              <xs:element name="isKillExecutionSupported" type="xs:boolean"/>
+              <xs:element minOccurs="0" name="defaultStudy" type="xs:string"/>
+              <xs:element name="supportedAPIVersion" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="PipelineKeyBooleanValuePair">
+        <xs:sequence>
+          <xs:element name="name" type="tns:Pipeline"/>
+          <xs:element name="value" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="deleteExecution">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="executionId" type="xs:string"/>
+          <xs:element minOccurs="1" name="deleteFiles" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="deleteExecutionResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getPipeline">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="pipelineId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getPipelineResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="authenticateHTTP">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="userName" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="authenticateHTTPResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="logout">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="logoutResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="updateExecution">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="executionId" type="xs:string"/>
+          <xs:element maxOccurs="unbounded" minOccurs="1" name="keyValuePair" type="tns:StringKeyValuePair"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="StringKeyValuePair">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+          <xs:choice>
+            <xs:element name="valueStr" type="xs:string"/>
+            <xs:element name="valueInt" type="xs:int"/>
+            <xs:element name="valueStatus" type="tns:ExecutionStatus"/>
+            <xs:element name="valueParamType" type="tns:ParameterTypedValue"/>
+          </xs:choice>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="updateExecutionResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getGlobalProperties">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="getGlobalPropertiesResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="initExecution">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="pipelineId" type="xs:string"/>
+          <xs:element maxOccurs="unbounded" minOccurs="1" name="inputValue" type="tns:StringKeyParameterValuePair"/>
+          <xs:element minOccurs="0" name="timeout" type="xs:int"/>
+          <xs:element minOccurs="0" name="executionName" type="xs:string"/>
+          <xs:element minOccurs="0" name="studyId" type="xs:string"/>
+          <xs:element minOccurs="0" name="playExecution" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="initExecutionResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getExecutionResults">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="executionId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getExecutionResultsResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="killExecution">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="executionId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getStdOut">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="executionId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getStdOutResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getStdErr">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="executionId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getStdErrResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="killExecutionResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getExecution">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="executionId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getExecutionResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="playExecution">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="executionId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="playExecutionResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="listPipelines">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="studyIdentifier" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="listPipelinesResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="listExecutions">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="studyIdentifier" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="listExecutionsResponse">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="return" type="tns:Response"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="ParameterType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="File"/>
+          <xs:enumeration value="String"/>
+          <xs:enumeration value="Boolean"/>
+          <xs:enumeration value="Int64"/>
+          <xs:enumeration value="Double"/>
+          <xs:enumeration value="List"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="ExecutionStatus">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="Initializing"/>
+          <xs:enumeration value="Ready"/>
+          <xs:enumeration value="Running"/>
+          <xs:enumeration value="Finished"/>
+          <xs:enumeration value="InitializationFailed"/>
+          <xs:enumeration value="ExecutionFailed"/>
+          <xs:enumeration value="Unknown"/>
+          <xs:enumeration value="Killed"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="Module">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="Processing"/>
+          <xs:enumeration value="Data"/>
+          <xs:enumeration value="Management"/>
+          <xs:enumeration value="Commercial"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="playExecutionResponse">
+    <wsdl:part name="parameters" element="tns:playExecutionResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="logout">
+    <wsdl:part name="parameters" element="tns:logout"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listPipelinesResponse">
+    <wsdl:part name="parameters" element="tns:listPipelinesResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listExecutionsResponse">
+    <wsdl:part name="parameters" element="tns:listExecutionsResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="authenticateHTTPResponse">
+    <wsdl:part name="parameters" element="tns:authenticateHTTPResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateExecution">
+    <wsdl:part name="parameters" element="tns:updateExecution"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExecutionResults">
+    <wsdl:part name="parameters" element="tns:getExecutionResults"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="killExecution">
+    <wsdl:part name="parameters" element="tns:killExecution"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExecutionResultsResponse">
+    <wsdl:part name="parameters" element="tns:getExecutionResultsResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExecution">
+    <wsdl:part name="parameters" element="tns:getExecution"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="logoutResponse">
+    <wsdl:part name="parameters" element="tns:logoutResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="killExecutionResponse">
+    <wsdl:part name="parameters" element="tns:killExecutionResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="authenticateSessionResponse">
+    <wsdl:part name="parameters" element="tns:authenticateSessionResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateExecutionResponse">
+    <wsdl:part name="parameters" element="tns:updateExecutionResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteExecutionResponse">
+    <wsdl:part name="parameters" element="tns:deleteExecutionResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="playExecution">
+    <wsdl:part name="parameters" element="tns:playExecution"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="initExecutionResponse">
+    <wsdl:part name="parameters" element="tns:initExecutionResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getStdOutResponse">
+    <wsdl:part name="parameters" element="tns:getStdOutResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getStdErrResponse">
+    <wsdl:part name="parameters" element="tns:getStdErrResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listPipelines">
+    <wsdl:part name="parameters" element="tns:listPipelines"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listExecutions">
+    <wsdl:part name="parameters" element="tns:listExecutions"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="authenticateSession">
+    <wsdl:part name="parameters" element="tns:authenticateSession"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteExecution">
+    <wsdl:part name="parameters" element="tns:deleteExecution"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPipeline">
+    <wsdl:part name="parameters" element="tns:getPipeline"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="authenticateHTTP">
+    <wsdl:part name="parameters" element="tns:authenticateHTTP"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getGlobalPropertiesResponse">
+    <wsdl:part name="parameters" element="tns:getGlobalPropertiesResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getGlobalProperties">
+    <wsdl:part name="parameters" element="tns:getGlobalProperties"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="initExecution">
+    <wsdl:part name="parameters" element="tns:initExecution"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getStdOut">
+    <wsdl:part name="parameters" element="tns:getStdOut"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getStdErr">
+    <wsdl:part name="parameters" element="tns:getStdErr"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPipelineResponse">
+    <wsdl:part name="parameters" element="tns:getPipelineResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getExecutionResponse">
+    <wsdl:part name="parameters" element="tns:getExecutionResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="Carmin">
+    <wsdl:operation name="authenticateSession">
+      <wsdl:input name="authenticateSession" message="tns:authenticateSession"></wsdl:input>
+      <wsdl:output name="authenticateSessionResponse" message="tns:authenticateSessionResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteExecution">
+      <wsdl:input name="deleteExecution" message="tns:deleteExecution"></wsdl:input>
+      <wsdl:output name="deleteExecutionResponse" message="tns:deleteExecutionResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPipeline">
+      <wsdl:input name="getPipeline" message="tns:getPipeline"></wsdl:input>
+      <wsdl:output name="getPipelineResponse" message="tns:getPipelineResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="authenticateHTTP">
+      <wsdl:input name="authenticateHTTP" message="tns:authenticateHTTP"></wsdl:input>
+      <wsdl:output name="authenticateHTTPResponse" message="tns:authenticateHTTPResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="logout">
+      <wsdl:input name="logout" message="tns:logout"></wsdl:input>
+      <wsdl:output name="logoutResponse" message="tns:logoutResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateExecution">
+      <wsdl:input name="updateExecution" message="tns:updateExecution"></wsdl:input>
+      <wsdl:output name="updateExecutionResponse" message="tns:updateExecutionResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGlobalProperties">
+      <wsdl:input name="getGlobalProperties" message="tns:getGlobalProperties"></wsdl:input>
+      <wsdl:output name="getGlobalPropertiesResponse" message="tns:getGlobalPropertiesResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="initExecution">
+      <wsdl:input name="initExecution" message="tns:initExecution"></wsdl:input>
+      <wsdl:output name="initExecutionResponse" message="tns:initExecutionResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getStdOut">
+      <wsdl:input name="getStdOut" message="tns:getStdOut"></wsdl:input>
+      <wsdl:output name="getStdOutResponse" message="tns:getStdOutResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getStdErr">
+      <wsdl:input name="getStdErr" message="tns:getStdErr"></wsdl:input>
+      <wsdl:output name="getStdErrResponse" message="tns:getStdErrResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExecutionResults">
+      <wsdl:input name="getExecutionResults" message="tns:getExecutionResults"></wsdl:input>
+      <wsdl:output name="getExecutionResultsResponse" message="tns:getExecutionResultsResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="killExecution">
+      <wsdl:input name="killExecution" message="tns:killExecution"></wsdl:input>
+      <wsdl:output name="killExecutionResponse" message="tns:killExecutionResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExecution">
+      <wsdl:input name="getExecution" message="tns:getExecution"></wsdl:input>
+      <wsdl:output name="getExecutionResponse" message="tns:getExecutionResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="playExecution">
+      <wsdl:input name="playExecution" message="tns:playExecution"></wsdl:input>
+      <wsdl:output name="playExecutionResponse" message="tns:playExecutionResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listPipelines">
+      <wsdl:input name="listPipelines" message="tns:listPipelines"></wsdl:input>
+      <wsdl:output name="listPipelinesResponse" message="tns:listPipelinesResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listExecutions">
+      <wsdl:input name="listExecutions" message="tns:listExecutions"></wsdl:input>
+      <wsdl:output name="listExecutionsResponse" message="tns:listExecutionsResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CarminSoapBinding" type="tns:Carmin">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="authenticateSession">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="authenticateSession">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="authenticateSessionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteExecution">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteExecution">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteExecutionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPipeline">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getPipeline">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPipelineResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="authenticateHTTP">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="authenticateHTTP">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="authenticateHTTPResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="logout">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="logout">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="logoutResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateExecution">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="updateExecution">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateExecutionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getGlobalProperties">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getGlobalProperties">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getGlobalPropertiesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="initExecution">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="initExecution">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="initExecutionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getStdOut">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getStdOut">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getStdOutResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getStdErr">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getStdErr">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getStdErrResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExecutionResults">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getExecutionResults">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getExecutionResultsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="killExecution">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="killExecution">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="killExecutionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getExecution">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getExecution">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getExecutionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="playExecution">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="playExecution">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="playExecutionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listPipelines">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listPipelines">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listPipelinesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listExecutions">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listExecutions">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listExecutionsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Carmin">
+    <wsdl:port name="CarminPort" binding="tns:CarminSoapBinding">
+      <soap:address location="http://localhost/api"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>${#Project#endpoint}</con:endpoint></con:endpoints><con:operation id="2d1fa166-a5ef-4fc3-9eb9-0b815054f7df" isOneWay="false" action="" name="authenticateHTTP" bindingOperationName="authenticateHTTP" type="Request-Response" outputName="authenticateHTTPResponse" inputName="authenticateHTTP" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="6c2dda2e-40f1-42e1-af2e-2e6cdecda3ee" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:authenticateHTTP>\r
+         <userName>?</userName>\r
+      </api:authenticateHTTP>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/authenticateHTTP"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="266d28f8-b3ba-4f29-8899-1554158b6296" isOneWay="false" action="" name="authenticateSession" bindingOperationName="authenticateSession" type="Request-Response" outputName="authenticateSessionResponse" inputName="authenticateSession" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="05b2f3bb-0748-42ac-8272-d15dedc5ae14" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:authenticateSession>\r
+         <userName>?</userName>\r
+         <password>?</password>\r
+      </api:authenticateSession>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/authenticateSession"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="75c403fd-7ed6-4456-aef9-35c523f3ebbf" isOneWay="false" action="" name="deleteExecution" bindingOperationName="deleteExecution" type="Request-Response" outputName="deleteExecutionResponse" inputName="deleteExecution" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="175e5a17-5af1-4c8f-a911-a19fc348e56f" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:deleteExecution>\r
+         <executionId>AnimaThrImage17051008562243900000000000000000000fffffffffffffffffffffff70000010</executionId>\r
+         <deleteFiles>true</deleteFiles>\r
+      </api:deleteExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/deleteExecution"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="c43118f1-f5c5-45b7-8ffd-6f31e7c29670" isOneWay="false" action="" name="getExecution" bindingOperationName="getExecution" type="Request-Response" outputName="getExecutionResponse" inputName="getExecution" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="b7842e32-90da-4626-b5a9-3c029ecd7c80" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getExecution>\r
+         <executionId>AnimaThrImage17042409354433300000000000000000000fffffffffffffffffffffff70000010</executionId>\r
+      </api:getExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getExecution"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="88e2d2b2-63de-4bc3-acfd-e0806ec27de2" isOneWay="false" action="" name="getExecutionResults" bindingOperationName="getExecutionResults" type="Request-Response" outputName="getExecutionResultsResponse" inputName="getExecutionResults" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="3ef8ddf7-584f-4151-bdfb-591a908166e1" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getExecutionResults>\r
+         <executionId>AnimaThrImage17042408542272900000000000000000000fffffffffffffffffffffff70000010</executionId>\r
+      </api:getExecutionResults>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getExecutionResults"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="f5d4bada-9474-4d15-bf0f-b9c8c9ab1a2c" isOneWay="false" action="" name="getGlobalProperties" bindingOperationName="getGlobalProperties" type="Request-Response" outputName="getGlobalPropertiesResponse" inputName="getGlobalProperties" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="9ddbc778-2a3b-4b32-934b-b35a2c9a845c" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getGlobalProperties/>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getGlobalProperties"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="0a390d71-63d8-4936-800d-d430350c6f43" isOneWay="false" action="" name="getPipeline" bindingOperationName="getPipeline" type="Request-Response" outputName="getPipelineResponse" inputName="getPipeline" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="2e239074-5b4f-45a4-a1da-702d2c5f637c" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getPipeline>\r
+         <pipelineId>?</pipelineId>\r
+      </api:getPipeline>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getPipeline"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="6052cddf-9b6a-49c5-b2f8-2d28a9f32bec" isOneWay="false" action="" name="getStdErr" bindingOperationName="getStdErr" type="Request-Response" outputName="getStdErrResponse" inputName="getStdErr" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="ed9dc180-7307-469f-9acd-5928014bbe2a" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getStdErr>\r
+         <executionId>?</executionId>\r
+      </api:getStdErr>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getStdErr"/></con:call></con:operation><con:operation id="855d4a2a-3df7-4d6f-a4ee-f02b24839305" isOneWay="false" action="" name="getStdOut" bindingOperationName="getStdOut" type="Request-Response" outputName="getStdOutResponse" inputName="getStdOut" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="1206abca-6f66-4b1b-ac9b-2b8a1761fb85" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getStdOut>\r
+         <executionId>?</executionId>\r
+      </api:getStdOut>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getStdOut"/></con:call></con:operation><con:operation id="eff111ef-38a1-4cf0-8fd6-8cc67350fe89" isOneWay="false" action="" name="initExecution" bindingOperationName="initExecution" type="Request-Response" outputName="initExecutionResponse" inputName="initExecution" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="79193a17-152f-46af-a0c8-5ffa98489832" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <api:initExecution>
+         <pipelineId>BrainExtractionMultiModal</pipelineId>
+         <!--1 or more repetitions:-->
+         <inputValue>
+            <name>Atlas reference T1</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/Reference_T1.nrrd</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Atlas brain mask</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/BrainMask.nrrd</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Input unregistered image T1</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/3DT1.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Output masked image T1</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>outputT1.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Input unregistered image T2</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/T2.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Output masked image T2</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>outputT2.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Input unregistered image FLAIR</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/3DFLAIR.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Output brain Mask FLAIR</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>Mask_registered.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Output masked image FLAIR</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>outputFLAIR.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Input unregistered image GADO</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/3DT1GADO.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Output masked image GADO</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>outputT1GADO.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Input unregistered image DP</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/DP.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Output masked image DP</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>outputDP.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <!--Optional:-->
+         <executionName>?</executionName>
+         <!--Optional:-->
+         <studyId>?</studyId>
+         <!--Optional:-->
+         <playExecution>false</playExecution>
+      </api:initExecution>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/initExecution"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="0ef110b7-249f-4af1-9828-9bf2e995408f" isOneWay="false" action="" name="killExecution" bindingOperationName="killExecution" type="Request-Response" outputName="killExecutionResponse" inputName="killExecution" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="134200ba-d9d5-4d79-b6e0-f4721008b58b" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:killExecution>\r
+         <executionId>AnimaThrImage17051008562243900000000000000000000fffffffffffffffffffffff70000010</executionId>\r
+      </api:killExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/killExecution"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="06dbed95-e88e-4447-8435-8436a8663746" isOneWay="false" action="" name="listExecutions" bindingOperationName="listExecutions" type="Request-Response" outputName="listExecutionsResponse" inputName="listExecutions" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="da7e0107-3b51-4323-a6da-b7bd2af4404c" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:listExecutions>\r
+         <studyIdentifier></studyIdentifier>\r
+      </api:listExecutions>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/listExecutions"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="44593ef2-165f-4a2b-b839-17b6bd039cd0" isOneWay="false" action="" name="listPipelines" bindingOperationName="listPipelines" type="Request-Response" outputName="listPipelinesResponse" inputName="listPipelines" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="742282c5-1111-482d-bea3-c50b19627418" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:listPipelines>\r
+         <studyIdentifier></studyIdentifier>\r
+      </api:listPipelines>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/listPipelines"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="7e72d21a-1b5e-4590-84a1-58b43cf0d862" isOneWay="false" action="" name="logout" bindingOperationName="logout" type="Request-Response" outputName="logoutResponse" inputName="logout" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="94f77dd4-d6a6-40cb-9d42-11257338627f" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:logout/>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/logout"/></con:call></con:operation><con:operation id="4aae3261-3ba3-4169-b681-543bbacf0e1a" isOneWay="false" action="" name="playExecution" bindingOperationName="playExecution" type="Request-Response" outputName="playExecutionResponse" inputName="playExecution" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="dc324bbe-75bf-423e-b59e-9ba44d3d6f1f" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:playExecution>\r
+         <executionId>BrainExtractionMultiModal17042409202040900000000000000000000fffffffffffffffffffffff70000010</executionId>\r
+      </api:playExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/playExecution"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="1f71361f-521b-4a69-8fef-c7b0147223d8" isOneWay="false" action="" name="updateExecution" bindingOperationName="updateExecution" type="Request-Response" outputName="updateExecutionResponse" inputName="updateExecution" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="b584c845-5088-4cc2-a2f9-fd647bdd1203" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:updateExecution>\r
+         <executionId>?</executionId>\r
+         <!--1 or more repetitions:-->\r
+         <keyValuePair>\r
+            <name>?</name>\r
+            <!--You have a CHOICE of the next 4 items at this level-->\r
+            <valueStr>?</valueStr>\r
+            <valueInt>?</valueInt>\r
+            <valueStatus>?</valueStatus>\r
+            <valueParamType>\r
+               <type>?</type>\r
+               <!--You have a CHOICE of the next 4 items at this level-->\r
+               <valueStr>?</valueStr>\r
+               <valueBool>?</valueBool>\r
+               <valueInt>?</valueInt>\r
+               <valueDouble>?</valueDouble>\r
+            </valueParamType>\r
+         </keyValuePair>\r
+      </api:updateExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/updateExecution"/></con:call></con:operation></con:interface><con:testSuite id="72a2c278-3519-48a8-916c-b6d5ed7ba0a2" name="TestSuite 1"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="ed757f10-5efe-4ce3-9e61-092bab8cba07" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="kill" searchProperties="true"><con:settings/><con:testStep type="request" id="153c4432-ba8d-4c7a-bb3f-6cfb96a65f6a" name="initExecution - Thr"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>initExecution</con:operation><con:request name="initExecution - Thr" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="339483af-7b44-4b71-b5b0-8992fa31ce3c"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <api:initExecution>
+         <pipelineId>AnimaThrImage</pipelineId>
+         <!--1 or more repetitions:-->
+         <inputValue>
+            <name>Input image</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/3DFLAIR.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+
+         <inputValue>
+            <name>Output threshold image</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>outputThresholded.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+
+         <inputValue>
+            <name>Adaptative threshold value</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>0.99</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+
+         <!--Optional:-->
+         <executionName>?</executionName>
+         <!--Optional:-->
+         <studyId>?</studyId>
+         <!--Optional:-->
+         <playExecution>false</playExecution>
+      </api:initExecution>
+   </soapenv:Body>
+</soapenv:Envelope>
+]]></con:request><con:assertion type="SOAP Response" id="47026e46-255c-444f-a7eb-c7323fd34cd6" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/initExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer" id="de1467f7-8f13-4255-900a-dfe285db5f24"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false"><con:name>exec_id</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>initExecution - Thr</con:sourceStep><con:sourcePath>//returnedValueStr</con:sourcePath><con:targetType>exec_id</con:targetType><con:targetStep>#TestCase#</con:targetStep><con:upgraded>true</con:upgraded></con:transfers></con:config></con:testStep><con:testStep type="request" id="b65ee45b-c025-478d-b745-8ab167e966c6" name="playExecution - play Thr"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>playExecution</con:operation><con:request name="playExecution - play Thr" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="5d12b5bf-4ae4-4130-b4df-edadbc164643"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:playExecution>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:playExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="205565bd-3a14-447e-bdfc-fd3310865236" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/playExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="5d18b166-ec8b-410d-a17b-ce93fa6e46fc" name="getExecution"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>getExecution</con:operation><con:request name="getExecution" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="0892dce5-727f-4b01-b035-99c3b918cd4e"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getExecution>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:getExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="3a2780cf-2c64-4f5e-81e3-61484a2d04db" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="delay" name="3s" id="bea2cae0-3921-4573-b8fa-d22ab3a4cc33"><con:settings/><con:config><delay>3000</delay></con:config></con:testStep><con:testStep type="goto" name="Conditional Goto" id="b2aa05d9-a645-45b0-8f4a-8ddfcb7b0785"><con:settings/><con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:condition><con:name>Condition 1</con:name><con:type>XPATH</con:type><con:expression>//status='Ready'</con:expression><con:targetStep>playExecution - play Thr</con:targetStep></con:condition><con:condition><con:name>Condition 3</con:name><con:type>XPATH</con:type><con:expression>//status='Initializing'</con:expression><con:targetStep>getExecution</con:targetStep></con:condition></con:config></con:testStep><con:testStep type="request" id="55e81009-a04d-4457-bd0b-b241b7cf545c" name="killExecution"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>killExecution</con:operation><con:request name="killExecution" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="feadad76-1735-4eb4-841e-4721a9bbe62e"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:killExecution>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:killExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="bb07b2c4-970c-4637-bd11-0b87f53065d8" name="SOAP Response"/><con:assertion type="XPath Match" id="dcc429f5-f035-4fc8-b0ae-87b1f7d8ea2f" name="XPath Match"><con:configuration><path>//statusCode</path><content>0</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/killExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="302904cf-44be-4b0d-b9f5-9467594f3480" name="getExecution Failed"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>getExecution</con:operation><con:request name="getExecution Failed" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="0892dce5-727f-4b01-b035-99c3b918cd4e"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getExecution>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:getExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="3a2780cf-2c64-4f5e-81e3-61484a2d04db" name="SOAP Response"/><con:assertion type="XPath Match" id="fee9ef2a-a671-4b68-ba93-e80bf34093e4" name="XPath Match"><con:configuration><path>//status</path><content>ExecutionFailed</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="62930b2e-ec4c-400e-bf5d-e3eb63787897" name="getExecutionResults"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>getExecutionResults</con:operation><con:request name="getExecutionResults" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="bbe335cb-5c90-4a08-b0f6-9526207710b4"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getExecutionResults>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:getExecutionResults>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="8a25f467-cd19-423c-a685-bf8d317d09ec" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getExecutionResults"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="41882349-579e-4306-9fb9-938d9248ab66" name="listExecutions"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>listExecutions</con:operation><con:request name="listExecutions" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="b0feac71-8b2b-400d-8207-3212661f39d3"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:listExecutions>\r
+         <studyIdentifier>?</studyIdentifier>\r
+      </api:listExecutions>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="b5bf378e-ba60-4adc-8820-6339ab455a6b" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/listExecutions"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties><con:property><con:name>item</con:name><con:value>PreProcessingWithSkull</con:value></con:property><con:property><con:name>exec_id</con:name><con:value>AnimaThrImage17050909511139800000000000000000000fffffffffffffffffffffff70000010</con:value></con:property></con:properties></con:testCase><con:testCase id="542d456a-4a1e-4cc6-9a39-ff0ce09a56a4" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="init and start- Thr" searchProperties="true"><con:settings/><con:testStep type="request" id="b32501bc-01e0-4436-9689-792069eae060" name="initExecution - Thr"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>initExecution</con:operation><con:request name="initExecution - Thr" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="339483af-7b44-4b71-b5b0-8992fa31ce3c"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <api:initExecution>
+         <pipelineId>AnimaThrImage</pipelineId>
+         <!--1 or more repetitions:-->
+         <inputValue>
+            <name>Input image</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/3DFLAIR.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+
+         <inputValue>
+            <name>Output threshold image</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>outputThresholded.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+
+         <inputValue>
+            <name>Adaptative threshold value</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>0.99</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+
+         <!--Optional:-->
+         <executionName>?</executionName>
+         <!--Optional:-->
+         <studyId>?</studyId>
+         <!--Optional:-->
+         <playExecution>false</playExecution>
+      </api:initExecution>
+   </soapenv:Body>
+</soapenv:Envelope>
+]]></con:request><con:assertion type="SOAP Response" id="47026e46-255c-444f-a7eb-c7323fd34cd6" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/initExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer" id="986e2bd9-c5e4-4d79-b2a9-bd00280f19b8"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false"><con:name>exec_id</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>initExecution - Thr</con:sourceStep><con:sourcePath>//returnedValueStr</con:sourcePath><con:targetType>exec_id</con:targetType><con:targetStep>#TestCase#</con:targetStep><con:upgraded>true</con:upgraded></con:transfers></con:config></con:testStep><con:testStep type="request" id="9b43692a-9d6f-4a13-ad1f-a250c136e10a" name="playExecution - play Thr"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>playExecution</con:operation><con:request name="playExecution - play Thr" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="5d12b5bf-4ae4-4130-b4df-edadbc164643"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:playExecution>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:playExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="205565bd-3a14-447e-bdfc-fd3310865236" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/playExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="55ebfad8-0ec4-4763-9d91-e5e66150e48c" name="getExecution"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>getExecution</con:operation><con:request name="getExecution" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="0892dce5-727f-4b01-b035-99c3b918cd4e"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getExecution>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:getExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="3a2780cf-2c64-4f5e-81e3-61484a2d04db" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="delay" name="3s" id="51b4b06c-a3c7-4b89-bfef-f56fb6adc237"><con:settings/><con:config><delay>3000</delay></con:config></con:testStep><con:testStep type="goto" name="Conditional Goto" id="615479b3-d180-490a-b6fd-8a4699e56689"><con:settings/><con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:condition><con:name>Condition 1</con:name><con:type>XPATH</con:type><con:expression>//status='Ready'</con:expression><con:targetStep>playExecution - play Thr</con:targetStep></con:condition><con:condition><con:name>Condition 2</con:name><con:type>XPATH</con:type><con:expression>//status='Running'</con:expression><con:targetStep>getExecution</con:targetStep></con:condition><con:condition><con:name>Condition 3</con:name><con:type>XPATH</con:type><con:expression>//status='Initializing'</con:expression><con:targetStep>getExecution</con:targetStep></con:condition></con:config></con:testStep><con:testStep type="request" id="ce3cba86-0748-4682-83f0-017f8f2a1d8a" name="getExecution Finished"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>getExecution</con:operation><con:request name="getExecution Finished" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="0892dce5-727f-4b01-b035-99c3b918cd4e"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getExecution>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:getExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="3a2780cf-2c64-4f5e-81e3-61484a2d04db" name="SOAP Response"/><con:assertion type="XPath Match" id="fee9ef2a-a671-4b68-ba93-e80bf34093e4" name="XPath Match"><con:configuration><path>//status</path><content>Finished</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="2dc10671-a1dd-4279-914d-e2d0db33a9ca" name="getExecutionResults"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>getExecutionResults</con:operation><con:request name="getExecutionResults" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="bbe335cb-5c90-4a08-b0f6-9526207710b4"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getExecutionResults>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:getExecutionResults>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="8a25f467-cd19-423c-a685-bf8d317d09ec" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getExecutionResults"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="d1d5e9a9-6f06-42bb-bcf7-14d4ece3f1d3" name="listExecutions"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>listExecutions</con:operation><con:request name="listExecutions" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="b0feac71-8b2b-400d-8207-3212661f39d3"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:listExecutions>\r
+         <studyIdentifier>?</studyIdentifier>\r
+      </api:listExecutions>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="b5bf378e-ba60-4adc-8820-6339ab455a6b" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/listExecutions"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties><con:property><con:name>item</con:name><con:value>PreProcessingWithSkull</con:value></con:property><con:property><con:name>exec_id</con:name><con:value>AnimaThrImage17051008562243900000000000000000000fffffffffffffffffffffff70000010</con:value></con:property></con:properties></con:testCase><con:testCase id="941733a0-3355-4508-81aa-61ba884c7a50" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="init and start - Denoising" searchProperties="true"><con:settings/><con:testStep type="request" id="3a1931f0-d191-4c91-9669-84835ee03b2d" name="initExecution"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>initExecution</con:operation><con:request name="initExecution" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="339483af-7b44-4b71-b5b0-8992fa31ce3c"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <api:initExecution>
+         <pipelineId>DenoisingAndBiasCorrection</pipelineId>
+         <!--1 or more repetitions:-->
+         <inputValue>
+            <name>Input noisy image</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/3DFLAIR.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Output unbiased image</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>outputDenoised.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <!--Optional:-->
+         <executionName>?</executionName>
+         <!--Optional:-->
+         <studyId>?</studyId>
+         <!--Optional:-->
+         <playExecution>false</playExecution>
+      </api:initExecution>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="47026e46-255c-444f-a7eb-c7323fd34cd6" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/initExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer" id="951e976d-2bf6-4ced-bcd2-e20a94bf9087"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false"><con:name>exec_id</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>initExecution</con:sourceStep><con:sourcePath>//returnedValueStr</con:sourcePath><con:targetType>exec_id</con:targetType><con:targetStep>#TestCase#</con:targetStep><con:upgraded>true</con:upgraded></con:transfers></con:config></con:testStep><con:testStep type="request" id="6e167a60-06ad-4d87-bd50-bc081964604e" name="playExecution"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>playExecution</con:operation><con:request name="playExecution" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="5d12b5bf-4ae4-4130-b4df-edadbc164643"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:playExecution>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:playExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="205565bd-3a14-447e-bdfc-fd3310865236" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/playExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="ebdd4aa3-8e42-42da-a37d-e42964c8a60f" name="getExecution"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>getExecution</con:operation><con:request name="getExecution" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="0892dce5-727f-4b01-b035-99c3b918cd4e"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getExecution>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:getExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="3a2780cf-2c64-4f5e-81e3-61484a2d04db" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="delay" name="3s" id="b8bb3a5b-341c-43b1-804f-ccb0cd33c9bf"><con:settings/><con:config><delay>3000</delay></con:config></con:testStep><con:testStep type="goto" name="Conditional Goto" id="1eaf0c4f-4a81-4055-9051-09803c23667f"><con:settings/><con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:condition><con:name>Condition 1</con:name><con:type>XPATH</con:type><con:expression>//status='Ready'</con:expression><con:targetStep>playExecution</con:targetStep></con:condition><con:condition><con:name>Condition 2</con:name><con:type>XPATH</con:type><con:expression>//status='Running'</con:expression><con:targetStep>getExecution</con:targetStep></con:condition><con:condition><con:name>Condition 3</con:name><con:type>XPATH</con:type><con:expression>//status='Initializing'</con:expression><con:targetStep>getExecution</con:targetStep></con:condition></con:config></con:testStep><con:testStep type="request" id="04aa6bdb-c08f-463d-a7ec-cece2c2cf87d" name="getExecution Finished"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>getExecution</con:operation><con:request name="getExecution Finished" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="0892dce5-727f-4b01-b035-99c3b918cd4e"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getExecution>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:getExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="3a2780cf-2c64-4f5e-81e3-61484a2d04db" name="SOAP Response"/><con:assertion type="XPath Match" id="fee9ef2a-a671-4b68-ba93-e80bf34093e4" name="XPath Match"><con:configuration><path>//status</path><content>Finished</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="c0466bb7-6300-4d45-aef7-7fcd80f45a12" name="getExecutionResults"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>getExecutionResults</con:operation><con:request name="getExecutionResults" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="bbe335cb-5c90-4a08-b0f6-9526207710b4"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getExecutionResults>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:getExecutionResults>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="8a25f467-cd19-423c-a685-bf8d317d09ec" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getExecutionResults"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="058a5e85-f0a4-447d-bd79-2ca50b33ee05" name="listExecutions"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>listExecutions</con:operation><con:request name="listExecutions" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="b0feac71-8b2b-400d-8207-3212661f39d3"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:listExecutions>\r
+         <studyIdentifier>?</studyIdentifier>\r
+      </api:listExecutions>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="b5bf378e-ba60-4adc-8820-6339ab455a6b" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/listExecutions"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties><con:property><con:name>item</con:name><con:value>PreProcessingWithSkull</con:value></con:property><con:property><con:name>exec_id</con:name><con:value>DenoisingAndBiasCorrection17051109354458500000000000000000000fffffffffffffffffffffff70000010</con:value></con:property></con:properties></con:testCase><con:testCase id="3d2592ba-7b95-4467-83e0-50d0f369e162" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="init and start - Brain Extraction" searchProperties="true"><con:settings/><con:testStep type="request" id="73c58558-8bfd-44e1-a37b-b99f8acf742a" name="initExecution"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>initExecution</con:operation><con:request name="initExecution" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="339483af-7b44-4b71-b5b0-8992fa31ce3c"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <api:initExecution>
+         <pipelineId>BrainExtractionMultiModal</pipelineId>
+         <!--1 or more repetitions:-->
+         <inputValue>
+            <name>Atlas reference T1</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/Reference_T1.nrrd</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Atlas brain mask</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/BrainMask.nrrd</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Input unregistered image T1</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/3DT1.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Output masked image T1</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>outputT1.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Input unregistered image T2</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/T2.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Output masked image T2</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>outputT2.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Input unregistered image FLAIR</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/3DFLAIR.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Output brain Mask FLAIR</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>Mask_registered.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Output masked image FLAIR</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>outputFLAIR.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Input unregistered image GADO</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/3DT1GADO.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Output masked image GADO</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>outputT1GADO.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Input unregistered image DP</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/DP.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <inputValue>
+            <name>Output masked image DP</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>outputDP.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+         <!--Optional:-->
+         <executionName>?</executionName>
+         <!--Optional:-->
+         <studyId>?</studyId>
+         <!--Optional:-->
+         <playExecution>false</playExecution>
+      </api:initExecution>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="47026e46-255c-444f-a7eb-c7323fd34cd6" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/initExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer" id="c1bc8867-2ffe-4c25-bf48-87e63f7c6c86"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false"><con:name>exec_id</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>initExecution</con:sourceStep><con:sourcePath>//returnedValueStr</con:sourcePath><con:targetType>exec_id</con:targetType><con:targetStep>#TestCase#</con:targetStep><con:upgraded>true</con:upgraded></con:transfers></con:config></con:testStep><con:testStep type="request" id="aa8b8c62-840b-4f25-938e-81cff860d1bc" name="playExecution - play"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>playExecution</con:operation><con:request name="playExecution - play" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="5d12b5bf-4ae4-4130-b4df-edadbc164643"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:playExecution>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:playExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="205565bd-3a14-447e-bdfc-fd3310865236" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/playExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="c1bf6263-2f14-459b-bb7e-5c6e39b854ac" name="getExecution"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>getExecution</con:operation><con:request name="getExecution" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="0892dce5-727f-4b01-b035-99c3b918cd4e"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getExecution>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:getExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="3a2780cf-2c64-4f5e-81e3-61484a2d04db" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="delay" name="3s" id="947b5067-3601-4ecc-a82d-7453e5066aa8"><con:settings/><con:config><delay>3000</delay></con:config></con:testStep><con:testStep type="goto" name="Conditional Goto" id="2c464375-7d8b-44b7-a041-2d7e38e91e30"><con:settings/><con:config xsi:type="con:GotoStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:condition><con:name>Condition 1</con:name><con:type>XPATH</con:type><con:expression>//status='Ready'</con:expression><con:targetStep>playExecution - play</con:targetStep></con:condition><con:condition><con:name>Condition 2</con:name><con:type>XPATH</con:type><con:expression>//status='Running'</con:expression><con:targetStep>getExecution</con:targetStep></con:condition><con:condition><con:name>Condition 3</con:name><con:type>XPATH</con:type><con:expression>//status='Initializing'</con:expression><con:targetStep>getExecution</con:targetStep></con:condition></con:config></con:testStep><con:testStep type="request" id="6afff7c8-434c-40e1-9509-b3b541cf1d50" name="getExecution Finished"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>getExecution</con:operation><con:request name="getExecution Finished" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="0892dce5-727f-4b01-b035-99c3b918cd4e"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getExecution>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:getExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="3a2780cf-2c64-4f5e-81e3-61484a2d04db" name="SOAP Response"/><con:assertion type="XPath Match" id="fee9ef2a-a671-4b68-ba93-e80bf34093e4" name="XPath Match"><con:configuration><path>//status</path><content>Finished</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="e07d6123-a092-4fb7-97ad-b05b22187808" name="getExecutionResults"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>getExecutionResults</con:operation><con:request name="getExecutionResults" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="bbe335cb-5c90-4a08-b0f6-9526207710b4"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getExecutionResults>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:getExecutionResults>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="8a25f467-cd19-423c-a685-bf8d317d09ec" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getExecutionResults"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="d7d206b7-e127-4f1a-bdd8-191b0c8bc3b3" name="listExecutions"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>listExecutions</con:operation><con:request name="listExecutions" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="b0feac71-8b2b-400d-8207-3212661f39d3"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:listExecutions>\r
+         <studyIdentifier>?</studyIdentifier>\r
+      </api:listExecutions>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="b5bf378e-ba60-4adc-8820-6339ab455a6b" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/listExecutions"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties><con:property><con:name>item</con:name><con:value>PreProcessingWithSkull</con:value></con:property><con:property><con:name>exec_id</con:name><con:value>BrainExtractionMultiModal17051509432042700000000000000000000fffffffffffffffffffffff70000010</con:value></con:property></con:properties></con:testCase><con:testCase id="5e4c378c-833f-4532-badb-2ad03fbce007" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="getPipelines" searchProperties="true"><con:settings/><con:testStep type="request" id="75a27b6e-3ac3-41d8-8217-b2f5676fca67" name="getGlobalProperties"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>getGlobalProperties</con:operation><con:request name="getGlobalProperties" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="be71e666-800f-462a-a0bc-ed3b5b35a70c"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getGlobalProperties/>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="ce65b527-ade9-490e-a018-a6cb2ae53bf3" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getGlobalProperties"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="eed00b5b-5483-4ef6-bc78-3862b7d9989d" name="listPipelines"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>listPipelines</con:operation><con:request name="listPipelines" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="11ae14f3-2dfe-409d-9ae9-0d1fa84d0d0e"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:listPipelines>\r
+         <studyIdentifier></studyIdentifier>\r
+      </api:listPipelines>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="76406e44-1075-4279-a43d-4a4573479831" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/listPipelines"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="groovy" name="getPipeline for all items" id="b996dd26-1919-4565-b58e-c9dd466a09d3"><con:settings/><con:config><script>// create groovyUtils and XmlHolder for response
+def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
+def holder = groovyUtils.getXmlHolder( "listPipelines#Response" )
+
+// loop item nodes in response message
+for( item in holder.getNodeValues( "//item/identifier" )) {
+	testRunner.testCase.setPropertyValue( "item", item);
+	log.info "Item : $item" ;
+	testRunner.runTestStepByName("getPipeline")
+	
+    
+}</script></con:config></con:testStep><con:testStep type="request" id="4995185a-47ae-4c30-8e73-3c8416e33fb6" name="getPipeline"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>getPipeline</con:operation><con:request name="getPipeline" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="130d8e3d-3f20-48a6-9f1e-99ce6d0ef475"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getPipeline>\r
+         <pipelineId>${#TestCase#item}</pipelineId>\r
+      </api:getPipeline>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="5b986361-f078-4c45-898b-ec5f1bd05952" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getPipeline"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties><con:property><con:name>item</con:name><con:value>PreProcessingWithSkull</con:value></con:property></con:properties></con:testCase><con:testCase id="c2a1b00d-294d-4853-a144-9f601a186d90" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="init failed and start - Thr" searchProperties="true"><con:settings/><con:testStep type="request" id="f3461c45-cfd3-4a23-a5f0-624091a56363" name="initExecution - Thr"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>initExecution</con:operation><con:request name="initExecution - Thr" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="339483af-7b44-4b71-b5b0-8992fa31ce3c"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <api:initExecution>
+         <pipelineId>AnimaThrImage</pipelineId>
+         <!--1 or more repetitions:-->
+         <inputValue>
+            <name>Input image</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>/local/amorawin/data/3DFLAIR.nii.gz2</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+
+         <inputValue>
+            <name>Output threshold image</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>outputThresholded.nii.gz</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+
+         <inputValue>
+            <name>Adaptative threshold value</name>
+            <!--1 or more repetitions:-->
+            <value>
+               <type>0</type>
+               <!--You have a CHOICE of the next 4 items at this level-->
+               <valueStr>0.99</valueStr>
+               <valueBool>?</valueBool>
+               <valueInt>?</valueInt>
+               <valueDouble>?</valueDouble>
+            </value>
+         </inputValue>
+
+         <!--Optional:-->
+         <executionName>?</executionName>
+         <!--Optional:-->
+         <studyId>?</studyId>
+         <!--Optional:-->
+         <playExecution>false</playExecution>
+      </api:initExecution>
+   </soapenv:Body>
+</soapenv:Envelope>
+]]></con:request><con:assertion type="SOAP Response" id="47026e46-255c-444f-a7eb-c7323fd34cd6" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/initExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer" id="a77d15f9-4288-4e95-8579-bb7504ce006b"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false"><con:name>exec_id</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>initExecution - Thr</con:sourceStep><con:sourcePath>//returnedValueStr</con:sourcePath><con:targetType>exec_id</con:targetType><con:targetStep>#TestCase#</con:targetStep><con:upgraded>true</con:upgraded></con:transfers></con:config></con:testStep><con:testStep type="request" id="eccd68ee-188d-4e08-b29c-00caa18bdee0" name="playExecution - play Thr"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>playExecution</con:operation><con:request name="playExecution - play Thr" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="5d12b5bf-4ae4-4130-b4df-edadbc164643"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:playExecution>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:playExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="205565bd-3a14-447e-bdfc-fd3310865236" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/playExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="1378154a-42be-4d54-8864-8cc7140f4864" name="getExecution"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CarminSoapBinding</con:interface><con:operation>getExecution</con:operation><con:request name="getExecution" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="0892dce5-727f-4b01-b035-99c3b918cd4e"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#endpoint}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://france-life-imaging.fr/api">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <api:getExecution>\r
+         <executionId>${#TestCase#exec_id}</executionId>\r
+      </api:getExecution>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="3a2780cf-2c64-4f5e-81e3-61484a2d04db" name="SOAP Response"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://france-life-imaging.fr/api/Carmin/getExecution"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties><con:property><con:name>item</con:name><con:value></con:value></con:property><con:property><con:name>exec_id</con:name><con:value></con:value></con:property></con:properties></con:testCase><con:properties><con:property><con:name>item</con:name><con:value></con:value></con:property></con:properties></con:testSuite><con:properties><con:property><con:name>endpoint</con:name><con:value></con:value></con:property></con:properties><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>
