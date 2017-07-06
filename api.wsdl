@@ -218,8 +218,9 @@
       </xs:complexType>
       <xs:complexType name="updateExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
-	  <xs:element maxOccurs="unbounded" minOccurs="1" name="keyValuePair" type="tns:StringKeyValuePair"/>
+	  <xs:element name="executionId" type="xs:string"/>
+	  <xs:element minOccurs="0" name="name" type="xs:string"/>
+	  <xs:element minOccurs="0" name="timeout" type="xs:int"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="StringKeyValuePair">
