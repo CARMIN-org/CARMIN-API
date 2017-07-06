@@ -164,12 +164,14 @@
 	      <xs:element maxOccurs="unbounded" minOccurs="0" name="APIErrorCodesAndMessages" type="tns:IntKeyStringValuePair"/>
 	      <xs:element maxOccurs="unbounded" name="supportedTransferProtocol" type="xs:string"/>
 	      <xs:element maxOccurs="unbounded" name="supportedModule" type="tns:Module"/>
+	      <xs:element name="defaultLimitListExecutions" type="xs:int"/>
+	      <xs:element name="platformName" type="xs:string"/>
 	      <xs:element minOccurs="0" name="email" type="xs:string"/>
 	      <xs:element minOccurs="0" name="platformDescription" type="xs:string"/>
 	      <xs:element minOccurs="0" name="minAuthorizedExecutionTimeout" type="xs:int"/>
 	      <xs:element minOccurs="0" name="maxAuthorizedExecutionTimeout" type="xs:int"/>
 	      <xs:element minOccurs="0" name="defaultExecutionTimeout" type="xs:int"/>
-	      <xs:element name="isKillExecutionSupported" type="xs:boolean"/>
+	      <xs:element minOccurs="0" maxOccurs="unbounded" name="unsupportedMethod" type="xs:string"/>
 	      <xs:element minOccurs="0" name="defaultStudy" type="xs:string"/>
 	      <xs:element name="supportedAPIVersion" type="xs:string"/>
 	    </xs:sequence>
