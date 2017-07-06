@@ -41,6 +41,28 @@ paths:
             $ref: '#/definitions/PlatformProperties'
         default:
           $ref: '#/responses/GenericError'
+  /authenticate:
+    get:
+      description:
+        Returns the api key necessary to use the API. The key can be dynamic (a new one for each request) or static (always the same one until the user change it in a back-end)
+      operationId: authenticate
+      security: []
+      parameters: 
+        - name: username
+          in: query
+          type: string
+          required: true
+        - name: password
+          in: query
+          type: string
+          required: true
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/Authentication'
+        default:
+            $ref: '#/responses/GenericError'
   /executions:
     get:
       description:
@@ -48,6 +70,16 @@ paths:
         All the executions that were launched by the user must be returned. It is up to the platform to return executions that the user did not launch.
         When studyIdentifier is present, all the executions that the user launched in the study must be returned.
       operationId: listExecutions
+      parameters:
+        - name: studyIdentifier
+          in: query
+          type: string
+        - name: offset
+          in: query
+          type: integer
+        - name: limit
+          in: query
+          type: integer
       responses:
         '200':
           description: successful response
@@ -59,8 +91,8 @@ paths:
           $ref: '#/responses/GenericError'
     post:
       description:
-        Initializes an execution. Does not start it. The successful response must contain the execution identifier.
-      operationId: initExecution
+        Initializes an execution. The successful response must contain the execution identifier. If status “Initializing” is returned, playExecution must be called to start the execution.
+      operationId: createExecution
       parameters:
         - name: body
           in: body
@@ -74,22 +106,18 @@ paths:
             $ref: '#/definitions/Execution'
         default:
           $ref: '#/responses/GenericError'
-  /executions/create-and-start:
-    post:
-      description:
-        Initializes an execution and start it. The successful response must contain the execution identifier.
-      operationId: initAndStartExecution
+  /executions/count:
+    get:
+      operationId: countExecutions
       parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/Execution'
+        - name: studyIdentifier
+          in: query
+          type: string
       responses:
         '200':
           description: successful response
           schema:
-            $ref: '#/definitions/Execution'
+            type: integer
         default:
           $ref: '#/responses/GenericError'
   /executions/{executionIdentifier}:
@@ -286,12 +314,21 @@ responses:
     schema:
       $ref: '#/definitions/ErrorCodeAndMessage'
 definitions:
+  Authentication:
+    type: object
+    required:
+      - httpHeader
+      - httpHeaderValue
+    properties:
+      httpHeader:
+        type: string
+      httpHeaderValue:
+        type: string
   PlatformProperties:
     type: object
     required:
       - supportedTransferProtocols
       - supportedModules
-      - isKillExecutionSupported
       - supportedAPIVersion
     properties:
       platformName: # not present in 0.2 version, keep it as optional
@@ -312,7 +349,7 @@ definitions:
         type: array
         items:
           type: string
-          enum: ["Processing", "Data", "Management", "Commercial", ]
+          enum: ["Processing", "Data", "AdvancedData", "Management", "Commercial", ]
       defaultLimitListExecutions: # not present in 0.2, keep it as optional
         type: integer
         format: int64
@@ -332,8 +369,6 @@ definitions:
       defaultExecutionTimeout:
         type: integer
         format: int64
-      isKillExecutionSupported:
-        type: boolean
       unsupportedMethods: 
       # not present in 0.2, keep it as optional
         type: array
@@ -403,13 +438,13 @@ definitions:
   ErrorCodeAndMessage:
     type: object
     required:
-      - code
-      - message
+      - errorCode
+      - errorMessage
     properties:
-      code:
+      errorCode:
         type: integer
         format: int64
-      message:
+      errorMessage:
         type: string
   Execution:
     type: object
@@ -436,7 +471,7 @@ definitions:
         description: The timeout in seconds until which the execution is killed and deleted with all its files. 0 or absense means no timeout
       status:
         type: string
-        enum: [initializing,ready,running,finished,initialization_failed,execution_failed,unknown,killed]
+        enum: [Initializing,Ready,Running,Finished,InitializationFailed,ExecutionFailed,Unknown,Killed]
         readOnly: true
         description: The status of the execution. Must always be present in responses.
       inputValues:
