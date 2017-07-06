@@ -14,8 +14,8 @@
       <xs:element name="getPlatformPropertiesResponse" type="tns:getPlatformPropertiesResponse"/>
       <xs:element name="getPipeline" type="tns:getPipeline"/>
       <xs:element name="getPipelineResponse" type="tns:getPipelineResponse"/>
-      <xs:element name="initExecution" type="tns:initExecution"/>
-      <xs:element name="initExecutionResponse" type="tns:initExecutionResponse"/>
+      <xs:element name="createExecution" type="tns:createExecution"/>
+      <xs:element name="createExecutionResponse" type="tns:createExecutionResponse"/>
       <xs:element name="getStdOut" type="tns:getStdOut"/>
       <xs:element name="getStdOutResponse" type="tns:getStdOutResponse"/>
       <xs:element name="getStdErr" type="tns:getStdErr"/>
@@ -53,7 +53,7 @@
 	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValuePipeline" 		type="tns:Pipeline"/>
 	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueExecution" 		type="tns:Execution"/>
 	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValuePlatformProp" 	type="tns:PlatformProperties"/>
-	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueStr"			type="xs:string"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueStr"			type="xs:string"/>
 	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueInt"			type="xs:int"/>
 	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueListStrings"		type="tns:ArrayOfStrings"/>
 	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueListExecutions"	type="tns:ArrayOfExecutions"/>
@@ -247,17 +247,16 @@
 	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
-      <xs:complexType name="initExecution">
+      <xs:complexType name="createExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="1" name="pipelineId" type="xs:string"/>
-	  <xs:element maxOccurs="unbounded" minOccurs="1" name="inputValue" type="tns:StringKeyParameterValuePair"/>
-	  <xs:element minOccurs="0" name="timeout" type="xs:int"/>
+	  <xs:element name="pipelineId" type="xs:string"/>
+	  <xs:element maxOccurs="unbounded" name="inputValue" type="tns:StringKeyParameterValuePair"/>
+	  <xs:element minOccurs="0" name="timeoutInSeconds" type="xs:int"/>
 	  <xs:element minOccurs="0" name="executionName" type="xs:string"/>
 	  <xs:element minOccurs="0" name="studyId" type="xs:string"/>
-	  <xs:element minOccurs="0" name="playExecution" type="xs:boolean"/>
 	</xs:sequence>
       </xs:complexType>
-      <xs:complexType name="initExecutionResponse">
+      <xs:complexType name="createExecutionResponse">
 	<xs:sequence>
 	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
@@ -450,8 +449,8 @@
     <wsdl:part name="parameters" element="tns:playExecution">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="initExecutionResponse">
-    <wsdl:part name="parameters" element="tns:initExecutionResponse">
+  <wsdl:message name="createExecutionResponse">
+    <wsdl:part name="parameters" element="tns:createExecutionResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getStdOutResponse">
@@ -498,8 +497,8 @@
     <wsdl:part name="parameters" element="tns:getPlatformProperties">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="initExecution">
-    <wsdl:part name="parameters" element="tns:initExecution">
+  <wsdl:message name="createExecution">
+    <wsdl:part name="parameters" element="tns:createExecution">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getStdOut">
@@ -555,10 +554,10 @@
       <wsdl:output name="getPlatformPropertiesResponse" message="tns:getPlatformPropertiesResponse">
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="initExecution">
-      <wsdl:input name="initExecution" message="tns:initExecution">
+    <wsdl:operation name="createExecution">
+      <wsdl:input name="createExecution" message="tns:createExecution">
       </wsdl:input>
-      <wsdl:output name="initExecutionResponse" message="tns:initExecutionResponse">
+      <wsdl:output name="createExecutionResponse" message="tns:createExecutionResponse">
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getStdOut">
@@ -672,12 +671,12 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="initExecution">
+    <wsdl:operation name="createExecution">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="initExecution">
+      <wsdl:input name="createExecution">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="initExecutionResponse">
+      <wsdl:output name="createExecutionResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
