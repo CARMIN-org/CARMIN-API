@@ -2,10 +2,8 @@
 <wsdl:definitions name="Carmin" targetNamespace="http://france-life-imaging.fr/api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://france-life-imaging.fr/api" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://france-life-imaging.fr/api" elementFormDefault="unqualified" targetNamespace="http://france-life-imaging.fr/api" version="1.0">
-      <xs:element name="authenticateHTTP" type="tns:authenticateHTTP"/>
-      <xs:element name="authenticateHTTPResponse" type="tns:authenticateHTTPResponse"/>
-      <xs:element name="authenticateSession" type="tns:authenticateSession"/>
-      <xs:element name="authenticateSessionResponse" type="tns:authenticateSessionResponse"/>
+      <xs:element name="authenticate" type="tns:authenticate"/>
+      <xs:element name="authenticateResponse" type="tns:authenticateResponse"/>
       <xs:element name="deleteExecution" type="tns:deleteExecution"/>
       <xs:element name="deleteExecutionResponse" type="tns:deleteExecutionResponse"/>
       <xs:element name="getExecution" type="tns:getExecution"/>
@@ -34,15 +32,15 @@
       <xs:element name="playExecutionResponse" type="tns:playExecutionResponse"/>
       <xs:element name="updateExecution" type="tns:updateExecution"/>
       <xs:element name="updateExecutionResponse" type="tns:updateExecutionResponse"/>
-      <xs:complexType name="authenticateSession">
+      <xs:complexType name="authenticate">
 	<xs:sequence>
-	  <xs:element minOccurs="1" name="userName" type="xs:string"/>
-	  <xs:element minOccurs="1" name="password" type="xs:string"/>
+	  <xs:element name="username" type="xs:string"/>
+	  <xs:element name="password" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
-      <xs:complexType name="authenticateSessionResponse">
+      <xs:complexType name="authenticateResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
+	  <xs:element name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="Response">
@@ -50,17 +48,28 @@
 	  <xs:element name="statusCode" type="xs:int"/>
 	  <xs:element minOccurs="0" maxOccurs="1" name="errorMessage" type="xs:string"/>
 	  <xs:choice>
-	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValuePipeline" 		type="tns:Pipeline"/>
-	    <xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueExecution" 		type="tns:Execution"/>
-	    <xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueGlobalProp" 		type="tns:GlobalProperties"/>
-	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueStr" 			type="xs:string"/>
-	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueListStrings" 			type="tns:ArrayOfStrings"/>
-	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueListExecutions" 			type="tns:ArrayOfExecutions"/>
-	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueListPipelines" 			type="tns:ArrayOfPipelines"/>
-	    <xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueStatus" 			type="tns:ExecutionStatus"/>
-	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValuePairKey" 		type="tns:PipelineKeyBooleanValuePair"/>
+	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValuePipeline" 		type="tns:Pipeline"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueExecution" 		type="tns:Execution"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueGlobalProp" 		type="tns:GlobalProperties"/>
+	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueStr"			type="xs:string"/>
+	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueListStrings"		type="tns:ArrayOfStrings"/>
+	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueListExecutions"	type="tns:ArrayOfExecutions"/>
+	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueListPipelines"	type="tns:ArrayOfPipelines"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueStatus"		type="tns:ExecutionStatus"/>
+	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValuePairKey"		type="tns:PipelineKeyBooleanValuePair"/>
+	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueAuthentication"	type="tns:Authentication"/>
 	   </xs:choice>
 	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Authentication">
+	<xs:complexContent>
+	  <xs:extension base="tns:Object">
+	    <xs:sequence>
+	      <xs:element name="httpHeader" type="xs:string"/>
+	      <xs:element name="httpHeaderValue" type="xs:string"/>
+	    </xs:sequence>
+	  </xs:extension>
+	</xs:complexContent>
       </xs:complexType>
       <xs:complexType name="Pipeline">
 	<xs:complexContent>
@@ -190,16 +199,6 @@
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="getPipelineResponse">
-	<xs:sequence>
-	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
-	</xs:sequence>
-      </xs:complexType>
-      <xs:complexType name="authenticateHTTP">
-	<xs:sequence>
-	  <xs:element minOccurs="1" name="userName" type="xs:string"/>
-	</xs:sequence>
-      </xs:complexType>
-      <xs:complexType name="authenticateHTTPResponse">
 	<xs:sequence>
 	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
@@ -385,10 +384,6 @@
     <wsdl:part name="parameters" element="tns:listExecutionsResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="authenticateHTTPResponse">
-    <wsdl:part name="parameters" element="tns:authenticateHTTPResponse">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="updateExecution">
     <wsdl:part name="parameters" element="tns:updateExecution">
     </wsdl:part>
@@ -417,8 +412,8 @@
     <wsdl:part name="parameters" element="tns:killExecutionResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="authenticateSessionResponse">
-    <wsdl:part name="parameters" element="tns:authenticateSessionResponse">
+  <wsdl:message name="authenticateResponse">
+    <wsdl:part name="parameters" element="tns:authenticateResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="updateExecutionResponse">
@@ -453,8 +448,8 @@
     <wsdl:part name="parameters" element="tns:listExecutions">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="authenticateSession">
-    <wsdl:part name="parameters" element="tns:authenticateSession">
+  <wsdl:message name="authenticate">
+    <wsdl:part name="parameters" element="tns:authenticate">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteExecution">
@@ -498,10 +493,10 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="Carmin">
-    <wsdl:operation name="authenticateSession">
-      <wsdl:input name="authenticateSession" message="tns:authenticateSession">
+    <wsdl:operation name="authenticate">
+      <wsdl:input name="authenticate" message="tns:authenticate">
       </wsdl:input>
-      <wsdl:output name="authenticateSessionResponse" message="tns:authenticateSessionResponse">
+      <wsdl:output name="authenticateResponse" message="tns:authenticateResponse">
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleteExecution">
@@ -514,12 +509,6 @@
       <wsdl:input name="getPipeline" message="tns:getPipeline">
       </wsdl:input>
       <wsdl:output name="getPipelineResponse" message="tns:getPipelineResponse">
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="authenticateHTTP">
-      <wsdl:input name="authenticateHTTP" message="tns:authenticateHTTP">
-      </wsdl:input>
-      <wsdl:output name="authenticateHTTPResponse" message="tns:authenticateHTTPResponse">
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="logout">
@@ -597,12 +586,12 @@
   </wsdl:portType>
   <wsdl:binding name="CarminSoapBinding" type="tns:Carmin">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-    <wsdl:operation name="authenticateSession">
+    <wsdl:operation name="authenticate">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="authenticateSession">
+      <wsdl:input name="authenticate">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="authenticateSessionResponse">
+      <wsdl:output name="authenticateResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -621,15 +610,6 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getPipelineResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="authenticateHTTP">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="authenticateHTTP">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="authenticateHTTPResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
