@@ -330,7 +330,9 @@
       </xs:complexType>
       <xs:complexType name="listExecutions">
 	<xs:sequence>
-	  <xs:element minOccurs="1" name="studyIdentifier" type="xs:string"/>
+	  <xs:element minOccurs="0" name="studyIdentifier" type="xs:string"/>
+	  <xs:element minOccurs="0" name="offset" type="xs:int"/>
+	  <xs:element minOccurs="0" name="limit" type="xs:int"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="listExecutionsResponse">
