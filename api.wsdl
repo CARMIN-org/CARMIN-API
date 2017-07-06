@@ -24,6 +24,8 @@
       <xs:element name="killExecutionResponse" type="tns:killExecutionResponse"/>
       <xs:element name="listExecutions" type="tns:listExecutions"/>
       <xs:element name="listExecutionsResponse" type="tns:listExecutionsResponse"/>
+      <xs:element name="countExecutions" type="tns:countExecutions"/>
+      <xs:element name="countExecutionsResponse" type="tns:countExecutionsResponse"/>
       <xs:element name="listPipelines" type="tns:listPipelines"/>
       <xs:element name="listPipelinesResponse" type="tns:listPipelinesResponse"/>
       <xs:element name="logout" type="tns:logout"/>
@@ -50,8 +52,9 @@
 	  <xs:choice>
 	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValuePipeline" 		type="tns:Pipeline"/>
 	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueExecution" 		type="tns:Execution"/>
-	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValuePlatformProp" 		type="tns:PlatformProperties"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValuePlatformProp" 	type="tns:PlatformProperties"/>
 	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueStr"			type="xs:string"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueInt"			type="xs:int"/>
 	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueListStrings"		type="tns:ArrayOfStrings"/>
 	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueListExecutions"	type="tns:ArrayOfExecutions"/>
 	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueListPipelines"	type="tns:ArrayOfPipelines"/>
@@ -340,6 +343,16 @@
 	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
+      <xs:complexType name="countExecutions">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="studyIdentifier" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="countExecutionsResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
       <xs:simpleType name="ParameterType">
 	<xs:restriction base="xs:string">
 	  <xs:enumeration value="File"/>
@@ -386,6 +399,10 @@
   </wsdl:message>
   <wsdl:message name="listExecutionsResponse">
     <wsdl:part name="parameters" element="tns:listExecutionsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="countExecutionsResponse">
+    <wsdl:part name="parameters" element="tns:countExecutionsResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="updateExecution">
@@ -450,6 +467,10 @@
   </wsdl:message>
   <wsdl:message name="listExecutions">
     <wsdl:part name="parameters" element="tns:listExecutions">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="countExecutions">
+    <wsdl:part name="parameters" element="tns:countExecutions">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="authenticate">
@@ -587,6 +608,12 @@
       <wsdl:output name="listExecutionsResponse" message="tns:listExecutionsResponse">
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="countExecutions">
+      <wsdl:input name="countExecutions" message="tns:countExecutions">
+      </wsdl:input>
+      <wsdl:output name="countExecutionsResponse" message="tns:countExecutionsResponse">
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="CarminSoapBinding" type="tns:Carmin">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
@@ -722,6 +749,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="listExecutionsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="countExecutions">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="countExecutions">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="countExecutionsResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
