@@ -10,8 +10,8 @@
       <xs:element name="getExecutionResponse" type="tns:getExecutionResponse"/>
       <xs:element name="getExecutionResults" type="tns:getExecutionResults"/>
       <xs:element name="getExecutionResultsResponse" type="tns:getExecutionResultsResponse"/>
-      <xs:element name="getGlobalProperties" type="tns:getGlobalProperties"/>
-      <xs:element name="getGlobalPropertiesResponse" type="tns:getGlobalPropertiesResponse"/>
+      <xs:element name="getPlatformProperties" type="tns:getPlatformProperties"/>
+      <xs:element name="getPlatformPropertiesResponse" type="tns:getPlatformPropertiesResponse"/>
       <xs:element name="getPipeline" type="tns:getPipeline"/>
       <xs:element name="getPipelineResponse" type="tns:getPipelineResponse"/>
       <xs:element name="initExecution" type="tns:initExecution"/>
@@ -50,7 +50,7 @@
 	  <xs:choice>
 	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValuePipeline" 		type="tns:Pipeline"/>
 	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueExecution" 		type="tns:Execution"/>
-	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueGlobalProp" 		type="tns:GlobalProperties"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValuePlatformProp" 		type="tns:PlatformProperties"/>
 	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueStr"			type="xs:string"/>
 	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueListStrings"		type="tns:ArrayOfStrings"/>
 	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueListExecutions"	type="tns:ArrayOfExecutions"/>
@@ -157,7 +157,7 @@
 	  <xs:element name="value" type="tns:ParameterTypedValue"/>
 	</xs:sequence>
       </xs:complexType>
-      <xs:complexType name="GlobalProperties">
+      <xs:complexType name="PlatformProperties">
 	<xs:complexContent>
 	  <xs:extension base="tns:Object">
 	    <xs:sequence>
@@ -233,10 +233,10 @@
 	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
-      <xs:complexType name="getGlobalProperties">
+      <xs:complexType name="getPlatformProperties">
 	<xs:sequence/>
       </xs:complexType>
-      <xs:complexType name="getGlobalPropertiesResponse">
+      <xs:complexType name="getPlatformPropertiesResponse">
 	<xs:sequence>
 	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
@@ -464,12 +464,12 @@
     <wsdl:part name="parameters" element="tns:authenticateHTTP">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getGlobalPropertiesResponse">
-    <wsdl:part name="parameters" element="tns:getGlobalPropertiesResponse">
+  <wsdl:message name="getPlatformPropertiesResponse">
+    <wsdl:part name="parameters" element="tns:getPlatformPropertiesResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getGlobalProperties">
-    <wsdl:part name="parameters" element="tns:getGlobalProperties">
+  <wsdl:message name="getPlatformProperties">
+    <wsdl:part name="parameters" element="tns:getPlatformProperties">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="initExecution">
@@ -523,10 +523,10 @@
       <wsdl:output name="updateExecutionResponse" message="tns:updateExecutionResponse">
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getGlobalProperties">
-      <wsdl:input name="getGlobalProperties" message="tns:getGlobalProperties">
+    <wsdl:operation name="getPlatformProperties">
+      <wsdl:input name="getPlatformProperties" message="tns:getPlatformProperties">
       </wsdl:input>
-      <wsdl:output name="getGlobalPropertiesResponse" message="tns:getGlobalPropertiesResponse">
+      <wsdl:output name="getPlatformPropertiesResponse" message="tns:getPlatformPropertiesResponse">
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="initExecution">
@@ -631,12 +631,12 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getGlobalProperties">
+    <wsdl:operation name="getPlatformProperties">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="getGlobalProperties">
+      <wsdl:input name="getPlatformProperties">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="getGlobalPropertiesResponse">
+      <wsdl:output name="getPlatformPropertiesResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
