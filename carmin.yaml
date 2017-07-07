@@ -1,626 +1,286 @@
 swagger: '2.0'
 info:
-  version: '1.0.0'
+  version: '0.2.1'
   title: CARMIN a Common web API for Remote pipeline INvocation
   description: FLI/IAM REST API for exchanging data and remote calling pipelines.
-
-  #termsOfService: http://helloreverb.com/terms/
-  #contact:
-    #name: Swagger API team
-    #email: foo@example.com
-    #url: http://swagger.io
-  #license:
-    #name: MIT
-    #url: http://opensource.org/licenses/MIT
-#host: petstore.swagger.io
-basePath: /api/carmin
-security: 
-  - {basicAuth:[]}
-  - {apiKey:[]}
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  contact:
+    name: CARMIN mailing list
+    url: https://groups.google.com/d/forum/carmin
+    email: carmin@googlegroups.com
 schemes:
-  - http
+  - https 
 consumes:
   - application/json
 produces:
   - application/json
 
 securityDefinitions:
-  basicAuth:
-    type: basic
-    description: If supported by the platform, it is possible to use HTTP
-      Basic Authentication but one must call `/login_basic_http` before 
-      calling any API service.
   apiKey:
-      # TODO: Should we replace cookie authentication (not supported by Swagger)
-      # by apiKey authentication ?
       type: apiKey
-      name: api_key
+      name: apikey
       in: header
-      description: If HTTP Basic authentication is not supported, calling
-        `/login` allows for password checking and cookie based authentication.
+      description: An API key that must be provided by the platform.
+security: 
+  - apiKey: []
 
 paths:
-  /login:
-    get:
-      description: |
-        Check username and password and allow access to the API in case of 
-        success by setting a cookie that must be used in any subsequent API
-        calls.
-      operationId: authenticateSession
-      parameters:
-        - name: username
-          in: query
-          description: Name of the user account.
-          required: true
-          type: string
-          format: utf8
-        - name: password
-          in: query
-          description: Password to verify.
-          required: true
-          type: string
-          format: password
-      responses:
-        '200':
-          description: Returns `success` if login is successful or `failure`
-            if login and/or password is incorrect.
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
   /platform:
     get:
-      description: Returns information about the platform
+      description: 
+        Returns information about the platform.
+        https must be supported in the list of the supported protocols.
       operationId: getPlatformProperties
-      produces:
-        - application/json
+      security: []
       responses:
         '200':
           description: successful response
           schema:
-            $ref: '#/definitions/platformProperties'
+            $ref: '#/definitions/PlatformProperties'
         default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-  /studies:
+          $ref: '#/responses/GenericError'
+  /authenticate:
     get:
-      description: List all the allowed studies in terms of user right
-      operationId: getStudies
-      produces:
-        - application/json
+      description:
+        Returns the api key necessary to use the API. The key can be dynamic (a new one for each request) or static (always the same one until the user change it in a back-end)
+      operationId: authenticate
+      security: []
+      parameters: 
+        - name: username
+          in: query
+          type: string
+          required: true
+        - name: password
+          in: query
+          type: string
+          required: true
       responses:
         '200':
           description: successful response
           schema:
-            $ref: '#/definitions/studies'
+            $ref: '#/definitions/Authentication'
         default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-    post:
-      description: Create a new study. The user gets {study}_manager role.
-        Returns all the information of {study} including platform-created `identifier`.
-      operationId: postStudy
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          description: study to add in the database
-          required: true
-          schema:
-            $ref: '#/definitions/newStudy'
-      responses:
-        '200':
-          description: successfully create a new study
-          schema:
-            $ref: '#/definitions/study'
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-  /studies/{study}:
-    get:
-      description: get study information by study name
-      operationId: getStudy
-      produces:
-        - application/json
-      parameters:
-        - name: study
-          in: path
-          description: study name
-          required: true
-          type: string
-      responses:
-        '200':
-          description: successful response
-          schema:
-            $ref: '#/definitions/study'
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-    put:
-      description: modify some properties of a study
-      operationId: putStudy
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          description: modify a value in the study by keyValuePair,
-            i.e. description, contactEmail, base_path.
-            The study name and the identifier cannot be changed.
-          required: true
-          schema:
-            $ref: '#/definitions/keyValuePair'
-        - name: study
-          in: path
-          description: study name
-          required: true
-          type: string
-      responses:
-        '200':
-          description: successfully modify a study.
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-    delete:
-      description: remove a study
-      operationId: deleteStudy
-      parameters:
-        - name: study
-          in: path
-          description: study name
-          required: true
-          type: string
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: successful response
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
+            $ref: '#/responses/GenericError'
   /executions:
     get:
-      description: |
+      description:
         list all execution Ids in the platform which are ordered in decreasing submission time.
-      operationId: getExecutions
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: successful response
-          schema:
-            $ref: '#/definitions/executions'
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-  /executions/{execution}:
-    get:
-      description: get information about an execution
-      operationId: getExecutionsExecution
+        All the executions that were launched by the user must be returned. It is up to the platform to return executions that the user did not launch.
+        When studyIdentifier is present, all the executions that the user launched in the study must be returned.
+      operationId: listExecutions
       parameters:
-        - name: execution
-          in: path
-          description: execution id
-          required: true
+        - name: studyIdentifier
+          in: query
           type: string
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: successful response
-          schema:
-            $ref: '#/definitions/execution'
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-    put:
-      description: |
-        Modify some parameters (i.e. name and timeout).
-      operationId: putExecutionsExecution
-      consumes:
-        - application/json
-      parameters:
-        - name: execution
-          in: path
-          description: execution id
-          required: true
-          type: string
-        - name: body
-          in: body
-          description: |
-            For example, you can modify name 
-            as key= "name" and value="execution name"
-          required: false
-          schema:
-            $ref: '#/definitions/keyValuePair'
-      responses:
-        '200':
-          description: successful response
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-    delete:
-      description: |
-        Delete an execution. This will kill the underlying processes (if possible)
-        and free all resources associated with this execution.
-      operationId: deleteExecutionsExecution
-      parameters:
-        - name: execution
-          in: path
-          description: execution id
-          required: true
-          type: string
-        - name: body
-          in: body
-          description: delete configuration
-          schema:
-            $ref: '#/definitions/delConfig'
-      responses:
-        '200':
-          description: successful response
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-  /executions/{execution}/stdout:
-    get:
-      description: get stdout of an execution
-      operationId: getExecutionsExecutionStdout
-      parameters:
-        - name: execution
-          in: path
-          description: execution id
-          required: true
-          type: string
-      responses:
-        '200':
-          description: successful response
-          schema:
-            $ref: '#/definitions/message'
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-  /executions/{execution}/stderr:
-    get:
-      description: get stderr of an execution
-      operationId: getExecutionsExecutionStderr
-      parameters:
-        - name: execution
-          in: path
-          description: execution id
-          required: true
-          type: string
-      responses:
-        '200':
-          description: successful response
-          schema:
-            $ref: '#/definitions/message'
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-  /executions/{execution}/play:
-    get:
-      description: play an execution
-      operationId: getStudyExecutionsExecutionPlay
-      parameters:
-        - name: execution
-          in: path
-          description: execution id
-          required: true
-          type: string
-      responses:
-        '200':
-          description: successful response
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-  /executions/{execution}/kill:
-    get:
-      description: kill an execution
-      operationId: getStudyExecutionsExecutionKill
-      parameters:
-        - name: execution
-          in: path
-          description: execution id
-          required: true
-          type: string
-      responses:
-        '200':
-          description: successful response
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-  /studies/{study}/pipelines:
-    get:
-      description: |
-        All the pipelines that the user can execute must be returned.
-        It is up to the platform to return pipelines that the user cannot execute.
-        When studyIdentifier is present, all the pipelines that the user can execute
-        in the study must be returned. In this case, execution rights denote the rights
-        to execute the pipeline in the study.
-      operationId: listStudyPipelines
-      parameters:
-        - name: study
-          in: path
-          description: study name
-          required: true
-          type: string
-      produces:
-        - application/json
+        - name: offset
+          in: query
+          type: integer
+        - name: limit
+          in: query
+          type: integer
       responses:
         '200':
           description: successful response
           schema:
             type: array
             items:
-              $ref: '#/definitions/Pipeline'
+              $ref: '#/definitions/Execution'
         default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-  /studies/{study}/executions:
-    get:
-      description: list all execution Ids in the study called {study}
-      operationId: getStudyExecutions
-      parameters:
-        - name: study
-          in: path
-          description: study name
-          required: true
-          type: string
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: successful response
-          schema:
-            $ref: '#/definitions/executions'
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
+          $ref: '#/responses/GenericError'
     post:
-      description: |
-        initialize a new execution. All necessary data must have already been
-        transferred to the platform. The execution may not start immediately 
-        (according to a parameter). The user gets the role {execution}_owner.
-      operationId: postStudyExecutions
+      description:
+        Initializes an execution. The successful response must contain the execution identifier. If status “Initializing” is returned, playExecution must be called to start the execution.
+      operationId: createExecution
       parameters:
-        - name: study
-          in: path
-          description: study name
-          required: true
-          type: string
         - name: body
           in: body
-          description: |
-            An array of key value pairs. The definition is defined as below
           required: true
           schema:
-            # it is defined by the pipeline definition.
-            # The name denotes the name of parameter in pipeline
-            # and the value denotes the value of parameter.
-            $ref: '#/definitions/newExecution'
-      produces:
-        - application/json
+            $ref: '#/definitions/Execution'
       responses:
         '200':
           description: successful response
           schema:
-            $ref: '#/definitions/executionId'
+            $ref: '#/definitions/Execution'
         default:
-          description: unexpected error
+          $ref: '#/responses/GenericError'
+  /executions/count:
+    get:
+      operationId: countExecutions
+      parameters:
+        - name: studyIdentifier
+          in: query
+          type: string
+      responses:
+        '200':
+          description: successful response
           schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-  /studies/{study}/executions/{execution}:
+            type: integer
+        default:
+          $ref: '#/responses/GenericError'
+  /executions/{executionIdentifier}:
+    parameters:
+      - name: executionIdentifier
+        in: path
+        required: true      
+        type: string
+        format: ascii
     get:
       description: get information about an execution
-      operationId: getStudyExecutionsExecution
-      parameters:
-        - name: study
-          in: path
-          description: study name
-          required: true
-          type: string
-        - name: execution
-          in: path
-          description: execution id
-          required: true
-          type: string
-      produces:
-        - application/json
+      operationId: getExecution
       responses:
         '200':
           description: successful response
           schema:
-            $ref: '#/definitions/execution'
+            $ref: '#/definitions/Execution'
         default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
+          $ref: '#/responses/GenericError'
     put:
-      description: |
-        Modify some parameters (i.e. name and timeout).
-      operationId: putStudyExecutionsExecution
-      consumes:
-        - application/json
+      description:
+        Modify an execution. Only the name and the timeout of the execution can be modified. Changes to the identifier or the status will raise errors. Changes to the other properties will be ignored.
+      operationId: updateExecution
       parameters:
-        - name: study
-          in: path
-          description: study name
-          required: true
-          type: string
-        - name: execution
-          in: path
-          description: execution id
-          required: true
-          type: string
         - name: body
           in: body
-          description: |
-            For example, you can modify name 
-            as key= "name" and value="execution name"
-          required: false
+          required: true
           schema:
-            $ref: '#/definitions/keyValuePair'
+            $ref: '#/definitions/Execution'
+      responses:
+        '204':
+          description: successful response
+        default:
+          $ref: '#/responses/GenericError'
+  /executions/{executionIdentifier}/results:
+    get:
+      description: get the result files of the execution
+      operationId: getExecutionResults
+      produces:
+      - application/json
+      parameters:
+      - name: executionIdentifier
+        in: path
+        required: true
+        type: string
+        format: ascii
+      - name: protocol
+        in: query
+        type: string
+        description: if not specified the default protocol is https
       responses:
         '200':
           description: successful response
-        default:
-          description: unexpected error
           schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-    delete:
-      description: |
-        Delete an execution. This will kill the underlying processes (if possible)
-        and free all resources associated with this execution.
-      operationId: deleteStudyExecutionsExecution
+            type: array
+            items:
+              type: string
+              format: url
+        default:
+          $ref: '#/responses/GenericError'
+  /executions/{executionIdentifier}/stdout:
+    get:
+      description: get stdout of an execution
+      operationId: getStdout
+      produces:
+      - text/plain
+      - application/json
       parameters:
-        - name: study
+      - name: executionIdentifier
+        in: path
+        required: true
+        type: string
+        format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/GenericError'
+  /executions/{executionIdentifier}/stderr:
+    get:
+      description: get stderr of an execution
+      operationId: getStderr
+      produces:
+      - text/plain
+      - application/json
+      parameters:
+      - name: executionIdentifier
+        in: path
+        required: true
+        type: string
+        format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/GenericError'
+  /executions/{executionIdentifier}/play:
+    put:
+      description: play an execution
+      operationId: playExecution
+      parameters:
+      - name: executionIdentifier
+        in: path
+        required: true      
+        type: string
+        format: ascii
+      responses:
+        '204':
+          description: successful response
+        default:
+          $ref: '#/responses/GenericError'
+  /executions/{executionIdentifier}/kill:
+    put:
+      description: kill an execution
+      operationId: killExecution
+      parameters:
+      - name: executionIdentifier
+        in: path
+        required: true      
+        type: string
+        format: ascii
+      responses:
+        '204':
+          description: successful response
+        default:
+          $ref: '#/responses/GenericError'
+  /executions/{executionIdentifier}/delete:
+    put:
+      description:
+        Delete an execution. This will kill the underlying processes (if possible) and free all resources associated with this execution (depending of the configuration given in as body input).
+      operationId: deleteExecution
+      parameters:
+        - name: executionIdentifier
           in: path
-          description: study name
-          required: true
+          required: true      
           type: string
-        - name: execution
-          in: path
-          description: execution id
-          required: true
-          type: string
+          format: ascii
         - name: body
           in: body
           description: delete configuration
           schema:
-            $ref: '#/definitions/delConfig'
+            $ref: '#/definitions/DeleteExecutionConfiguration'
       responses:
-        '200':
+        '204':
           description: successful response
         default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-  /studies/{study}/executions/{execution}/play:
-    get:
-      description: play an execution
-      operationId: getExecutionsExecutionPlay
-      parameters:
-        - name: study
-          in: path
-          description: study name
-          required: true
-          type: string
-        - name: execution
-          in: path
-          description: execution id
-          required: true
-          type: string
-      responses:
-        '200':
-          description: successful response
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-  /studies/{study}/executions/{execution}/kill:
-    get:
-      description: kill an execution
-      operationId: getExecutionsExecutionKill
-      parameters:
-        - name: study
-          in: path
-          description: study name
-          required: true
-          type: string
-        - name: execution
-          in: path
-          description: execution id
-          required: true
-          type: string
-      responses:
-        '200':
-          description: successful response
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-  /studies/{study}/executions/{execution}/stdout:
-    get:
-      description: get stdout of an execution
-      operationId: getStudyExecutionsExecutionStdout
-      parameters:
-        - name: study
-          in: path
-          description: study name
-          required: true
-          type: string
-        - name: execution
-          in: path
-          description: execution id
-          required: true
-          type: string
-      responses:
-        '200':
-          description: successful response
-          schema:
-            $ref: '#/definitions/message'
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-  /studies/{study}/executions/{execution}/stderr:
-    get:
-      description: get stderr of an execution
-      operationId: getStudyExecutionsExecutionStderr
-      parameters:
-        - name: study
-          in: path
-          description: study name
-          required: true
-          type: string
-        - name: execution
-          in: path
-          description: execution id
-          required: true
-          type: string
-      responses:
-        '200':
-          description: successful response
-          schema:
-            $ref: '#/definitions/message'
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
+          $ref: '#/responses/GenericError'
   /pipelines:
     get:
-      description: |
+      description:
         All the pipelines that the user can execute must be returned.
         It is up to the platform to return pipelines that the user cannot execute.
-        When studyIdentifier is present, all the pipelines that the user can execute
-        in the study must be returned. In this case, execution rights denote the rights
-        to execute the pipeline in the study.
+        When studyIdentifier is present, all the pipelines that the user can execute in the study must be returned. In this case, execution rights denote the rights to execute the pipeline in the study.
       operationId: listPipelines
-      produces:
-        - application/json
+      parameters:
+        - name: studyIdentifier
+          in: query
+          type: string
+          format: ascii
       responses:
         '200':
           description: successful response
@@ -629,120 +289,76 @@ paths:
             items:
               $ref: '#/definitions/Pipeline'
         default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
-  /pipelines/{pipeline}:
+          $ref: '#/responses/GenericError'
+  /pipelines/{pipelineIdentifier}:
     get:
-      description: |
-        Show the definition of a given pipeline name
+      description: Show the definition of a given pipeline
       operationId: getPipeline
-      produces:
-        - application/json
       parameters:
-        - name: pipeline
+        - name: pipelineIdentifier
           in: path
-          description: pipeline name
           required: true
+          description: pipeline identifier
           type: string
+          format: ascii
       responses:
         '200':
           description: successful response
           schema:
             $ref: '#/definitions/Pipeline'
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorCodesAndMessage'
+        default: 
+          $ref: '#/responses/GenericError'
+responses:
+  GenericError:
+    description: An functional or internal error occured processing the request
+    schema:
+      $ref: '#/definitions/ErrorCodeAndMessage'
 definitions:
-  studies:
-    type: array
-    items:
-      $ref: '#/definitions/study'
-  newStudy:
+  Authentication:
     type: object
     required:
-      - name
-      - description
-      - contactEmail
-      - base_path
+      - httpHeader
+      - httpHeaderValue
     properties:
-      name:
+      httpHeader:
         type: string
-        description: study name
-      description:
+      httpHeaderValue:
         type: string
-        description: information about the study
-      contactEmail:
-        type: string
-        description: email of someone that knows about this study in the platform
-      base_path:
-        type: string
-        description: all files starting with base_path will be declared as belonging to the study
-  study:
+  PlatformProperties:
     type: object
     required:
-      - name
-      - identifier
-      - description
-      - contactEmail
-      - base_path
-    properties:
-      name:
-        type: string
-        description: study name
-      identifier:
-        type: string
-        description: study unique identifier
-      description:
-        type: string
-        description: information about the study
-      contactEmail:
-        type: string
-        description: email of someone that knows about this study in the platform
-      base_path:
-        type: string
-        description: all files starting with base_path will be declared as belonging to the study
-  platformProperties:
-    type: object
-    required:
-      - platformName
       - supportedTransferProtocols
       - supportedModules
-      - defaultLimitListExecutions
-      - unsupportedMethods
       - supportedAPIVersion
     properties:
-      platformName:
+      platformName: # not present in 0.2 version, keep it as optional
         type: string
         description: Name of the platform.
       APIErrorCodesAndMessages:
         type: array
         items:
-          $ref: '#/definitions/errorCodesAndMessage'
+          $ref: '#/definitions/ErrorCodeAndMessage'
       supportedTransferProtocols:
         type: array
         items:
           type: string
           enum: ["http", "https", "ftp", "sftp", "ftps", "scp", "webdav"]
-        description: |
-          Used in getExecutionResults and getAccessURL.
+        description:
           Protocol names must be URL prefixes (e.g. "http", "https", "ftp", "sftp", "ftps", "scp", "webdav"). 
       supportedModules:
         type: array
         items:
           type: string
-          enum: ["Processing", "Data", "Management", "Commercial", ]
-      defaultLimitListExecutions:
+          enum: ["Processing", "Data", "AdvancedData", "Management", "Commercial", ]
+      defaultLimitListExecutions: # not present in 0.2, keep it as optional
         type: integer
         format: int64
-        description: The number of Executions returned by getExecutions and getStudyExecutions when limit is not specified.
+        description: The number of Executions returned by getExecutions
       email:
         type: string
-        format: utf8 # TODO: I do not know if utf8 is valid here.
+        format: email
       platformDescription:
         type: string
-        format: utf8
       minAuthorizedExecutionTimeout:
         type: integer
         format: int64
@@ -753,23 +369,48 @@ definitions:
       defaultExecutionTimeout:
         type: integer
         format: int64
-      unsupportedMethods:
+      unsupportedMethods: 
+      # not present in 0.2, keep it as optional
         type: array
         items:
           type: string
-        description: List of optional methods that are not supported by the platform.
-      maxSizeDirectTransfer:
-        type: integer
-        format: int64
-        description: |
-          The maximal size of files and directories that can be transferred
-          by methods Path.uploadPath and Path.downloadPath.
+        description: List of optional methods that are not supported by the platform. Must be consistent with the "isKillExecutionSupported" property.
       defaultStudy:
         type: string
-      isKillExecutionSupported:
-        type: boolean
+        format: ascii
       supportedAPIVersion:
         type: string
+        format: ascii
+    additionalProperties: true # allow extensions
+  Pipeline:
+    type: object
+    required:
+      - identifier
+      - name
+      - version
+      # - parameters optional in 0.2
+    properties:
+      identifier:
+        type: string
+        format: ascii
+      name:
+        type: string
+      version:
+        type: string
+        format: ascii
+      description:
+        type: string
+      canExecute:
+        type: boolean
+        description: true if the user who requested the pipeline can execute it
+      parameters:
+        type: array
+        items:
+          $ref: '#/definitions/PipelineParameter'
+      errorCodesAndMessages:
+        type: array
+        items:
+          $ref: '#/definitions/ErrorCodeAndMessage'
   PipelineParameter:
     type: object
     required:
@@ -780,123 +421,96 @@ definitions:
     properties:
       name:
         type: string
+        format: ascii
       type:
-        type: string
+        $ref: '#/definitions/ParameterType'
       isOptional:
         type: boolean
       isReturnedValue:
         type: boolean
       defaultValue:
-        description: Default value. It can be any type.
+        description: Default value. It must be consistent with the parameter type.
       description:
         type: string
-        format: utf8
-  Pipeline:
+  ParameterType:
+    type: string
+    enum: [File,String,Boolean,Int64,Double,List]
+  ErrorCodeAndMessage:
     type: object
     required:
-      - identifier
+      - errorCode
+      - errorMessage
+    properties:
+      errorCode:
+        type: integer
+        format: int64
+      errorMessage:
+        type: string
+  Execution:
+    type: object
+    required:
       - name
-      - version
-      - parameters
+      - pipelineIdentifier
+      - inputValues
     properties:
       identifier:
         type: string
-      name:
-        type: string
-        format: utf8
-      version:
-        type: string
-      description:
-        type: string
-        format: utf8
-      canExecute:
-        type: boolean
-      parameters:
-        type: array
-        items:
-          $ref: '#/definitions/PipelineParameter'
-  errorCodesAndMessage:
-    type: object
-    required:
-      - code
-      - message
-    properties:
-      code:
-        type: integer
-        format: int32
-      message:
-        type: string
-  execution:
-    type: object
-    required:
-      - executionId
-      - pipelineIdentifier
-      - status
-    properties:
-      executionId:
-        type: string
-        description: execution id
+        format: ascii
+        readOnly: true
+        description: execution id. Must always be present in responses.
       name:
         type: string
         description: execution name
       pipelineIdentifier:
         type: string
+        format: ascii
         description: which pipeline that started this execution
-      pipelineName:
-        type: string
-        description: pipeline name
+      timeout:
+        type: integer
+        format: int64
+        description: The timeout in seconds until which the execution is killed and deleted with all its files. 0 or absense means no timeout
       status:
         type: string
-        "enum": ["initializing",
-          "ready",
-          "running",
-          "finished",
-          "initialization_failed",
-          "execution_failed",
-          "unknown",
-          "killed"]
-  delConfig:
+        enum: [Initializing,Ready,Running,Finished,InitializationFailed,ExecutionFailed,Unknown,Killed]
+        readOnly: true
+        description: The status of the execution. Must always be present in responses.
+      inputValues:
+        type: object
+        additionalProperties: true
+        description:
+          Represents the input as a key/value object. The types should respect the parameters of the pipeline used for the execution.
+      returnedFiles:
+        type: object
+        additionalProperties:
+          type: array
+          items: 
+            type: string
+            format: url
+        readOnly: true
+        description: 
+          Absent when not available (e.g. execution still running). Empty if no returned file is produced.
+          Each key/value of the "returnedFiles" object corresponds to an output pipeline parameter (with "isReturnedValue" set to true) and the key must be the parameter name. The value must be an array of valid URL strings.
+          A value array can be empty if the output parameter produces no value. It can have several URLs entries when the output is a directory with several files, a big file split in several download links, several files or any other implementation specific design.
+      studyIdentifier:
+        type: string
+        format: ascii
+      errorCode:
+        type: integer
+        format: int64
+        readOnly: true
+      startDate:
+        type: integer
+        format: int64
+        description: Time in seconds since Unix epoch
+        readOnly: true
+      endDate:
+        type: integer
+        format: int64
+        description: Time in seconds since Unix epoch
+        readOnly: true
+  DeleteExecutionConfiguration:
     type: object
+    required: [deleteFiles]
     properties:
       deleteFiles:
         type: boolean
-        description: delete files or not
-  executions:
-    type: array
-    items:
-      $ref: '#/definitions/execution'
-  newExecution:
-    type: object
-    required:
-      - pipelineIdentifier
-      - inputValues
-    properties:
-      name:
-        type: string
-        description: name to display to users
-      pipelineIdentifier:
-        type: string
-      timeout:
-        type: integer
-        description: timeout in seconds
-      inputValues:
-        type: array
-        items:
-          $ref: '#/definitions/keyValuePair'
-  executionId:
-    type: string
-  keyValuePair:
-    type: object
-    required:
-      - key
-      - value
-    properties:
-      key:
-        type: string
-        description: the key value
-      value: ### I don't know how to define a mixed type, so I put an object
-        type: object
-        description: the value associated with key
-  message:
-    type: string
-
