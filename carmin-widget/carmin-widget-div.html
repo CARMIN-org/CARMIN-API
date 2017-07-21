@@ -1,0 +1,47 @@
+<!-- 1. Add the carmin-widget library to the JavaScript on your site
+	For the future we will provide a public https URL to use, like
+	https://fli-iam.fr/carmin-widget/carmin-widget.js
+-->
+<script type="text/javascript" src="/scripts/carmin-widget.js" />
+
+<!-- 2. Include this hidden div into your website source code -->
+<div id="carmin-widget-container"
+		title="Search for processing pipelines with CARMIN"
+		style="display: none;">
+		<br />
+		<p><b>Process patient with ID: 01-02225</b></p>
+		<br />
+		<div id="carmin-widget-tabs">
+			<ul>
+				<li><a href="#tabs-1">Choose pipeline</a></li>
+				<li><a href="#tabs-2">Executions</a></li>
+				<li><a href="#tabs-3">Settings</a></li>
+			</ul>
+			<div id="tabs-1">
+				<p><b>Start your pipeline:</b></p>
+				<br />
+				<p>Filter the list of pipelines.</p>
+				<form>
+					<fieldset>
+						<label for="name">Pipeline name:</label>
+						<input type="text"
+							name="name" id="name" value="Segmentation" />
+						<!-- Allow form submission with keyboard without duplicating the dialog button -->
+						<input type="submit" tabindex="-1" value="Apply filter"/>
+					</fieldset>
+				</form>
+				<br />
+				<ul>
+					<li><a href="#">AnimaApplyRegistration</a></li>
+					<li><a href="#">AnimaApplyTransformation</a></li>
+					<li><a href="#">AnimaApplyTransformSerie</a></li>
+					<li><a href="#">GinFizz</a></li>
+					<li><a href="#">GIN_Transform_T1</a></li>
+					<li><a href="#">GIN_Transform_T2</a></li>
+					<li><a href="#">FLI Strasbourg Test</a></li>
+				</ul>
+			</div>
+			<div id="tabs-2">Running executions listed here:</div>
+			<div id="tabs-3">Configure your settings here:</div>
+		</div>
+	</div>
