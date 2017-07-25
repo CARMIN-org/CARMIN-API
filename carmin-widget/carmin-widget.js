@@ -2,9 +2,13 @@
 
     // Localize jQuery variable
     var jQuery;
+    var carminURL;
+    var carminUserName;
+    var carminPassword;
+    var carminAPIKey;
 
     /******** Load jQuery if not present *********/
-    if (window.jQuery === undefined || window.jQuery.fn.jquery !== '1.7.2') {
+    if (window.jQuery === undefined || window.jQuery.fn.jquery !== '3.2.1') {
         var script_tag = document.createElement('script');
         script_tag.setAttribute("type", "text/javascript");
         script_tag.setAttribute("src", "/Shanoir/scripts/jquery-jquery-ui.min.js");
@@ -47,7 +51,7 @@
     function main() {
         jQuery(document).ready(function ($) {
         	
-        	/******* Load JQuery UI on using JQuery 
+        	/******* Load JQuery UI on using JQuery: this should be used outside Shanoir old
         	var js_link_jqueryui = $("<script>", {
                 type: "text/javascript",
                 src: "https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
@@ -62,14 +66,18 @@
             });
             css_link.appendTo('head');
             
+            var pipeline = $('input[type="radio"]').checkboxradio({
+            	icon: false
+        	});
+
             var tabs = $("#carmin-widget-tabs").tabs();
 
             /******* Load HTML *******/
             var dialog = $("#carmin-widget-container").dialog({
             	autoOpen: false,
                 modal: true,
-            	height: 480,
-                width: 420,
+            	height: 520,
+                width: 400,
                 buttons: {
                 	"Start pipeline execution": doFilter,
                 	Cancel: function() {
@@ -77,9 +85,35 @@
                 	}
                 },
                 open: function() {
+                	// do some important styling here
                 	$(".ui-dialog").css("position","absolute");
                 	$(".ui-dialog").css("overflow","hidden");
+                	$(".ui-checkboxradio-label").css("width", "240");
                 }
+            });
+            
+            /******* Check if HTML 5 Local Storage is supported, if not display error. *******/
+            if (typeof(Storage) !== "undefined") {
+            	carminURL = localStorage.getItem("carminURL");
+            	$("#carminURL").val(carminURL);
+            	carminUserName = localStorage.getItem("carminUserName");
+            	$("#carminUserName").val(carminUserName);
+            	carminPassword = localStorage.getItem("carminPassword");
+            	$("#carminPassword").val(carminPassword);
+            	carminAPIKey = localStorage.getItem("carminAPIKey");
+            	$("#carminAPIKey").val(carminAPIKey);
+            } else {
+                // Sorry! No Web Storage support..
+            	alert("Sorry! The CARMIN widget will not work in your browser," +
+            			"as your browser has no Web Storage support. Please switch to a more recent browser version.");
+            }
+            
+            $("#carminSaveSettings").click(function () {
+            	localStorage.setItem("carminURL", $("#carminURL").val());
+            	localStorage.setItem("carminUserName", $("#carminUserName").val());
+            	localStorage.setItem("carminPassword", $("#carminPassword").val());
+            	localStorage.setItem("carminAPIKey", $("#carminAPIKey").val());
+            	alert("Your settings have been saved.");
             });
             
             $("#open-dialog").button().on("click", function() {

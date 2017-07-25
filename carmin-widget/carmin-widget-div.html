@@ -5,12 +5,12 @@
 <script type="text/javascript" src="/scripts/carmin-widget.js" />
 
 <!-- 2. Include this hidden div into your website source code -->
-<div id="carmin-widget-container"
+	<div id="carmin-widget-container"
 		title="Search for processing pipelines with CARMIN"
 		style="display: none;">
-		<br />
+		<br/>
 		<p><b>Process patient with ID: 01-02225</b></p>
-		<br />
+		<br/>
 		<div id="carmin-widget-tabs">
 			<ul>
 				<li><a href="#tabs-1">Choose pipeline</a></li>
@@ -24,24 +24,55 @@
 				<form>
 					<fieldset>
 						<label for="name">Pipeline name:</label>
-						<input type="text"
-							name="name" id="name" value="Segmentation" />
-						<!-- Allow form submission with keyboard without duplicating the dialog button -->
-						<input type="submit" tabindex="-1" value="Apply filter"/>
+						<input type="text" name="name" id="name" value="Segmentation" />
+						<input type="submit" tabindex="-1" value="Apply filter" />
 					</fieldset>
 				</form>
 				<br />
-				<ul>
-					<li><a href="#">AnimaApplyRegistration</a></li>
-					<li><a href="#">AnimaApplyTransformation</a></li>
-					<li><a href="#">AnimaApplyTransformSerie</a></li>
-					<li><a href="#">GinFizz</a></li>
-					<li><a href="#">GIN_Transform_T1</a></li>
-					<li><a href="#">GIN_Transform_T2</a></li>
-					<li><a href="#">FLI Strasbourg Test</a></li>
-				</ul>
+				<fieldset>
+					<legend>Select a pipeline:</legend>
+					<label for="radio-1">AnimaApplyRegistration</label>
+					<input type="radio" name="pipeline" id="radio-1"/>
+					<br/>
+					<label for="radio-2">AnimaApplyTransformation</label>
+					<input type="radio" name="pipeline" id="radio-2"/>
+					<br/>
+					<label for="radio-3">AnimaApplyTransformSerie</label>
+					<input type="radio" name="pipeline" id="radio-3"/>
+					<br/>
+					<label for="radio-4">GinFizz</label>
+					<input type="radio" name="pipeline" id="radio-4"/>
+					<br/>
+					<label for="radio-5">GIN_Transform_T1</label>
+					<input type="radio" name="pipeline" id="radio-5"/>
+					<br/>
+					<label for="radio-6">GIN_Transform_T2</label>
+					<input type="radio" name="pipeline" id="radio-6"/>
+					<br/>
+					<label for="radio-7">FLI Strasbourg Test</label>
+					<input type="radio" name="pipeline" id="radio-7"/>				
+				</fieldset>
 			</div>
 			<div id="tabs-2">Running executions listed here:</div>
-			<div id="tabs-3">Configure your settings here:</div>
+			<div id="tabs-3">
+				<p><b>Configure your settings here:</b></p>
+				<br />
+				<p>Enter connection parameters for CARMIN platform:</p>
+				<fieldset>
+					<label for="carminURL">Platform URL:</label>
+					<input type="text" name="carminURL" id="carminURL" value="https://" />
+					<br/>
+					<label for="carminUserName">User name:</label>
+					<input type="text" name="carminUserName" id="carminUserName" value="" />
+					<br/>
+					<label for="carminPassword">Password:</label>
+					<input type="password" name="carminPassword" id="carminPassword" value="" />
+					<br/>
+					<label for="carminAPIKey">API Key:</label>
+					<input type="password" name="carminAPIKey" id="carminAPIKey" value="" />
+					<br/>
+					<input id="carminSaveSettings" type="submit" tabindex="-1" value="Save settings" />
+				</fieldset>
+			</div>
 		</div>
 	</div>
