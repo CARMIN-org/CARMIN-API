@@ -42,7 +42,7 @@ paths:
         default:
           $ref: '#/responses/GenericError'
   /authenticate:
-    get:
+    post:
       description:
         Returns the api key necessary to use the API. The key can be dynamic (a new one for each request) or static (always the same one until the user change it in a back-end)
       operationId: authenticate
