@@ -1,0 +1,43 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>CARMIN REST client</title>
+</head>
+
+<body>
+	<script src="js/carmin.js"></script>
+	<script src="script.js"></script>
+	<div id="initDiv">
+		<h1>CARMIN is fun !</h1>
+		<label>Enter platform URL</label>
+		<input type="text" id="url" />
+		<label>Use Authorization header (CATI) ?</label>
+		<input type="checkbox" id="useAuthorizationHeader" />
+		<br />
+		<label>Enter API key</label>
+		<input type="text" id="apikey" />
+		<br />
+		<button id="validateInit">Submit</button>
+	</div>
+	<div id="pipelineListDiv" style="display:none">
+		<h1>Welcome on <span id="platformName" /></h1>
+		<p>You have access to the folowing pipelines:</p>
+		<div id="pipelineList"></div>
+	</div>
+	<div id="pipelineExecDiv" style="display:none">
+		<h1>Launching <span id="pipelineName" /></h1>
+		<div id="pipelineDescription"></div>
+	</div>
+	<div id="execWaitingDiv" style="display:none">
+		<h1>Waiting for <span id="executionIdentifier" /> to finish</h1>
+	</div>
+	<div id="execResultDiv" style="display:none">
+		<h1>Execution finished. Results :</h1>
+		<div id="execResult"></div>
+		<p id="fileContent"></p>
+	</div>
+</body>
+</html>
