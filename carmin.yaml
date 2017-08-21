@@ -48,14 +48,11 @@ paths:
       operationId: authenticate
       security: []
       parameters: 
-        - name: username
-          in: query
-          type: string
+        - name: body
+          in: body
           required: true
-        - name: password
-          in: query
-          type: string
-          required: true
+          schema:
+            $ref: '#/definitions/AuthenticationCredentials'
       responses:
         '200':
           description: successful response
@@ -314,6 +311,16 @@ responses:
     schema:
       $ref: '#/definitions/ErrorCodeAndMessage'
 definitions:
+  AuthenticationCredentials:
+    type: object
+    required:
+      - username
+      - password
+    properties:
+      username:
+        type: string
+      password:
+        type: string
   Authentication:
     type: object
     required:
