@@ -60,7 +60,7 @@
 	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueListPipelines"	type="tns:ArrayOfPipelines"/>
 	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueStatus"		type="tns:ExecutionStatus"/>
 	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValuePairKey"		type="tns:PipelineKeyBooleanValuePair"/>
-	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValueAuthentication"	type="tns:Authentication"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueAuthentication"	type="tns:Authentication"/>
 	   </xs:choice>
 	</xs:sequence>
       </xs:complexType>
