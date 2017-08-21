@@ -36,7 +36,7 @@
       <xs:element name="updateExecutionResponse" type="tns:updateExecutionResponse"/>
       <xs:complexType name="authenticate">
 	<xs:sequence>
-	  <xs:element name="username" type="xs:string"/>
+	  <xs:element name="userName" type="xs:string"/>
 	  <xs:element name="password" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
