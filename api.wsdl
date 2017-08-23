@@ -2,22 +2,20 @@
 <wsdl:definitions name="Carmin" targetNamespace="http://france-life-imaging.fr/api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://france-life-imaging.fr/api" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://france-life-imaging.fr/api" elementFormDefault="unqualified" targetNamespace="http://france-life-imaging.fr/api" version="1.0">
-      <xs:element name="authenticateHTTP" type="tns:authenticateHTTP"/>
-      <xs:element name="authenticateHTTPResponse" type="tns:authenticateHTTPResponse"/>
-      <xs:element name="authenticateSession" type="tns:authenticateSession"/>
-      <xs:element name="authenticateSessionResponse" type="tns:authenticateSessionResponse"/>
+      <xs:element name="authenticate" type="tns:authenticate"/>
+      <xs:element name="authenticateResponse" type="tns:authenticateResponse"/>
       <xs:element name="deleteExecution" type="tns:deleteExecution"/>
       <xs:element name="deleteExecutionResponse" type="tns:deleteExecutionResponse"/>
       <xs:element name="getExecution" type="tns:getExecution"/>
       <xs:element name="getExecutionResponse" type="tns:getExecutionResponse"/>
       <xs:element name="getExecutionResults" type="tns:getExecutionResults"/>
       <xs:element name="getExecutionResultsResponse" type="tns:getExecutionResultsResponse"/>
-      <xs:element name="getGlobalProperties" type="tns:getGlobalProperties"/>
-      <xs:element name="getGlobalPropertiesResponse" type="tns:getGlobalPropertiesResponse"/>
+      <xs:element name="getPlatformProperties" type="tns:getPlatformProperties"/>
+      <xs:element name="getPlatformPropertiesResponse" type="tns:getPlatformPropertiesResponse"/>
       <xs:element name="getPipeline" type="tns:getPipeline"/>
       <xs:element name="getPipelineResponse" type="tns:getPipelineResponse"/>
-      <xs:element name="initExecution" type="tns:initExecution"/>
-      <xs:element name="initExecutionResponse" type="tns:initExecutionResponse"/>
+      <xs:element name="createExecution" type="tns:createExecution"/>
+      <xs:element name="createExecutionResponse" type="tns:createExecutionResponse"/>
       <xs:element name="getStdOut" type="tns:getStdOut"/>
       <xs:element name="getStdOutResponse" type="tns:getStdOutResponse"/>
       <xs:element name="getStdErr" type="tns:getStdErr"/>
@@ -26,6 +24,8 @@
       <xs:element name="killExecutionResponse" type="tns:killExecutionResponse"/>
       <xs:element name="listExecutions" type="tns:listExecutions"/>
       <xs:element name="listExecutionsResponse" type="tns:listExecutionsResponse"/>
+      <xs:element name="countExecutions" type="tns:countExecutions"/>
+      <xs:element name="countExecutionsResponse" type="tns:countExecutionsResponse"/>
       <xs:element name="listPipelines" type="tns:listPipelines"/>
       <xs:element name="listPipelinesResponse" type="tns:listPipelinesResponse"/>
       <xs:element name="logout" type="tns:logout"/>
@@ -34,15 +34,15 @@
       <xs:element name="playExecutionResponse" type="tns:playExecutionResponse"/>
       <xs:element name="updateExecution" type="tns:updateExecution"/>
       <xs:element name="updateExecutionResponse" type="tns:updateExecutionResponse"/>
-      <xs:complexType name="authenticateSession">
+      <xs:complexType name="authenticate">
 	<xs:sequence>
-	  <xs:element minOccurs="1" name="userName" type="xs:string"/>
-	  <xs:element minOccurs="1" name="password" type="xs:string"/>
+	  <xs:element name="userName" type="xs:string"/>
+	  <xs:element name="password" type="xs:string"/>
 	</xs:sequence>
       </xs:complexType>
-      <xs:complexType name="authenticateSessionResponse">
+      <xs:complexType name="authenticateResponse">
 	<xs:sequence>
-	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
+	  <xs:element name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="Response">
@@ -50,17 +50,29 @@
 	  <xs:element name="statusCode" type="xs:int"/>
 	  <xs:element minOccurs="0" maxOccurs="1" name="errorMessage" type="xs:string"/>
 	  <xs:choice>
-	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValuePipeline" 		type="tns:Pipeline"/>
-	    <xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueExecution" 		type="tns:Execution"/>
-	    <xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueGlobalProp" 		type="tns:GlobalProperties"/>
-	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueStr" 			type="xs:string"/>
-	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueListStrings" 			type="tns:ArrayOfStrings"/>
-	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueListExecutions" 			type="tns:ArrayOfExecutions"/>
-	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValueListPipelines" 			type="tns:ArrayOfPipelines"/>
-	    <xs:element minOccurs="0" maxOccurs="1" 		name="returnedValueStatus" 			type="tns:ExecutionStatus"/>
-	    <xs:element minOccurs="0" maxOccurs="unbounded" name="returnedValuePairKey" 		type="tns:PipelineKeyBooleanValuePair"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValuePipeline" 		type="tns:Pipeline"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueExecution" 		type="tns:Execution"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValuePlatformProp" 	type="tns:PlatformProperties"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueStr"			type="xs:string"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueInt"			type="xs:int"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueListStrings"		type="tns:ArrayOfStrings"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueListExecutions"	type="tns:ArrayOfExecutions"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueListPipelines"	type="tns:ArrayOfPipelines"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueStatus"		type="tns:ExecutionStatus"/>
+	    <xs:element minOccurs="0" maxOccurs="unbounded"	name="returnedValuePairKey"		type="tns:PipelineKeyBooleanValuePair"/>
+	    <xs:element minOccurs="0" maxOccurs="1"		name="returnedValueAuthentication"	type="tns:Authentication"/>
 	   </xs:choice>
 	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Authentication">
+	<xs:complexContent>
+	  <xs:extension base="tns:Object">
+	    <xs:sequence>
+	      <xs:element name="httpHeader" type="xs:string"/>
+	      <xs:element name="httpHeaderValue" type="xs:string"/>
+	    </xs:sequence>
+	  </xs:extension>
+	</xs:complexContent>
       </xs:complexType>
       <xs:complexType name="Pipeline">
 	<xs:complexContent>
@@ -145,22 +157,24 @@
       <xs:complexType name="StringKeyParameterValuePair">
 	<xs:sequence>
 	  <xs:element name="name" type="xs:string"/>
-	  <xs:element name="value" type="tns:ParameterTypedValue"/>
+	  <xs:element minOccurs="1" maxOccurs="unbounded" name="value" type="tns:ParameterTypedValue"/>
 	</xs:sequence>
       </xs:complexType>
-      <xs:complexType name="GlobalProperties">
+      <xs:complexType name="PlatformProperties">
 	<xs:complexContent>
 	  <xs:extension base="tns:Object">
 	    <xs:sequence>
 	      <xs:element maxOccurs="unbounded" minOccurs="0" name="APIErrorCodesAndMessages" type="tns:IntKeyStringValuePair"/>
 	      <xs:element maxOccurs="unbounded" name="supportedTransferProtocol" type="xs:string"/>
 	      <xs:element maxOccurs="unbounded" name="supportedModule" type="tns:Module"/>
+	      <xs:element name="defaultLimitListExecutions" type="xs:int"/>
+	      <xs:element name="platformName" type="xs:string"/>
 	      <xs:element minOccurs="0" name="email" type="xs:string"/>
 	      <xs:element minOccurs="0" name="platformDescription" type="xs:string"/>
 	      <xs:element minOccurs="0" name="minAuthorizedExecutionTimeout" type="xs:int"/>
 	      <xs:element minOccurs="0" name="maxAuthorizedExecutionTimeout" type="xs:int"/>
 	      <xs:element minOccurs="0" name="defaultExecutionTimeout" type="xs:int"/>
-	      <xs:element name="isKillExecutionSupported" type="xs:boolean"/>
+	      <xs:element minOccurs="0" maxOccurs="unbounded" name="unsupportedMethod" type="xs:string"/>
 	      <xs:element minOccurs="0" name="defaultStudy" type="xs:string"/>
 	      <xs:element name="supportedAPIVersion" type="xs:string"/>
 	    </xs:sequence>
@@ -194,16 +208,6 @@
 	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
-      <xs:complexType name="authenticateHTTP">
-	<xs:sequence>
-	  <xs:element minOccurs="1" name="userName" type="xs:string"/>
-	</xs:sequence>
-      </xs:complexType>
-      <xs:complexType name="authenticateHTTPResponse">
-	<xs:sequence>
-	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
-	</xs:sequence>
-      </xs:complexType>
       <xs:complexType name="logout">
 	<xs:sequence/>
       </xs:complexType>
@@ -214,8 +218,9 @@
       </xs:complexType>
       <xs:complexType name="updateExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="1" name="executionId" type="xs:string"/>
-	  <xs:element maxOccurs="unbounded" minOccurs="1" name="keyValuePair" type="tns:StringKeyValuePair"/>
+	  <xs:element name="executionId" type="xs:string"/>
+	  <xs:element minOccurs="0" name="name" type="xs:string"/>
+	  <xs:element minOccurs="0" name="timeout" type="xs:int"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="StringKeyValuePair">
@@ -234,25 +239,24 @@
 	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
-      <xs:complexType name="getGlobalProperties">
+      <xs:complexType name="getPlatformProperties">
 	<xs:sequence/>
       </xs:complexType>
-      <xs:complexType name="getGlobalPropertiesResponse">
+      <xs:complexType name="getPlatformPropertiesResponse">
 	<xs:sequence>
 	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
       </xs:complexType>
-      <xs:complexType name="initExecution">
+      <xs:complexType name="createExecution">
 	<xs:sequence>
-	  <xs:element minOccurs="1" name="pipelineId" type="xs:string"/>
-	  <xs:element maxOccurs="unbounded" minOccurs="1" name="inputValue" type="tns:StringKeyParameterValuePair"/>
-	  <xs:element minOccurs="0" name="timeout" type="xs:int"/>
+	  <xs:element name="pipelineId" type="xs:string"/>
+	  <xs:element maxOccurs="unbounded" name="inputValue" type="tns:StringKeyParameterValuePair"/>
+	  <xs:element minOccurs="0" name="timeoutInSeconds" type="xs:int"/>
 	  <xs:element minOccurs="0" name="executionName" type="xs:string"/>
 	  <xs:element minOccurs="0" name="studyId" type="xs:string"/>
-	  <xs:element minOccurs="0" name="playExecution" type="xs:boolean"/>
 	</xs:sequence>
       </xs:complexType>
-      <xs:complexType name="initExecutionResponse">
+      <xs:complexType name="createExecutionResponse">
 	<xs:sequence>
 	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
@@ -329,10 +333,22 @@
       </xs:complexType>
       <xs:complexType name="listExecutions">
 	<xs:sequence>
-	  <xs:element minOccurs="1" name="studyIdentifier" type="xs:string"/>
+	  <xs:element minOccurs="0" name="studyIdentifier" type="xs:string"/>
+	  <xs:element minOccurs="0" name="offset" type="xs:int"/>
+	  <xs:element minOccurs="0" name="limit" type="xs:int"/>
 	</xs:sequence>
       </xs:complexType>
       <xs:complexType name="listExecutionsResponse">
+	<xs:sequence>
+	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="countExecutions">
+	<xs:sequence>
+	  <xs:element minOccurs="0" name="studyIdentifier" type="xs:string"/>
+	</xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="countExecutionsResponse">
 	<xs:sequence>
 	  <xs:element minOccurs="1" name="return" type="tns:Response"/>
 	</xs:sequence>
@@ -385,8 +401,8 @@
     <wsdl:part name="parameters" element="tns:listExecutionsResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="authenticateHTTPResponse">
-    <wsdl:part name="parameters" element="tns:authenticateHTTPResponse">
+  <wsdl:message name="countExecutionsResponse">
+    <wsdl:part name="parameters" element="tns:countExecutionsResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="updateExecution">
@@ -417,8 +433,8 @@
     <wsdl:part name="parameters" element="tns:killExecutionResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="authenticateSessionResponse">
-    <wsdl:part name="parameters" element="tns:authenticateSessionResponse">
+  <wsdl:message name="authenticateResponse">
+    <wsdl:part name="parameters" element="tns:authenticateResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="updateExecutionResponse">
@@ -433,8 +449,8 @@
     <wsdl:part name="parameters" element="tns:playExecution">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="initExecutionResponse">
-    <wsdl:part name="parameters" element="tns:initExecutionResponse">
+  <wsdl:message name="createExecutionResponse">
+    <wsdl:part name="parameters" element="tns:createExecutionResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getStdOutResponse">
@@ -453,8 +469,12 @@
     <wsdl:part name="parameters" element="tns:listExecutions">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="authenticateSession">
-    <wsdl:part name="parameters" element="tns:authenticateSession">
+  <wsdl:message name="countExecutions">
+    <wsdl:part name="parameters" element="tns:countExecutions">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="authenticate">
+    <wsdl:part name="parameters" element="tns:authenticate">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteExecution">
@@ -465,20 +485,16 @@
     <wsdl:part name="parameters" element="tns:getPipeline">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="authenticateHTTP">
-    <wsdl:part name="parameters" element="tns:authenticateHTTP">
+  <wsdl:message name="getPlatformPropertiesResponse">
+    <wsdl:part name="parameters" element="tns:getPlatformPropertiesResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getGlobalPropertiesResponse">
-    <wsdl:part name="parameters" element="tns:getGlobalPropertiesResponse">
+  <wsdl:message name="getPlatformProperties">
+    <wsdl:part name="parameters" element="tns:getPlatformProperties">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getGlobalProperties">
-    <wsdl:part name="parameters" element="tns:getGlobalProperties">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="initExecution">
-    <wsdl:part name="parameters" element="tns:initExecution">
+  <wsdl:message name="createExecution">
+    <wsdl:part name="parameters" element="tns:createExecution">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getStdOut">
@@ -498,10 +514,10 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="Carmin">
-    <wsdl:operation name="authenticateSession">
-      <wsdl:input name="authenticateSession" message="tns:authenticateSession">
+    <wsdl:operation name="authenticate">
+      <wsdl:input name="authenticate" message="tns:authenticate">
       </wsdl:input>
-      <wsdl:output name="authenticateSessionResponse" message="tns:authenticateSessionResponse">
+      <wsdl:output name="authenticateResponse" message="tns:authenticateResponse">
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleteExecution">
@@ -516,12 +532,6 @@
       <wsdl:output name="getPipelineResponse" message="tns:getPipelineResponse">
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="authenticateHTTP">
-      <wsdl:input name="authenticateHTTP" message="tns:authenticateHTTP">
-      </wsdl:input>
-      <wsdl:output name="authenticateHTTPResponse" message="tns:authenticateHTTPResponse">
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="logout">
       <wsdl:input name="logout" message="tns:logout">
       </wsdl:input>
@@ -534,16 +544,16 @@
       <wsdl:output name="updateExecutionResponse" message="tns:updateExecutionResponse">
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getGlobalProperties">
-      <wsdl:input name="getGlobalProperties" message="tns:getGlobalProperties">
+    <wsdl:operation name="getPlatformProperties">
+      <wsdl:input name="getPlatformProperties" message="tns:getPlatformProperties">
       </wsdl:input>
-      <wsdl:output name="getGlobalPropertiesResponse" message="tns:getGlobalPropertiesResponse">
+      <wsdl:output name="getPlatformPropertiesResponse" message="tns:getPlatformPropertiesResponse">
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="initExecution">
-      <wsdl:input name="initExecution" message="tns:initExecution">
+    <wsdl:operation name="createExecution">
+      <wsdl:input name="createExecution" message="tns:createExecution">
       </wsdl:input>
-      <wsdl:output name="initExecutionResponse" message="tns:initExecutionResponse">
+      <wsdl:output name="createExecutionResponse" message="tns:createExecutionResponse">
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getStdOut">
@@ -594,15 +604,21 @@
       <wsdl:output name="listExecutionsResponse" message="tns:listExecutionsResponse">
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="countExecutions">
+      <wsdl:input name="countExecutions" message="tns:countExecutions">
+      </wsdl:input>
+      <wsdl:output name="countExecutionsResponse" message="tns:countExecutionsResponse">
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="CarminSoapBinding" type="tns:Carmin">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-    <wsdl:operation name="authenticateSession">
+    <wsdl:operation name="authenticate">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="authenticateSession">
+      <wsdl:input name="authenticate">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="authenticateSessionResponse">
+      <wsdl:output name="authenticateResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -624,15 +640,6 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="authenticateHTTP">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="authenticateHTTP">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="authenticateHTTPResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="logout">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="logout">
@@ -651,21 +658,21 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="getGlobalProperties">
+    <wsdl:operation name="getPlatformProperties">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="getGlobalProperties">
+      <wsdl:input name="getPlatformProperties">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="getGlobalPropertiesResponse">
+      <wsdl:output name="getPlatformPropertiesResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="initExecution">
+    <wsdl:operation name="createExecution">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="initExecution">
+      <wsdl:input name="createExecution">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="initExecutionResponse">
+      <wsdl:output name="createExecutionResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
@@ -738,6 +745,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="listExecutionsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="countExecutions">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="countExecutions">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="countExecutionsResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
