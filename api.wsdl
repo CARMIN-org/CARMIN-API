@@ -485,10 +485,6 @@
     <wsdl:part name="parameters" element="tns:getPipeline">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="authenticateHTTP">
-    <wsdl:part name="parameters" element="tns:authenticateHTTP">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getPlatformPropertiesResponse">
     <wsdl:part name="parameters" element="tns:getPlatformPropertiesResponse">
     </wsdl:part>
