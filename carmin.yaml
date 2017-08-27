@@ -432,6 +432,7 @@ definitions:
   Execution:
     type: object
     required:
+      - identifier
       - name
       - pipelineIdentifier
       - inputValues
@@ -494,3 +495,35 @@ definitions:
     properties:
       deleteFiles:
         type: boolean
+  Path:
+    type: object
+    required:
+      - platformURI
+      - lastModificationDate
+      - isDirectory
+    properties:
+      platformURI:
+        type: string
+        description: A valid URI, complying to the following pattern: scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]. For instance, shablanc://shablanc.somedomain.org/home/foo/file.txt and sftp://foo@server1.localhost/home/foo/file.txt are valid platform URIs. In addition, the path in this URI must be consistent with the path of files and directories uploaded and downloaded by clients. For instance, if a user uploads a directory structure “dir/{file1.txt,file2.txt}”, it is expected that the path of the first file will be “[prefix]/dir/file1.txt” and that the path of the second file will be “[prefix]/dir/file2.txt” where [prefix] depends on the upload parameters, in particular destination directory.
+      lastModificationDate:
+        type: integer
+        format: int64
+        description: Date of last modification, in seconds since the Epoch (UNIX timestamp).
+      isDirectory:
+        type: boolean
+	description: True if the path represents a directory.
+      exists:
+        type: boolean
+	description: True if path exists.
+      size:
+        type: integer
+        format: int64
+	description: For a file, size in bytes. For a directory, sum of all the sizes of the files contained in the directory (recursively).
+      executionId:
+        type: string
+        format: ascii
+	description: Id of the Execution that produced the Path.
+      mimeType:
+        type: string
+        format: ascii
+	description: mime type based on RFC 6838.
