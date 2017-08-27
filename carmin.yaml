@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
   version: '1.0.0'
-  title: CARMIN a Common web API for Remote pipeline INvocation
-  description: FLI/IAM REST API for exchanging data and remote calling pipelines.
+  title: CARMIN - Common API for Research Medical Imaging Network 
+  description: REST API for exchanging data and remotely calling pipelines.
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
@@ -241,6 +241,24 @@ paths:
           description: successful response
         default:
           $ref: '#/responses/GenericError'
+  /path/{pathURI}:
+    get:
+      description: Show the attributes of a given path
+      operationId: getPath
+      parameters:
+        - name: pathURI
+          in: path
+          required: true
+          description: path URI
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/Path'
+        default: 
+          $ref: '#/responses/GenericError'    
   /pipelines:
     get:
       description:
