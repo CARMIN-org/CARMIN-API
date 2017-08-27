@@ -171,7 +171,7 @@ paths:
           schema:
             type: array
             items:
-              type: $ref: '#/responses/Path'
+              $ref: '#/responses/Path'
         default:
           $ref: '#/responses/GenericError'
   /executions/{executionIdentifier}/stdout:
