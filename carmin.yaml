@@ -190,7 +190,7 @@ paths:
             type: string
         default:
           $ref: '#/responses/GenericError'
-  /executions/{executionIdentifier}/play:
+  /executions/{executionIdentifier}/start:
     put:
       description: play an execution
       operationId: playExecution
@@ -221,7 +221,7 @@ paths:
         default:
           $ref: '#/responses/GenericError'
   /executions/{executionIdentifier}/delete:
-    put:
+    delete:
       description:
         Delete an execution. This will kill the underlying processes (if possible) and free all resources associated with this execution (depending of the configuration given in as body input).
       operationId: deleteExecution
@@ -241,12 +241,12 @@ paths:
           description: successful response
         default:
           $ref: '#/responses/GenericError'
-  /path/{pathURI}:
+  /path/{uri}:
     get:
-      description: Show the attributes of a given path
+      description: Shows the attributes of a given path
       operationId: getPath
       parameters:
-        - name: pathURI
+        - name: uri
           in: path
           required: true
           description: path URI
@@ -258,7 +258,116 @@ paths:
           schema:
             $ref: '#/definitions/Path'
         default: 
-          $ref: '#/responses/GenericError'    
+          $ref: '#/responses/GenericError' 
+  /path/exists/{uri}:
+    get:
+      description: Tests if the path exists
+      operationId: existsPath
+      parameters:
+        - name: uri
+          in: path
+          required: true
+          description: path URI
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: boolean
+        default: 
+          $ref: '#/responses/GenericError'       
+  /path/{uri}/delete:
+    delete:
+      description: Deletes the path. Returns an error if user is not allowed.
+      operationId: deletePath
+      parameters:
+        - name: uri
+          in: path
+          required: true
+          description: path URI
+          type: string
+          format: ascii
+      responses:
+        '204':
+          description: successful response
+        default: 
+          $ref: '#/responses/GenericError'
+  /path/{uri}/list:
+    get:
+      description: When uri refers to a directory, returns a list of Paths in this directory.
+      operationId: listDirectory
+      parameters:
+        - name: uri
+          in: path
+          required: true
+          description: path URI
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Path'
+        default: 
+          $ref: '#/responses/GenericError'
+  /path/{uri}/mkdir:
+    get:
+      description: Creates a directory at uri and returns the corresponding Path object.
+      operationId: createDirectory
+      parameters:
+        - name: uri
+          in: path
+          required: true
+          description: path URI
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+              $ref: '#/definitions/Path'
+        default: 
+          $ref: '#/responses/GenericError'
+  /path/{uri}/content:
+    get:
+      description: Returns the Path content encoded in base 64. Platform may impose restrictions on the max size of files that can be downloaded with this method. 
+      operationId: downloadPath
+      parameters:
+        - name: uri
+          in: path
+          required: true
+          description: path URI
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: string
+            format: ascii
+        default: 
+          $ref: '#/responses/GenericError'
+    put:
+      description: Path content is passed in the HTTP request, encoded in base64. Platform may impose restrictions on the max size of files that can be uploaded with this method.
+      operationId: uploadPath
+      parameters:
+        - name: uri
+          in: path
+          required: true
+          description: path URI
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: string
+            format: ascii
+        default: 
+          $ref: '#/responses/GenericError'
   /pipelines:
     get:
       description:
