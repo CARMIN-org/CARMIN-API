@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
   version: '0.2.1'
-  title: CARMIN a Common web API for Remote pipeline INvocation
-  description: FLI/IAM REST API for exchanging data and remote calling pipelines.
+  title: CARMIN - Common API for Research Medical Imaging Network 
+  description: REST API for exchanging data and remotely calling pipelines.
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
@@ -171,8 +171,7 @@ paths:
           schema:
             type: array
             items:
-              type: string
-              format: url
+              $ref: '#/definitions/Path'
         default:
           $ref: '#/responses/GenericError'
   /executions/{executionIdentifier}/stdout:
@@ -215,7 +214,7 @@ paths:
             type: string
         default:
           $ref: '#/responses/GenericError'
-  /executions/{executionIdentifier}/play:
+  /executions/{executionIdentifier}/start:
     put:
       description: play an execution
       operationId: playExecution
@@ -246,7 +245,7 @@ paths:
         default:
           $ref: '#/responses/GenericError'
   /executions/{executionIdentifier}/delete:
-    put:
+    delete:
       description:
         Delete an execution. This will kill the underlying processes (if possible) and free all resources associated with this execution (depending of the configuration given in as body input).
       operationId: deleteExecution
@@ -265,6 +264,133 @@ paths:
         '204':
           description: successful response
         default:
+          $ref: '#/responses/GenericError'
+  /path/{uri}:
+    get:
+      description: Shows the attributes of a given path
+      operationId: getPath
+      parameters:
+        - name: uri
+          in: path
+          required: true
+          description: path URI
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            $ref: '#/definitions/Path'
+        default: 
+          $ref: '#/responses/GenericError' 
+  /path/exists/{uri}:
+    get:
+      description: Tests if the path exists
+      operationId: existsPath
+      parameters:
+        - name: uri
+          in: path
+          required: true
+          description: path URI
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: boolean
+        default: 
+          $ref: '#/responses/GenericError'       
+  /path/{uri}/delete:
+    delete:
+      description: Deletes the path. Returns an error if user is not allowed.
+      operationId: deletePath
+      parameters:
+        - name: uri
+          in: path
+          required: true
+          description: path URI
+          type: string
+          format: ascii
+      responses:
+        '204':
+          description: successful response
+        default: 
+          $ref: '#/responses/GenericError'
+  /path/{uri}/list:
+    get:
+      description: When uri refers to a directory, returns a list of Paths in this directory.
+      operationId: listDirectory
+      parameters:
+        - name: uri
+          in: path
+          required: true
+          description: path URI
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Path'
+        default: 
+          $ref: '#/responses/GenericError'
+  /path/{uri}/mkdir:
+    get:
+      description: Creates a directory at uri and returns the corresponding Path object.
+      operationId: createDirectory
+      parameters:
+        - name: uri
+          in: path
+          required: true
+          description: path URI
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+              $ref: '#/definitions/Path'
+        default: 
+          $ref: '#/responses/GenericError'
+  /path/{uri}/content:
+    get:
+      description: Returns the Path content encoded in base 64. Platform may impose restrictions on the max size of files that can be downloaded with this method. 
+      operationId: downloadPath
+      parameters:
+        - name: uri
+          in: path
+          required: true
+          description: path URI
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: string
+            format: ascii
+        default: 
+          $ref: '#/responses/GenericError'
+    put:
+      description: Path content is passed in the HTTP request, encoded in base64. Platform may impose restrictions on the max size of files that can be uploaded with this method.
+      operationId: uploadPath
+      parameters:
+        - name: uri
+          in: path
+          required: true
+          description: path URI
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          schema:
+            type: string
+            format: ascii
+        default: 
           $ref: '#/responses/GenericError'
   /pipelines:
     get:
@@ -307,7 +433,7 @@ paths:
           $ref: '#/responses/GenericError'
 responses:
   GenericError:
-    description: An functional or internal error occured processing the request
+    description: A functional or internal error occured processing the request
     schema:
       $ref: '#/definitions/ErrorCodeAndMessage'
 definitions:
@@ -521,3 +647,35 @@ definitions:
     properties:
       deleteFiles:
         type: boolean
+  Path:
+    type: object
+    required:
+      - platformURI
+      - lastModificationDate
+      - isDirectory
+    properties:
+      platformURI:
+        type: string
+        description: A valid URI, complying to the following pattern "scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]". For instance, "shablanc://shablanc.somedomain.org/home/foo/file.txt" and "sftp://foo@server1.localhost/home/foo/file.txt" are valid platform URIs. In addition, the path in this URI must be consistent with the path of files and directories uploaded and downloaded by clients. For instance, if a user uploads a directory structure "dir/{file1.txt,file2.txt}", it is expected that the path of the first file will be "[prefix]/dir/file1.txt" and that the path of the second file will be "[prefix]/dir/file2.txt" where [prefix] depends on the upload parameters, in particular destination directory.
+      lastModificationDate:
+        type: integer
+        format: int64
+        description: Date of last modification, in seconds since the Epoch (UNIX timestamp).
+      isDirectory:
+        type: boolean
+        description: True if the path represents a directory.
+      exists:
+        type: boolean
+        description: True if path exists.
+      size:
+        type: integer
+        format: int64
+        description: For a file, size in bytes. For a directory, sum of all the sizes of the files contained in the directory (recursively).
+      executionId:
+        type: string
+        format: ascii
+        description: Id of the Execution that produced the Path.
+      mimeType:
+        type: string
+        format: ascii
+        description: mime type based on RFC 6838.
