@@ -307,7 +307,7 @@ paths:
           $ref: '#/responses/GenericError'
 responses:
   GenericError:
-    description: An functional or internal error occured processing the request
+    description: A functional or internal error occured processing the request
     schema:
       $ref: '#/definitions/ErrorCodeAndMessage'
 definitions:
