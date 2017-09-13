@@ -149,6 +149,25 @@ paths:
           description: successful response
         default:
           $ref: '#/responses/GenericError'
+    delete:
+      description:
+        Delete an execution. This will kill the underlying processes (if possible) and free all resources associated with this execution (if deleteFiles parameter is present)
+      operationId: deleteExecution
+      parameters:
+        - name: executionIdentifier
+          in: path
+          required: true
+          type: string
+          format: ascii
+        - name: deleteFiles
+          in: query
+          type: boolean
+          description: Also delete all the associated resources (especially the output files).
+      responses:
+        '204':
+          description: successful response
+        default:
+          $ref: '#/responses/GenericError'
   /executions/{executionIdentifier}/results:
     get:
       description: get the result files of the execution
@@ -240,27 +259,6 @@ paths:
         required: true      
         type: string
         format: ascii
-      responses:
-        '204':
-          description: successful response
-        default:
-          $ref: '#/responses/GenericError'
-  /executions/{executionIdentifier}/delete:
-    put:
-      description:
-        Delete an execution. This will kill the underlying processes (if possible) and free all resources associated with this execution (depending of the configuration given in as body input).
-      operationId: deleteExecution
-      parameters:
-        - name: executionIdentifier
-          in: path
-          required: true      
-          type: string
-          format: ascii
-        - name: body
-          in: body
-          description: delete configuration
-          schema:
-            $ref: '#/definitions/DeleteExecutionConfiguration'
       responses:
         '204':
           description: successful response
@@ -515,9 +513,3 @@ definitions:
         format: int64
         description: Time in seconds since Unix epoch
         readOnly: true
-  DeleteExecutionConfiguration:
-    type: object
-    required: [deleteFiles]
-    properties:
-      deleteFiles:
-        type: boolean
