@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
   version: '0.2.1'
-  title: CARMIN a Common web API for Remote pipeline INvocation
-  description: FLI/IAM REST API for exchanging data and remote calling pipelines.
+  title: CARMIN - Common API for Research Medical Imaging Network
+  description: REST API for exchanging data and remotely calling pipelines.
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
