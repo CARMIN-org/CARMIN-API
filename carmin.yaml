@@ -171,8 +171,7 @@ paths:
           schema:
             type: array
             items:
-              type: string
-              format: url
+              $ref: '#/definitions/Path'
         default:
           $ref: '#/responses/GenericError'
   /executions/{executionIdentifier}/stdout:
@@ -304,6 +303,32 @@ paths:
           schema:
             $ref: '#/definitions/Pipeline'
         default: 
+          $ref: '#/responses/GenericError'
+  /path/{completePath}:
+    get:
+      description:
+        Give access to multiple information about a specific path. Although OpenAPI does not support it, the completePath path parameter is the complete path with slashes included (and non encoded). There is no conflict as no other GET request start with the same prefix. Depending on the optional action query parameter, different kind of information are available (see the parameter description). More importantly, if the "action" parameter is absent, the raw file is returned. If no "action" parameter is present and the path points to a directory, a tarball of this directory is returned.
+      operationId: getPath
+      parameters:
+        - name: completePath
+          in: path
+          required: true
+          type: string
+          description: the complete path on which to request information. It can contain non-encoded slashes. Except for the "exists" action, any request on a non-existing path should return an error
+        - name: action
+          in: query
+          type: string
+          description:
+            The action parameter must be one of [exists/properties/list/md5]. The "exists" action produces a BooleanResponse (see definition) indicating if the path exists or no. The "properties" action response produces a PathProperties (see definition) with the path properties. The "list" action produces a DirectoryList (see definition) with all the files of the directory (if the path is not a directory an error must be returned). The "md5" action is optional and produces a PathMd5 (see definition).
+      produces:
+      - application/octet-stream
+      - application/json
+      responses:
+        '200':
+          description: successful response. If there is no action, the raw file is returned, with the according mime type. If there is an action, a json response a returned
+          schema:
+            $ref: '#/definitions/AbstractPathInformation'
+        default:
           $ref: '#/responses/GenericError'
 responses:
   GenericError:
@@ -521,3 +546,77 @@ definitions:
     properties:
       deleteFiles:
         type: boolean
+  AbstractPathInformation :
+    type: object
+    discriminator: pathInformationType
+    properties:
+      pathInformationType:
+        type: string
+        enum: [Exists,Properties,DirectoryList,Md5]
+    required:
+    - pathInformationType
+  BooleanResponse:
+    description: A boolean response for "exists" action "getPath" operation
+    allOf:
+    - $ref: '#/definitions/AbstractPathInformation'
+    - type: object
+      properties:
+        exists:
+          type: boolean
+      required:
+      - exists
+  PathProperties:
+    allOf:
+    - $ref: '#/definitions/AbstractPathInformation'
+    - $ref: '#/definitions/Path'
+  DirectoryList:
+    allOf:
+    - $ref: '#/definitions/AbstractPathInformation'
+    - type: object
+      properties:
+        directories:
+          type: array
+          items:
+            $ref: '#/definitions/Path'
+      required:
+      - directories
+  PathMD5:
+    allOf:
+    - $ref: '#/definitions/AbstractPathInformation'
+    - type: object
+      properties:
+        md5:
+          type: string
+      required:
+      - md5
+  Path:
+    allOf:
+    - $ref: '#/definitions/AbstractPathInformation'
+    - type: object
+      required:
+      - platformPath
+      - lastModificationDate
+      - isDirectory
+      properties:
+        platformPath:
+          type: string
+          description: A valid path, slash-separated. It must be consistent with the path of files and directories uploaded and downloaded by clients. For instance, if a user uploads a directory structure "dir/{file1.txt,file2.txt}", it is expected that the path of the first file will be "[prefix]/dir/file1.txt" and that the path of the second file will be "[prefix]/dir/file2.txt" where [prefix] depends on the upload parameters, in particular destination directory.
+        lastModificationDate:
+          type: integer
+          format: int64
+          description: Date of last modification, in seconds since the Epoch (UNIX timestamp).
+        isDirectory:
+          type: boolean
+          description: True if the path represents a directory.
+        size:
+          type: integer
+          format: int64
+          description: For a file, size in bytes. For a directory, sum of all the sizes of the files contained in the directory (recursively).
+        executionId:
+          type: string
+          format: ascii
+          description: Id of the Execution that produced the Path.
+        mimeType:
+          type: string
+          format: ascii
+          description: mime type based on RFC 6838.
