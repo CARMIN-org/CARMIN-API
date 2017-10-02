@@ -9,6 +9,7 @@
 
     var carminClient;
     var pipelines;
+    var pipelinesFilters;
     var currentPipeline;
 
     /******** Load jQuery if not present *********/
@@ -159,10 +160,18 @@
 
     function updatePipelines(pipelineList) {
         pipelines=pipelineList;
+        filterPipelines(); // no args <=> no filter
+        addPipelineFilters();
+    }
+
+    function filterPipelines(property, value) {
         var pipelineListEl = $("#pipelines");
         pipelineListEl.empty();
         pipelineListEl.append("<legend>Select a pipeline:</legend>");
         for (var i = 0; i < pipelines.length; i++) {
+            if (property && value && 
+                (!pipelines[i].properties || pipelines[i].properties[property] !== value))
+                continue;
             pipelineListEl.append(
                 "<label for=\"radio-" + i + "\">" + pipelines[i].name + "</label>",
                 "<input type=\"radio\" name=\"pipeline\" id=\"radio-" + i + "\" value=\""+ i + "\"/>",
@@ -181,6 +190,52 @@
             $("#pipelines input:checked").prop("checked", false);
         });
     }
+
+    function addPipelineFilters() {
+        $("#pipelinesFilter").empty();
+        $("#pipelinesFilter").append("<legend>Filters :</legend>");
+        pipelineFilters = {};
+        for (var i=0; i<pipelines.length; i++) {
+            if (pipelines[i].properties) {
+                addPipelinePropertiesToFilters(pipelines[i].properties);
+            }
+        }
+        addFilterButtons();
+    }
+
+    function addPipelinePropertiesToFilters(properties) {
+        for (var prop in properties) {
+            if (!pipelineFilters[prop]) {
+                // the property doesnt exist yet, create it
+                pipelineFilters[prop] = [properties[prop]];
+            } else {
+                // the property already exists, but does the value ?
+                if (pipelineFilters[prop].indexOf(properties[prop]) < 0) {
+                    pipelineFilters[prop].push(properties[prop]);
+                }
+            }
+        }
+    }
+
+    function addFilterButtons() {
+        $("<label />", {for: "none", text : "None"}).appendTo("#pipelinesFilter");
+        $("<input />", {type: "radio", name : "filers", id: "none"}).appendTo("#pipelinesFilter");
+        for (var property in pipelineFilters) {
+            pipelineFilters[property].forEach(function (value) {
+                var id = property + ":" + value;
+                $("<label />", {for: id, text : property + " : " + value}).appendTo("#pipelinesFilter");
+                var input = $("<input />", {type: "radio", name : "filers", id: id});
+                input.data({ property : property, value : value});
+                input.appendTo("#pipelinesFilter");
+            });
+        }
+        $("#pipelinesFilter input").checkboxradio({icon:false});
+        $("#pipelinesFilter input").on( "change", function (e) {
+            var data = $(e.target).data();
+            filterPipelines(data.property, data.value);
+        });
+    }
+
 
     // tabs manipulation
 
