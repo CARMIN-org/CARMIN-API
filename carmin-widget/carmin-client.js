@@ -57,7 +57,7 @@ CarminClient.prototype.describePipeline = function(pipelineIdentifier, callback)
 
 CarminClient.prototype.initAndStart = function(executionName, pipelineIdentifier, inputValues, callback) {
   var content = {"name" : executionName,"pipelineIdentifier" : pipelineIdentifier, "inputValues" : inputValues};
-  this.doPostRequest("/executions/create-and-start", content, callback);
+  this.doPostRequest("/executions", content, callback);
 }
 
 CarminClient.prototype.getExecution = function(executionIdentifier, callback) {
