@@ -293,10 +293,9 @@ paths:
     get:
       summary: get content or various information
       description:
-        Give access to multiple information about a specific path. 
-        Depending on the optional action query parameter, different informations are available (see the parameter description). 
-        More importantly, if the "action" parameter is absent, the raw file is returned. 
-        If no "action" parameter is present and the path points to a directory, a tarball of this directory is returned.
+        Allow file downloading and give access to multiple information about a specific path. 
+        The response format and content depends on the mandatory action query parameter (see the parameter description). 
+        Basically, the "content" action downloads the raw file, and the other actions return various informations in json.
       operationId: getPath
       parameters:
       - name: completePath
@@ -309,18 +308,26 @@ paths:
           type: string
       - name: action
         in: query
+        required: true
         description:
-          The action parameter must be one of [exists/properties/list/md5]. 
-          The "exists" action produces a BooleanResponse (see definition) indicating if the path exists or no. 
-          The "properties" action response produces a PathProperties (see definition) with the path properties. 
-          The "list" action produces a DirectoryList (see definition) with all the files of the directory (if the path is not a directory an error must be returned). 
-          The "md5" action is optional and produces a PathMd5 (see definition).
+          The "content" action downloads the raw file. If the path points to a directory, a tarball of this directory is returned. 
+          The "exists" action returns a BooleanResponse object (see definition) indicating if the path exists or not. 
+          The "properties" action returns a Path object (see definition) with the path properties. 
+          The "list" action returns a DirectoryList object (see definition) with the properties of all the files of the directory (if the path is not a directory an error must be returned). 
+          The "md5" action is optional and returns a PathMd5 object (see definition).
         schema:
           type: string  
+          enum:
+          - content
+          - exists
+          - properties
+          - list
+          - md5
       responses:
         '200':
-          description: successful response. If there is no action, the raw file is returned, with the according mime type. 
-            If there is an action, a json response a returned
+          description: successful response. 
+            If the action is "content", the raw file (or a tarball) is returned, with the according mime type. 
+            Otherwise a json response a returned
           content:
             application/json:
               schema:
@@ -579,12 +586,9 @@ components:
       required:
       - exists
     DirectoryList:
-      type: object
-      properties:
-        directories:
-          type: array
-          items:
-            $ref: '#/components/schemas/Path'
+      type: array
+      items:
+        $ref: '#/components/schemas/Path'
       required:
       - directories
     PathMD5:
