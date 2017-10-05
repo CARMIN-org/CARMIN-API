@@ -1,10 +1,10 @@
-function Carmin(apiKey, baseUrl, opts) {
+function CarminClient(baseUrl, apiKey, opts) {
   this.apiKey = apiKey;
   this.baseUrl = baseUrl;
   this.opts = opts || {};
 }
 
-Carmin.prototype.doRequest = function(path, callback, opts) {
+CarminClient.prototype.doRequest = function(path, callback, opts) {
     opts = opts || {};
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() { 
@@ -18,6 +18,7 @@ Carmin.prototype.doRequest = function(path, callback, opts) {
         }
       }
     }
+    console.log(this.baseUrl);
     xmlHttp.open(opts.postContent ? "POST" : "GET", this.baseUrl + "/" + path, true);
     if (!opts.noApiKey) {
       if (this.opts.useAuthorizationHeader) {
@@ -36,34 +37,34 @@ Carmin.prototype.doRequest = function(path, callback, opts) {
     }
 }
 
-Carmin.prototype.doPostRequest = function(path, content, callback, opts) {
+CarminClient.prototype.doPostRequest = function(path, content, callback, opts) {
   opts = opts || {};
   opts.postContent = content;
   this.doRequest(path, callback, opts);
 }
 
-Carmin.prototype.getPlatformProperties = function(callback) {
+CarminClient.prototype.getPlatformProperties = function(callback) {
   this.doRequest("platform", callback);
 }
 
-Carmin.prototype.listPipelines = function(callback) {
+CarminClient.prototype.listPipelines = function(callback) {
   this.doRequest("pipelines", callback);
 }
 
-Carmin.prototype.describePipeline = function(pipelineIdentifier, callback) {
+CarminClient.prototype.describePipeline = function(pipelineIdentifier, callback) {
   this.doRequest("pipelines/" + pipelineIdentifier, callback);
 }
 
-Carmin.prototype.initAndStart = function(executionName, pipelineIdentifier, inputValues, callback) {
+CarminClient.prototype.initAndStart = function(executionName, pipelineIdentifier, inputValues, callback) {
   var content = {"name" : executionName,"pipelineIdentifier" : pipelineIdentifier, "inputValues" : inputValues};
-  this.doPostRequest("/executions/create-and-start", content, callback);
+  this.doPostRequest("/executions", content, callback);
 }
 
-Carmin.prototype.getExecution = function(executionIdentifier, callback) {
+CarminClient.prototype.getExecution = function(executionIdentifier, callback) {
   this.doRequest("executions/" + executionIdentifier, callback);
 }
 
-Carmin.prototype.downloadFile = function(filePath, callback) {
+CarminClient.prototype.downloadFile = function(filePath, callback) {
   this.doRequest("path/download?uri=vip://vip.creatis.insa-lyon.fr" + filePath, callback, {"noJson":true});
 }
 
