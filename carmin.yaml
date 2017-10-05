@@ -1,8 +1,8 @@
 openapi: '3.0.0'
 info:
   version: '0.2.2'
-  title: CARMIN a Common web API for Remote pipeline INvocation
-  description: FLI/IAM REST API for exchanging data and remote calling pipelines.
+  title: CARMIN - Common API for Research Medical Imaging Network
+  description: REST API for exchanging data and remotely calling pipelines.
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
@@ -152,6 +152,21 @@ paths:
           description: successful response
         default:
           $ref: '#/components/responses/Error'
+    delete:
+      summary: Delete an execution
+      description:
+        This will kill the underlying processes (if possible) and free all resources associated with this execution (if deleteFiles parameter is present)
+      operationId: deleteExecution
+      parameters:
+          in: query
+          schema:
+            type: boolean
+          description: Also delete all the associated resources (especially the output files).
+      responses:
+        '204':
+          description: successful response
+        default:
+          $ref: '#/responses/GenericError'
   /executions/{executionIdentifier}/results:
     get:
       summary: get the result files of the execution
@@ -227,24 +242,6 @@ paths:
           description: successful response
         default:
           $ref: '#/components/responses/Error'
-  /executions/{executionIdentifier}/delete:
-    put:
-      summary: Delete an execution
-      description:
-        This will kill the underlying processes (if possible) and free all resources associated with this execution (depending of the configuration given in as body input).
-      operationId: deleteExecution
-      parameters:
-      - $ref: '#/components/parameters/PathExecutionIdentifier'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DeleteExecutionConfiguration'
-      responses:
-        '204':
-          description: successful response
-        default:
-          $ref: '#/components/responses/Error'
   /pipelines:
     get:
       summary: List pipelines
@@ -307,7 +304,7 @@ components:
         format: ascii
   responses:
     Error:
-      description: An functional or internal error occured processing the request
+      description: A functional or internal error occured processing the request
       content:
         application/json:
           schema:
@@ -517,9 +514,3 @@ components:
           format: int64
           description: Time in seconds since Unix epoch
           readOnly: true
-    DeleteExecutionConfiguration:
-      type: object
-      required: [deleteFiles]
-      properties:
-        deleteFiles:
-          type: boolean
