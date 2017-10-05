@@ -400,7 +400,7 @@ definitions:
         type: array
         items:
           type: string
-        description: List of properties that can be used to describe the pipelines and to filter them in the "listPipelines" method
+        description: Complete list of all properties that can be used to describe the pipelines and to filter them in the "listPipelines" method
     additionalProperties: true # allow extensions
   Pipeline:
     type: object
@@ -432,7 +432,8 @@ definitions:
         type: object
         additionalProperties:
           type: string
-        description: the properties (as keys) and their values that describe the pipeline. The properties used must be listed in the "supportedPipelineProperties" of the "getPlatformProperties" method
+        description: the properties (as keys) and their values that describe the pipeline. 
+          The properties used must be listed in the "supportedPipelineProperties" of the "getPlatformProperties" method.
       errorCodesAndMessages:
         type: array
         items:
