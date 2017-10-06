@@ -37,6 +37,7 @@ paths:
       operationId: authenticate
       security: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -89,6 +90,7 @@ paths:
         If the status “Initializing” is returned, playExecution must be called to start the execution.
       operationId: createExecution
       requestBody :
+        required: true
         content:
           application/json:
             schema:
@@ -143,6 +145,7 @@ paths:
         Changes to the other properties will be ignored.
       operationId: updateExecution
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -332,12 +335,76 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetPathResponse' 
-            '*/*':
+            application/octet-stream:
+              # any media type is accepted, equivalent to `*/*`
               schema:
                 type: string
                 format: binary
         default:
-          $ref: '#/components/responses/Error' 
+          $ref: '#/components/responses/Error'
+    put:
+      summary: Upload data to a path
+      description:
+        A request without content creates a directory (an error should be returned if the path already exists).
+        A request with a specific content type ("application/carmin-json") allows to upload data encoded in base64.
+        The base64 content (part of a json payload) can either be an encoded file, are an encoded zip archive that will create a directory.
+        All other content (with any content type) will be considered as a raw file and will override the existing path content.
+        If the parent directory of the file/directory to create does not exist, an error must be returned.
+      operationId: uploadPath
+      parameters:
+      - name: completePath
+        in: path
+        required: true
+        description:
+          The complete path on which to upload data.
+          It can contain non-encoded slashes.
+        schema:
+          type: string
+      requestBody:
+        required: false
+        content:
+          application/carmin-json:
+            schema:
+              $ref: '#/components/schemas/UploadData'
+          application/octet-stream:
+            # any media type is accepted, equivalent to `*/*`
+            schema:
+              type: string
+              format: binary
+      responses:
+        '201':
+          description: The upload is successful and finished.
+          headers:
+            Location:
+              description: The url to access the created or updated path
+              schema:
+                type: string
+                format: url
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Path' 
+        default:
+          $ref: '#/components/responses/Error'
+    delete:
+      summary: Delete a path
+      description:
+        Delete a path and transitively delete all its content if it is a directory.
+      operationId: DeletePath
+      parameters:
+      - name: completePath
+        in: path
+        required: true
+        description:
+          The complete path to delete.
+          It can contain non-encoded slashes.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: the deletion is successful and finished.
+        default:
+          $ref: '#/components/responses/Error'
 components:
   securitySchemes:
     ApiKey:
@@ -627,3 +694,22 @@ components:
           type: string
           format: ascii
           description: mime type based on RFC 6838.
+    UploadData:
+      type: object
+      required:
+      - base64Content
+      - type
+      properties:
+        base64Content:
+          type: string
+          format: base64
+          description:
+            If the type is "File", the base64 string will be decoded to a single raw file.
+            If the type is "Archive", the base64 string must corresponds to an encoded zip file that will be decoded to create directory and its content.
+        type:
+          type: string
+          enum:
+          - File
+          - Archive
+        md5:
+          type: string
