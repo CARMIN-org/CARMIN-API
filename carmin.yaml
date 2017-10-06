@@ -155,9 +155,10 @@ paths:
     delete:
       summary: Delete an execution
       description:
-        This will kill the underlying processes (if possible) and free all resources associated with this execution (if deleteFiles parameter is present)
+        This will kill the underlying processes (if possible) and free all resources associated with this execution (if deleteFiles parameter is present and true)
       operationId: deleteExecution
       parameters:
+        - name: deleteFiles
           in: query
           schema:
             type: boolean
@@ -166,7 +167,7 @@ paths:
         '204':
           description: successful response
         default:
-          $ref: '#/responses/GenericError'
+          $ref: '#/components/responses/Error'
   /executions/{executionIdentifier}/results:
     get:
       summary: get the result files of the execution
