@@ -1,8 +1,8 @@
 openapi: '3.0.0'
 info:
   version: '0.2.2'
-  title: CARMIN a Common web API for Remote pipeline INvocation
-  description: FLI/IAM REST API for exchanging data and remote calling pipelines.
+  title: CARMIN - Common API for Research Medical Imaging Network
+  description: REST API for exchanging data and remotely calling pipelines.
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
@@ -155,6 +155,22 @@ paths:
           description: successful response
         default:
           $ref: '#/components/responses/Error'
+    delete:
+      summary: Delete an execution
+      description:
+        This will kill the underlying processes (if possible) and free all resources associated with this execution (if deleteFiles parameter is present and true)
+      operationId: deleteExecution
+      parameters:
+        - name: deleteFiles
+          in: query
+          schema:
+            type: boolean
+          description: Also delete all the associated resources (especially the output files).
+      responses:
+        '204':
+          description: successful response
+        default:
+          $ref: '#/components/responses/Error'
   /executions/{executionIdentifier}/results:
     get:
       summary: get the result files of the execution
@@ -229,24 +245,6 @@ paths:
           description: successful response
         default:
           $ref: '#/components/responses/Error'
-  /executions/{executionIdentifier}/delete:
-    put:
-      summary: Delete an execution
-      description:
-        This will kill the underlying processes (if possible) and free all resources associated with this execution (depending of the configuration given in as body input).
-      operationId: deleteExecution
-      parameters:
-      - $ref: '#/components/parameters/PathExecutionIdentifier'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DeleteExecutionConfiguration'
-      responses:
-        '204':
-          description: successful response
-        default:
-          $ref: '#/components/responses/Error'
   /pipelines:
     get:
       summary: List pipelines
@@ -261,6 +259,16 @@ paths:
         schema:
           type: string
           format: ascii
+      - name: property
+        in: query
+        schema:
+          type: string
+        description: A pipeline property to filter the returned pipelines. It must listed in the "supportedPipelineProperties" of the getPlatformProperties method. All the returned pipelines must have this property set. Use also the "propertyValue" to filter on this property value.
+      - name: propertyValue
+        in: query
+        schema:
+          type: string
+        description: A property value on which to filter the returned pipelines. The "property" parameter must also be present. All the returned pipelines must have this property equal to the value given in this parameter.
       responses:
         '200':
           description: successful response
@@ -422,7 +430,7 @@ components:
         format: ascii
   responses:
     Error:
-      description: An functional or internal error occured processing the request
+      description: A functional or internal error occured processing the request
       content:
         application/json:
           schema:
@@ -496,6 +504,11 @@ components:
         supportedAPIVersion:
           type: string
           format: ascii
+        supportedPipelineProperties:
+          type: array
+          items:
+            type: string
+          description: Complete list of all properties that can be used to describe the pipelines and to filter them in the "listPipelines" method
       additionalProperties: true # allow extensions   
     AuthenticationCredentials:
       type: object
@@ -523,6 +536,7 @@ components:
         - identifier
         - name
         - version
+        - properties
         # - parameters optional in 0.2
       properties:
         identifier:
@@ -542,6 +556,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PipelineParameter'
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+          description: the properties (as keys) and their values that describe the pipeline. 
+            The properties used must be listed in the "supportedPipelineProperties" of the "getPlatformProperties" method.
         errorCodesAndMessages:
           type: array
           items:
@@ -632,12 +652,6 @@ components:
           format: int64
           description: Time in seconds since Unix epoch
           readOnly: true
-    DeleteExecutionConfiguration:
-      type: object
-      required: [deleteFiles]
-      properties:
-        deleteFiles:
-          type: boolean
     GetPathResponse :
       oneOf:
       - $ref: '#/components/schemas/BooleanResponse'
