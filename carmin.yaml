@@ -354,7 +354,7 @@ paths:
       summary: Upload data to a path
       description:
         A request without content creates a directory (an error should be returned if the path already exists).
-        A request with a specific content type ("application/carmin-json") allows to upload data encoded in base64.
+        A request with a specific content type ("application/carmin+json") allows to upload data encoded in base64.
         The base64 content (part of a json payload) can either be an encoded file, are an encoded zip archive that will create a directory.
         All other content (with any content type) will be considered as a raw file and will override the existing path content.
         If the parent directory of the file/directory to create does not exist, an error must be returned.
@@ -371,7 +371,7 @@ paths:
       requestBody:
         required: false
         content:
-          application/carmin-json:
+          application/carmin+json:
             schema:
               $ref: '#/components/schemas/UploadData'
           application/octet-stream:
