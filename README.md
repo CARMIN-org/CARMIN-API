@@ -1,11 +1,17 @@
 # CARMIN
 
-A common web API for remote pipeline execution:
+A common web API for remote pipeline execution.
+
+* [Available on Swagger Hub](https://swaggerhub.com/apis/CARMIN/carmin-common_api_for_research_medical_imaging_network/0.3).
+* REST specification: see `carmin.yaml`.
+* [Abstract at 2015 INCF conference](http://www.frontiersin.org/10.3389/conf.fnins.2015.91.00053/event_abstract)
+
+## Deprecated
 
 * [Specification and documentation](https://docs.google.com/document/d/1qVSDLWs8cLJ59sIQI1Av5EA5_yrSAWSqRDywwlu-pmI/edit?usp=sharing)
 * Implementation in SOAP: see `api.wsdl`.
-* Implementation in REST: see `carmin.yaml`.
-* [Abstract at 2015 INCF conference](http://www.frontiersin.org/10.3389/conf.fnins.2015.91.00053/event_abstract)
+
+## Note
 
 Considering the REST or Richardson Maturity Model (RMM) defined by Leonard Richardson
 (please see http://martinfowler.com/articles/richardsonMaturityModel.html) the current
