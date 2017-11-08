@@ -37,6 +37,7 @@ paths:
       operationId: authenticate
       security: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -89,6 +90,7 @@ paths:
         If the status “Initializing” is returned, playExecution must be called to start the execution.
       operationId: createExecution
       requestBody :
+        required: true
         content:
           application/json:
             schema:
@@ -143,6 +145,7 @@ paths:
         Changes to the other properties will be ignored.
       operationId: updateExecution
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -187,8 +190,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
-                  format: url
+                  $ref: '#/components/schemas/Path'
         default:
           $ref: '#/components/responses/Error'
   /executions/{executionIdentifier}/stdout:
@@ -298,6 +300,119 @@ paths:
                 $ref: '#/components/schemas/Pipeline'
         default: 
           $ref: '#/components/responses/Error'      
+  /path/{completePath}:
+    get:
+      summary: get content or various information
+      description:
+        Allow file downloading and give access to multiple information about a specific path. 
+        The response format and content depends on the mandatory action query parameter (see the parameter description). 
+        Basically, the "content" action downloads the raw file, and the other actions return various informations in json.
+      operationId: getPath
+      parameters:
+      - name: completePath
+        in: path
+        required: true
+        description: the complete path on which to request information. 
+          It can contain non-encoded slashes. 
+          Except for the "exists" action, any request on a non-existing path should return an error
+        schema:
+          type: string
+      - name: action
+        in: query
+        required: true
+        description:
+          The "content" action downloads the raw file. If the path points to a directory, a tarball of this directory is returned. 
+          The "exists" action returns a BooleanResponse object (see definition) indicating if the path exists or not. 
+          The "properties" action returns a Path object (see definition) with the path properties. 
+          The "list" action returns a DirectoryList object (see definition) with the properties of all the files of the directory (if the path is not a directory an error must be returned). 
+          The "md5" action is optional and returns a PathMd5 object (see definition).
+        schema:
+          type: string  
+          enum:
+          - content
+          - exists
+          - properties
+          - list
+          - md5
+      responses:
+        '200':
+          description: successful response. 
+            If the action is "content", the raw file (or a tarball) is returned, with the according mime type. 
+            Otherwise a json response a returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPathResponse' 
+            application/octet-stream:
+              # any media type is accepted, equivalent to `*/*`
+              schema:
+                type: string
+                format: binary
+        default:
+          $ref: '#/components/responses/Error'
+    put:
+      summary: Upload data to a path
+      description:
+        A request without content creates a directory (an error should be returned if the path already exists).
+        A request with a specific content type ("application/carmin+json") allows to upload data encoded in base64.
+        The base64 content (part of a json payload) can either be an encoded file, are an encoded zip archive that will create a directory.
+        All other content (with any content type) will be considered as a raw file and will override the existing path content.
+        If the parent directory of the file/directory to create does not exist, an error must be returned.
+      operationId: uploadPath
+      parameters:
+      - name: completePath
+        in: path
+        required: true
+        description:
+          The complete path on which to upload data.
+          It can contain non-encoded slashes.
+        schema:
+          type: string
+      requestBody:
+        required: false
+        content:
+          application/carmin+json:
+            schema:
+              $ref: '#/components/schemas/UploadData'
+          application/octet-stream:
+            # any media type is accepted, equivalent to `*/*`
+            schema:
+              type: string
+              format: binary
+      responses:
+        '201':
+          description: The upload is successful and finished.
+          headers:
+            Location:
+              description: The url to access the created or updated path
+              schema:
+                type: string
+                format: url
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Path' 
+        default:
+          $ref: '#/components/responses/Error'
+    delete:
+      summary: Delete a path
+      description:
+        Delete a path and transitively delete all its content if it is a directory.
+      operationId: DeletePath
+      parameters:
+      - name: completePath
+        in: path
+        required: true
+        description:
+          The complete path to delete.
+          It can contain non-encoded slashes.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: the deletion is successful and finished.
+        default:
+          $ref: '#/components/responses/Error'
 components:
   securitySchemes:
     ApiKey:
@@ -537,3 +652,78 @@ components:
           format: int64
           description: Time in seconds since Unix epoch
           readOnly: true
+    GetPathResponse :
+      oneOf:
+      - $ref: '#/components/schemas/BooleanResponse'
+      - $ref: '#/components/schemas/Path'
+      - $ref: '#/components/schemas/DirectoryList'
+      - $ref: '#/components/schemas/PathMD5'
+    BooleanResponse:
+      description: A boolean response for "exists" action "getPath" operation
+      type: object
+      properties:
+        exists:
+          type: boolean
+      required:
+      - exists
+    DirectoryList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Path'
+      required:
+      - directories
+    PathMD5:
+      type: object
+      properties:
+        md5:
+          type: string
+      required:
+      - md5
+    Path:
+      type: object
+      required:
+      - platformPath
+      - lastModificationDate
+      - isDirectory
+      properties:
+        platformPath:
+          type: string
+          description: A valid path, slash-separated. It must be consistent with the path of files and directories uploaded and downloaded by clients. For instance, if a user uploads a directory structure "dir/{file1.txt,file2.txt}", it is expected that the path of the first file will be "[prefix]/dir/file1.txt" and that the path of the second file will be "[prefix]/dir/file2.txt" where [prefix] depends on the upload parameters, in particular destination directory.
+        lastModificationDate:
+          type: integer
+          format: int64
+          description: Date of last modification, in seconds since the Epoch (UNIX timestamp).
+        isDirectory:
+          type: boolean
+          description: True if the path represents a directory.
+        size:
+          type: integer
+          format: int64
+          description: For a file, size in bytes. For a directory, sum of all the sizes of the files contained in the directory (recursively).
+        executionId:
+          type: string
+          format: ascii
+          description: Id of the Execution that produced the Path.
+        mimeType:
+          type: string
+          format: ascii
+          description: mime type based on RFC 6838.
+    UploadData:
+      type: object
+      required:
+      - base64Content
+      - type
+      properties:
+        base64Content:
+          type: string
+          format: base64
+          description:
+            If the type is "File", the base64 string will be decoded to a single raw file.
+            If the type is "Archive", the base64 string must corresponds to an encoded zip file that will be decoded to create directory and its content.
+        type:
+          type: string
+          enum:
+          - File
+          - Archive
+        md5:
+          type: string
