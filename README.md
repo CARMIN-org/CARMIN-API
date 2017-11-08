@@ -8,7 +8,7 @@ A common web API for remote pipeline execution.
 
 ## Deprecated
 
-* [Specification (working document)](https://docs.google.com/document/d/1qVSDLWs8cLJ59sIQI1Av5EA5_yrSAWSqRDywwlu-pmI/edit?usp=sharing). Deprecated by the OpenAPI 
+* [Specification (working document)](https://docs.google.com/document/d/1qVSDLWs8cLJ59sIQI1Av5EA5_yrSAWSqRDywwlu-pmI/edit?usp=sharing). Deprecated by the OpenAPI specification but still contains useful comments.
 * Implementation in SOAP: see `api.wsdl`.
 
 ## Note
