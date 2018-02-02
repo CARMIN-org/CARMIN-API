@@ -1,6 +1,6 @@
 openapi: '3.0.0'
 info:
-  version: '0.2.2'
+  version: '0.4'
   title: CARMIN - Common API for Research Medical Imaging Network
   description: REST API for exchanging data and remotely calling pipelines.
   license:
@@ -532,61 +532,8 @@ components:
           type: string
     Pipeline:
       type: object
-      required:
-        - identifier
-        - name
-        - version
-        - properties
-        # - parameters optional in 0.2
-      properties:
-        identifier:
-          type: string
-          format: ascii
-        name:
-          type: string
-        version:
-          type: string
-          format: ascii
-        description:
-          type: string
-        canExecute:
-          type: boolean
-          description: true if the user who requested the pipeline can execute it
-        parameters:
-          type: array
-          items:
-            $ref: '#/components/schemas/PipelineParameter'
-        properties:
-          type: object
-          additionalProperties:
-            type: string
-          description: the properties (as keys) and their values that describe the pipeline. 
-            The properties used must be listed in the "supportedPipelineProperties" of the "getPlatformProperties" method.
-        errorCodesAndMessages:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorCodeAndMessage'
-    PipelineParameter:
-      type: object
-      required:
-        - name
-        - type
-        - isOptional
-        - isReturnedValue
-      properties:
-        name:
-          type: string
-          format: ascii
-        type:
-          $ref: '#/components/schemas/ParameterType'
-        isOptional:
-          type: boolean
-        isReturnedValue:
-          type: boolean
-        defaultValue:
-          description: Default value. It must be consistent with the parameter type.
-        description:
-          type: string
+      $ref: 'https://raw.githubusercontent.com/boutiques/boutiques/master/tools/python/boutiques/schema/descriptor.schema.json'
+      example: 'https://raw.githubusercontent.com/boutiques/boutiques/master/tools/python/boutiques/schema/examples/good.json'
     ParameterType:
       type: string
       enum: [File,String,Boolean,Int64,Double,List]
