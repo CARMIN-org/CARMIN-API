@@ -16,8 +16,6 @@ paths:
   /platform:
     get:
       summary: Returns information about the platform
-      description: 
-        https must be supported in the list of the supported protocols.
       operationId: getPlatformProperties
       security: []
       responses:
@@ -455,7 +453,6 @@ components:
     PlatformProperties:
       type: object
       required:
-        - supportedTransferProtocols
         - supportedModules
         - supportedAPIVersion
       properties:
@@ -466,13 +463,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ErrorCodeAndMessage'
-        supportedTransferProtocols:
-          type: array
-          items:
-            type: string
-            enum: ["http", "https", "ftp", "sftp", "ftps", "scp", "webdav"]
-          description:
-            Protocol names must be URL prefixes (e.g. "http", "https", "ftp", "sftp", "ftps", "scp", "webdav"). 
         supportedModules:
           type: array
           items:
