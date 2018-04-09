@@ -453,6 +453,10 @@ components:
           format: int64
         errorMessage:
           type: string
+        errorDetails:
+          description: optional pieces of information about the error(s)
+          type: object
+          additionalProperties: true
     PlatformProperties:
       type: object
       required:
