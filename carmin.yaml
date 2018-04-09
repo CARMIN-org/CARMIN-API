@@ -183,11 +183,6 @@ paths:
       operationId: getExecutionResults
       parameters:
       - $ref: '#/components/parameters/PathExecutionIdentifier'
-      - name: protocol
-        in: query
-        description: if not specified the default protocol is https
-        schema:
-          type: string
       responses:
         '200':
           description: successful response
