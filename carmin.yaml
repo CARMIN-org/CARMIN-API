@@ -57,18 +57,24 @@ paths:
       description:
         list all execution Ids in the platform which are ordered in decreasing submission time.
         All the executions that were launched by the user must be returned. It is up to the platform to return executions that the user did not launch.
+        Return the executions with indexes ranging from offset to offset+limit-1.
         When studyIdentifier is present, all the executions that the user launched in the study must be returned.
       operationId: listExecutions
       parameters:
       - name: studyIdentifier
+        description: When present, all the executions the user launched for this study must be returned
         in: query
         schema:
           type: string
       - name: offset
+        description: Index of the first execution to be returned. Defaults to 0.
         in: query
         schema:
           type: string
       - name: limit
+        description:
+          Maximum number of exeuctions to be returned.
+          Defaults to the "defaultLimitListExecutions" property in the getPlatformProperties method if present, to 500 otherwise.
         in: query
         schema:
           type: string
