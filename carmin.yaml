@@ -493,6 +493,11 @@ components:
           items:
             type: string
           description: List of optional methods that are not supported by the platform. Must be consistent with the "isKillExecutionSupported" property.
+        studiesSupport:
+          type: boolean
+          description:
+            Whether the platform support the concept of studies, and can filter pipelines and executions from a specific study.
+            Defaults to false.
         defaultStudy:
           type: string
           format: ascii
@@ -504,6 +509,7 @@ components:
           items:
             type: string
           description: Complete list of all properties that can be used to describe the pipelines and to filter them in the "listPipelines" method
+
       additionalProperties: true # allow extensions   
     AuthenticationCredentials:
       type: object
