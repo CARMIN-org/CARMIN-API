@@ -316,7 +316,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'http://raw.githubusercontent.com/boutiques/boutiques/0.5.7/tools/python/boutiques/schema/descriptor.schema.json'
+                $ref: 'http://raw.githubusercontent.com/boutiques/boutiques/0.5.8/tools/python/boutiques/schema/descriptor.schema.json'
         default: 
           $ref: '#/components/responses/Error'
   /path/{completePath}:
