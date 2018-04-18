@@ -16,8 +16,6 @@ paths:
   /platform:
     get:
       summary: Return information about the platform
-      description: 
-        https must be supported in the list of the supported protocols.
       operationId: getPlatformProperties
       security: []
       responses:
