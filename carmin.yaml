@@ -297,7 +297,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pipeline'
-        default:
+        default: 
+          $ref: '#/components/responses/Error'
+  /pipelines/{pipelineIdentifier}/boutiquesdescriptor:
+    get:
+      summary: Returns the Boutiques descriptor of the pipeline, if available. 
+      operationId: getBoutiquesDescriptor
+      parameters:
+      - name: pipelineIdentifier
+        in: path
+        required: true
+        schema:
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          content:
+            application/json:
+              schema:
+                $ref: 'http://raw.githubusercontent.com/boutiques/boutiques/0.5.8/tools/python/boutiques/schema/descriptor.schema.json'
+        default: 
           $ref: '#/components/responses/Error'
   /path/{completePath}:
     get:
