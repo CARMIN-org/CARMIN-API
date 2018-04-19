@@ -1,6 +1,6 @@
 openapi: '3.0.0'
 info:
-  version: '0.2.2'
+  version: '0.3'
   title: CARMIN - Common API for Research Medical Imaging Network
   description: REST API for exchanging data and remotely calling pipelines.
   license:
@@ -15,7 +15,7 @@ security:
 paths:
   /platform:
     get:
-      summary: Returns information about the platform
+      summary: Return information about the platform
       operationId: getPlatformProperties
       security: []
       responses:
@@ -29,7 +29,7 @@ paths:
           $ref: '#/components/responses/Error'
   /authenticate:
     post:
-      summary: Returns the api key necessary to use the API.
+      summary: Return the API key necessary to use the API.
       description:
          The key can be dynamic (a new one for each request) or static (always the same one until the user change it in a back-end)
       operationId: authenticate
@@ -51,9 +51,9 @@ paths:
             $ref: '#/components/responses/Error'
   /executions:
     get:
-      summary: Lists some executions.
+      summary: List some executions.
       description:
-        list all execution Ids in the platform which are ordered in decreasing submission time.
+        List all execution Ids in the platform which are ordered in decreasing submission time.
         All the executions that were launched by the user must be returned. It is up to the platform to return executions that the user did not launch.
         Return the executions with indexes ranging from offset to offset+limit-1.
         When studyIdentifier is present, all the executions that the user launched in the study must be returned.
@@ -88,7 +88,7 @@ paths:
         default:
           $ref: '#/components/responses/Error'
     post:
-      summary: Initializes an execution
+      summary: Initialize an execution
       description:
         The successful response must contain the execution identifier. 
         If the status “Initializing” is returned, playExecution must be called to start the execution.
@@ -110,7 +110,7 @@ paths:
           $ref: '#/components/responses/Error'
   /executions/count:
     get:
-      summary: Give the number of the user's executions
+      summary: Get the number of the user's executions
       operationId: countExecutions
       parameters:
       - name: studyIdentifier
@@ -130,7 +130,7 @@ paths:
     parameters:
     - $ref: '#/components/parameters/PathExecutionIdentifier'
     get:
-      summary: get information about an execution
+      summary: Get information about an execution
       operationId: getExecution
       responses:
         '200':
@@ -142,7 +142,7 @@ paths:
         default:
           $ref: '#/components/responses/Error'
     put:
-      summary: Modify an execution. 
+      summary: Modify an execution.
       description:
         Only the name and the timeout of the execution can be modified. 
         Changes to the identifier or the status will raise errors. 
@@ -177,7 +177,7 @@ paths:
           $ref: '#/components/responses/Error'
   /executions/{executionIdentifier}/results:
     get:
-      summary: get the result files of the execution
+      summary: Get the result files of the execution
       operationId: getExecutionResults
       parameters:
       - $ref: '#/components/parameters/PathExecutionIdentifier'
@@ -194,7 +194,7 @@ paths:
           $ref: '#/components/responses/Error'
   /executions/{executionIdentifier}/stdout:
     get:
-      summary: get stdout of an execution
+      summary: Get stdout of an execution
       operationId: getStdout
       parameters:
       - $ref: '#/components/parameters/PathExecutionIdentifier'
@@ -209,7 +209,7 @@ paths:
           $ref: '#/components/responses/Error'
   /executions/{executionIdentifier}/stderr:
     get:
-      summary: get stderr of an execution
+      summary: Get stderr of an execution
       operationId: getStderr
       parameters:
       - $ref: '#/components/parameters/PathExecutionIdentifier'
@@ -224,7 +224,7 @@ paths:
           $ref: '#/components/responses/Error'
   /executions/{executionIdentifier}/play:
     put:
-      summary: play an execution
+      summary: Play an execution
       operationId: playExecution
       parameters:
       - $ref: '#/components/parameters/PathExecutionIdentifier'
@@ -235,7 +235,7 @@ paths:
           $ref: '#/components/responses/Error'
   /executions/{executionIdentifier}/kill:
     put:
-      summary: kill an execution
+      summary: Kill an execution
       operationId: killExecution
       parameters:
       - $ref: '#/components/parameters/PathExecutionIdentifier'
@@ -297,15 +297,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pipeline'
-        default: 
-          $ref: '#/components/responses/Error'      
+        default:
+          $ref: '#/components/responses/Error'
   /path/{completePath}:
     get:
-      summary: get content or various information
+      summary: Get content or information for a given path
       description:
-        Allow file downloading and give access to multiple information about a specific path. 
-        The response format and content depends on the mandatory action query parameter (see the parameter description). 
-        Basically, the "content" action downloads the raw file, and the other actions return various informations in json.
+        Download a file (or a directory) or retun information about a specific path.
+        The response format and content depends on the mandatory action query parameter (see the parameter description).
+        Basically, the "content" action downloads the raw file, and the other actions return various information in a JSON record.
       operationId: getPath
       parameters:
       - name: completePath
@@ -613,7 +613,7 @@ components:
         timeout:
           type: integer
           format: int64
-          description: The timeout in seconds until which the execution is killed and deleted with all its files. 0 or absense means no timeout
+          description: The timeout in seconds until which the execution is killed and deleted with all its files. 0 or absence means no timeout
         status:
           type: string
           enum: [Initializing,Ready,Running,Finished,InitializationFailed,ExecutionFailed,Unknown,Killed]
