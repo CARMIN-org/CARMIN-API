@@ -10,7 +10,7 @@ info:
     name: CARMIN mailing list
     url: https://groups.google.com/d/forum/carmin
     email: carmin@googlegroups.com
-security: 
+security:
 - ApiKey: []
 paths:
   /platform:
@@ -90,7 +90,7 @@ paths:
     post:
       summary: Initialize an execution
       description:
-        The successful response must contain the execution identifier. 
+        The successful response must contain the execution identifier.
         If the status “Initializing” is returned, playExecution must be called to start the execution.
       operationId: createExecution
       requestBody :
@@ -144,8 +144,8 @@ paths:
     put:
       summary: Modify an execution.
       description:
-        Only the name and the timeout of the execution can be modified. 
-        Changes to the identifier or the status will raise errors. 
+        Only the name and the timeout of the execution can be modified.
+        Changes to the identifier or the status will raise errors.
         Changes to the other properties will be ignored.
       operationId: updateExecution
       requestBody:
@@ -297,7 +297,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pipeline'
-        default: 
+        default:
           $ref: '#/components/responses/Error'
   /pipelines/{pipelineIdentifier}/boutiquesdescriptor:
     get:
@@ -331,8 +331,8 @@ paths:
       - name: completePath
         in: path
         required: true
-        description: the complete path on which to request information. 
-          It can contain non-encoded slashes. 
+        description: the complete path on which to request information.
+          It can contain non-encoded slashes.
           Except for the "exists" action, any request on a non-existing path should return an error
         schema:
           type: string
@@ -340,28 +340,44 @@ paths:
         in: query
         required: true
         description:
-          The "content" action downloads the raw file. If the path points to a directory, a tarball of this directory is returned. 
-          The "exists" action returns a BooleanResponse object (see definition) indicating if the path exists or not. 
-          The "properties" action returns a Path object (see definition) with the path properties. 
-          The "list" action returns a DirectoryList object (see definition) with the properties of all the files of the directory (if the path is not a directory an error must be returned). 
+          The "content" action downloads the raw file. If the path points to a directory, a tarball of this directory is returned.
+          If the file to download is too big, then it should be downloaded by chunks using the "offet" and "size" parameters.
+          The "exists" action returns a BooleanResponse object (see definition) indicating if the path exists or not.
+          The "properties" action returns a Path object (see definition) with the path properties.
+          The "list" action returns a DirectoryList object (see definition) with the properties of all the files of the directory (if the path is not a directory an error must be returned).
           The "md5" action is optional and returns a PathMd5 object (see definition).
         schema:
-          type: string  
+          type: string
           enum:
           - content
           - exists
           - properties
           - list
           - md5
+      - name: offset
+        in: query
+        description:
+          Only relevant when the action is "content", and allow to download only a chunk of the desired data (combinded with "size").
+          Offset is the index of the first byte to be returned. The chunk returned contains the bytes from "offset" to "offset + size - 1".
+        schema:
+          type: integer
+      - name: size
+        in: query
+        description:
+          Only relevant when the action is "content", and allow to download only a chunk of the desired data (combinded with "offset").
+          If "size" is present, then "offset" must also be.
+          Size is the number of bytes to be returned. The chunk returned contains the bytes from "offset" to "offset + size - 1".
+        schema:
+          type: integer
       responses:
         '200':
-          description: successful response. 
-            If the action is "content", the raw file (or a tarball) is returned, with the according mime type. 
+          description: successful response.
+            If the action is "content", the raw file (or a tarball) is returned, with the according mime type.
             Otherwise a json response a returned
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetPathResponse' 
+                $ref: '#/components/schemas/GetPathResponse'
             application/octet-stream:
               # any media type is accepted, equivalent to `*/*`
               schema:
@@ -377,6 +393,7 @@ paths:
         The base64 content (part of a json payload) can either be an encoded file, are an encoded zip archive that will create a directory.
         All other content (with any content type) will be considered as a raw file and will override the existing path content.
         If the parent directory of the file/directory to create does not exist, an error must be returned.
+        If the data to upload is too big, then it shoudl be upload through the "uploadByChunks" method.
       operationId: uploadPath
       parameters:
       - name: completePath
@@ -410,7 +427,38 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Path' 
+                $ref: '#/components/schemas/Path'
+        default:
+          $ref: '#/components/responses/Error'
+    post:
+      summary: create a chunk upload
+      description:
+        Allow to upload a file by chunks. This request only declares the upload, the sender gives the path and the size of the file to upload, but no data.
+        THe method returns an identifier, to upload the chunks one by one with the uploadChunk method.
+        If the parent directory of the file/directory to create does not exist, an error must be returned.
+      operationId: uploadByChunks
+      parameters:
+      - name: completePath
+        in: path
+        required: true
+        description:
+          The complete path on which to upload data.
+          It can contain non-encoded slashes.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChunkUpload'
+      responses:
+        '200':
+          description: The chunk upload is declared. The chunks should be sent through the "uploadChunk" method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChunkUpload'
         default:
           $ref: '#/components/responses/Error'
     delete:
@@ -432,6 +480,92 @@ paths:
           description: the deletion is successful and finished.
         default:
           $ref: '#/components/responses/Error'
+  /upload/{chunkUploadId}:
+    post:
+      summary: Upload a single chunk of a file
+      operationId: uploadChunk
+      description:
+        After an upload by chunks is declared with the "uploadByChunks" method, data must be sent with this method.
+        The chunks must be sent one by one, in raw data, in the good order (from the begining of the file to the end).
+        After each single chunk upload, the response contains the number of bytes that have been received.
+        It is updated based on the content size of the last chunk.
+        For the last chunk, its content length must contain exactly the missing number of bytes, otherwise an error is sent.
+        If the last chunk upload is successful and the file is complete, then a "Path" object is returned with the new file information.
+      parameters:
+      - name: chunkUploadId
+        in: path
+        required: true
+        description:
+          the identifier of the upload by chunks.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            # any media type is accepted, equivalent to `*/*`
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: The chunk is successfully added to the previous one. The upload is not yet over
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChunkUpload'
+        '201':
+          description: The upload by chunk is over. The file is accessible.
+          headers:
+            Location:
+              description: The url to access the created or updated path
+              schema:
+                type: string
+                format: url
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Path'
+        default:
+          $ref: '#/components/responses/Error'
+    get:
+      summary: get the information of an upload by chunks
+      operationId: getUploadByChunk
+      parameters:
+      - name: chunkUploadId
+        in: path
+        required: true
+        description:
+          the identifier of the upload by chunks.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The current state of this upload by chunks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChunkUpload'
+        default:
+          $ref: '#/components/responses/Error'
+    delete:
+      summary: Cancel an upload by chunks
+      operationId: cancelUploadByChunk
+      description:
+        Allow to cancel an upload by chunk, for instance if there was a mistake. Destroy all the already sent data.
+      parameters:
+      - name: chunkUploadId
+        in: path
+        required: true
+        description:
+          the identifier of the upload by chunks.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: The upload by chunk is successful canceled
+        default:
+          $ref: '#/components/responses/Error'
 components:
   securitySchemes:
     ApiKey:
@@ -443,7 +577,7 @@ components:
     PathExecutionIdentifier:
       name: executionIdentifier
       in: path
-      required: true   
+      required: true
       schema:
         type: string
         format: ascii
@@ -507,7 +641,7 @@ components:
         defaultExecutionTimeout:
           type: integer
           format: int64
-        unsupportedMethods: 
+        unsupportedMethods:
         # not present in 0.2, keep it as optional
           type: array
           items:
@@ -529,8 +663,13 @@ components:
           items:
             type: string
           description: Complete list of all properties that can be used to describe the pipelines and to filter them in the "listPipelines" method
-
-      additionalProperties: true # allow extensions   
+        dataTransferSizeLimit:
+          type: integer
+          format: in64
+          description:
+            Maximum size for a unique data exchange in the data module. All data dowload and upload must be smaller than that limit.
+            If a data to download or upload is bigger than that limit, then it should be transfered by chunk (see the relevant methods).
+      additionalProperties: true # allow extensions
     AuthenticationCredentials:
       type: object
       required:
@@ -581,7 +720,7 @@ components:
           type: object
           additionalProperties:
             type: string
-          description: the properties (as keys) and their values that describe the pipeline. 
+          description: the properties (as keys) and their values that describe the pipeline.
             The properties used must be listed in the "supportedPipelineProperties" of the "getPlatformProperties" method.
         errorCodesAndMessages:
           type: array
@@ -648,11 +787,11 @@ components:
           type: object
           additionalProperties:
             type: array
-            items: 
+            items:
               type: string
               format: url
           readOnly: true
-          description: 
+          description:
             Absent when not available (e.g. execution still running). Empty if no returned file is produced.
             Each key/value of the "returnedFiles" object corresponds to an output pipeline parameter (with "isReturnedValue" set to true) and the key must be the parameter name. The value must be an array of valid URL strings.
             A value array can be empty if the output parameter produces no value. It can have several URLs entries when the output is a directory with several files, a big file split in several download links, several files or any other implementation specific design.
@@ -748,3 +887,33 @@ components:
           - Archive
         md5:
           type: string
+    ChunkUpload:
+      type: object
+      required:
+        - size
+      properties:
+        identifier:
+          type: string
+          format: ascii
+          description:
+            The unique identifier of the upload by chunks.
+        size:
+          type: integer
+          format: int64
+          description:
+            The total size (in bytes) of the file to upload.
+        transfered:
+          type: integer
+          format: int64
+          description:
+            The number of bytes that have been uploaded. Must be present for information in outputs, ignored on inputs.
+        platformPath:
+          type: string
+          description:
+            The path of the file that is uploaded by chunk. Must be present for information in outputs, ignored on inputs.
+        endDate:
+          type: integer
+          format: int64
+          description:
+            The time (in timestamp) before which the upload must be completed.
+            After this time, chunk cannot be uploaded and the already sent data will be destroyed.
