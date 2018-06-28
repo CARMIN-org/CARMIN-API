@@ -10,7 +10,7 @@ info:
     name: CARMIN mailing list
     url: https://groups.google.com/d/forum/carmin
     email: carmin@googlegroups.com
-security: 
+security:
 - ApiKey: []
 paths:
   /platform:
@@ -90,7 +90,7 @@ paths:
     post:
       summary: Initialize an execution
       description:
-        The successful response must contain the execution identifier. 
+        The successful response must contain the execution identifier.
         If the status “Initializing” is returned, playExecution must be called to start the execution.
       operationId: createExecution
       requestBody :
@@ -144,8 +144,8 @@ paths:
     put:
       summary: Modify an execution.
       description:
-        Only the name and the timeout of the execution can be modified. 
-        Changes to the identifier or the status will raise errors. 
+        Only the name and the timeout of the execution can be modified.
+        Changes to the identifier or the status will raise errors.
         Changes to the other properties will be ignored.
       operationId: updateExecution
       requestBody:
@@ -297,11 +297,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pipeline'
-        default: 
+        default:
           $ref: '#/components/responses/Error'
   /pipelines/{pipelineIdentifier}/boutiquesdescriptor:
     get:
-      summary: Returns the Boutiques descriptor of the pipeline, if available. 
+      summary: Returns the Boutiques descriptor of the pipeline, if available.
       operationId: getBoutiquesDescriptor
       parameters:
       - name: pipelineIdentifier
@@ -317,7 +317,7 @@ paths:
             application/json:
               schema:
                 $ref: 'http://raw.githubusercontent.com/boutiques/boutiques/0.5.8/tools/python/boutiques/schema/descriptor.schema.json'
-        default: 
+        default:
           $ref: '#/components/responses/Error'
   /path/{completePath}:
     get:
@@ -331,8 +331,8 @@ paths:
       - name: completePath
         in: path
         required: true
-        description: the complete path on which to request information. 
-          It can contain non-encoded slashes. 
+        description: the complete path on which to request information.
+          It can contain non-encoded slashes.
           Except for the "exists" action, any request on a non-existing path should return an error
         schema:
           type: string
@@ -340,13 +340,13 @@ paths:
         in: query
         required: true
         description:
-          The "content" action downloads the raw file. If the path points to a directory, a tarball of this directory is returned. 
-          The "exists" action returns a BooleanResponse object (see definition) indicating if the path exists or not. 
-          The "properties" action returns a Path object (see definition) with the path properties. 
-          The "list" action returns a DirectoryList object (see definition) with the properties of all the files of the directory (if the path is not a directory an error must be returned). 
+          The "content" action downloads the raw file. If the path points to a directory, a tarball of this directory is returned.
+          The "exists" action returns a BooleanResponse object (see definition) indicating if the path exists or not.
+          The "properties" action returns a Path object (see definition) with the path properties.
+          The "list" action returns a DirectoryList object (see definition) with the properties of all the files of the directory (if the path is not a directory an error must be returned).
           The "md5" action is optional and returns a PathMd5 object (see definition).
         schema:
-          type: string  
+          type: string
           enum:
           - content
           - exists
@@ -355,13 +355,13 @@ paths:
           - md5
       responses:
         '200':
-          description: successful response. 
-            If the action is "content", the raw file (or a tarball) is returned, with the according mime type. 
+          description: successful response.
+            If the action is "content", the raw file (or a tarball) is returned, with the according mime type.
             Otherwise a json response a returned
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetPathResponse' 
+                $ref: '#/components/schemas/GetPathResponse'
             application/octet-stream:
               # any media type is accepted, equivalent to `*/*`
               schema:
@@ -410,7 +410,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Path' 
+                $ref: '#/components/schemas/Path'
         default:
           $ref: '#/components/responses/Error'
     delete:
@@ -432,6 +432,78 @@ paths:
           description: the deletion is successful and finished.
         default:
           $ref: '#/components/responses/Error'
+  /externalPlatforms:
+    get:
+      summary: Lists all the supported external platforms
+      operationId: listExternalPlatforms
+      description:
+        This method lists all the external platforms supported.
+        These platforms can be used as the sources for execution input, or as destinations for outputs.
+        A user must configure his credentials for an external platform he wants to use.
+      parameters: []
+      responses:
+        '200':
+          description: Succesful response.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExternalPlatform'
+        default:
+          $ref: '#/components/responses/Error'
+  /user/externalKeys:
+    get:
+      summary: Lists the external API keys of the current user
+      operationId: listExternalKeys
+      description:
+        To use external platform in execution inputs and output, a user need to configure his credentials to these external platforms.
+        This method lists the external API keys he has configured.
+        To add them, he has to use the addExternalKey method
+      parameters: []
+      responses:
+        '200':
+          description: successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExternalKey'
+        default:
+          $ref: '#/components/responses/Error'
+    put:
+      summary: Configure an API key to an external platform
+      operationId : addExternalKey
+      description: Add or change the API key of the current user to a particular external platform.
+      parameters: []
+      requestBody:
+        content:
+          application/carmin+json:
+            schema:
+              $ref: '#/components/schemas/ExternalKey'
+      responses:
+        '204':
+          description: successful operation
+        default:
+          $ref: '#/components/responses/Error'
+  /user/externalKeys/{platformIdentifier}:
+    delete:
+      summary: Delete an API key to an external platform
+      operationId: deleteExternalKey
+      description: Delete the current user API key to the platform whose identifier is the one given on the path
+      parameters:
+      - name: platformIdentifier
+        in: path
+        required: true
+        schema:
+          type: string
+          format: ascii
+      responses:
+        '204':
+          description: successful operation
+        default:
+          $ref: '#/components/responses/Error'
 components:
   securitySchemes:
     ApiKey:
@@ -443,7 +515,7 @@ components:
     PathExecutionIdentifier:
       name: executionIdentifier
       in: path
-      required: true   
+      required: true
       schema:
         type: string
         format: ascii
@@ -507,7 +579,7 @@ components:
         defaultExecutionTimeout:
           type: integer
           format: int64
-        unsupportedMethods: 
+        unsupportedMethods:
         # not present in 0.2, keep it as optional
           type: array
           items:
@@ -530,7 +602,7 @@ components:
             type: string
           description: Complete list of all properties that can be used to describe the pipelines and to filter them in the "listPipelines" method
 
-      additionalProperties: true # allow extensions   
+      additionalProperties: true # allow extensions
     AuthenticationCredentials:
       type: object
       required:
@@ -581,7 +653,7 @@ components:
           type: object
           additionalProperties:
             type: string
-          description: the properties (as keys) and their values that describe the pipeline. 
+          description: the properties (as keys) and their values that describe the pipeline.
             The properties used must be listed in the "supportedPipelineProperties" of the "getPlatformProperties" method.
         errorCodesAndMessages:
           type: array
@@ -642,17 +714,30 @@ components:
         inputValues:
           type: object
           additionalProperties: true
-          description:
+          description: >
             Represents the input as a key/value object. The types should respect the parameters of the pipeline used for the execution.
+            When the type is "File", there are 2 possibilities :
+            1) If the desired file is on the same platform, it must be given as a complete path, for instance "/path/to/my/file".
+            2) If the desired file is on an external platform, it must be given as a complate path, prefixed with the platform identifier and a colon.
+            For instance "platformId:/path/to/file". The user must have a configured API key for this platform.
+        resultsLocation:
+          type: string
+          description:
+            An optional path that specifies where the results should be put.
+            It must be in a path format, with an optional storage to specifies a location on an external platform.
+            If an external platform is given, it must be in the format "platformIdentifier:/complete/path".
+            The user must have a configured API key to the desired platform.
+            Whether it's on the local or an external platform, this path must corresponds to an existing folder.
+            If not, the execution may start anyway but should produce an error.
         returnedFiles:
           type: object
           additionalProperties:
             type: array
-            items: 
+            items:
               type: string
               format: url
           readOnly: true
-          description: 
+          description:
             Absent when not available (e.g. execution still running). Empty if no returned file is produced.
             Each key/value of the "returnedFiles" object corresponds to an output pipeline parameter (with "isReturnedValue" set to true) and the key must be the parameter name. The value must be an array of valid URL strings.
             A value array can be empty if the output parameter produces no value. It can have several URLs entries when the output is a directory with several files, a big file split in several download links, several files or any other implementation specific design.
@@ -748,3 +833,35 @@ components:
           - Archive
         md5:
           type: string
+    ExternalPlatform:
+      type: object
+      required:
+      - identifier
+      - description
+      properties:
+        identifier:
+          type: string
+          format: ascii
+        url:
+          type: string
+          format: url
+          description: link to the public home page of the external platform (if it has one)
+        description:
+          type: string
+          description: description of the external platform
+    ExternalKey:
+      type: object
+      required:
+      - platformIdentifier
+      - APIKey
+      properties:
+        platformIdentifier:
+          type: string
+          format: ascii
+          description :
+            The identifier of the external platform this API key gives access to.
+            It must be an identifier of an existing external platform listed in the listExternalPlatforms method.
+        APIKey:
+          type: string
+          description:
+            the API key that identify the user on the external platform.
