@@ -42,18 +42,18 @@
         // Call our main function
         main();
     }
-    
+
     /******** Our main function ********/
     function main() {
         jQuery(document).ready(function ($) {
-        	
+
         	/******* Load JQuery UI on using JQuery: this should be used outside Shanoir old
         	var js_link_jqueryui = $("<script>", {
                 type: "text/javascript",
                 src: "https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
             });
         	js_link_jqueryui.appendTo('head');*******/
-        	
+
             /******* Load CSS for JQuery UI *******/
             var css_link = $("<link>", {
                 rel: "stylesheet",
@@ -61,7 +61,7 @@
                 href: "https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
             });
             css_link.appendTo('head');
-            
+
             var pipeline = $('input[type="radio"]').checkboxradio({
             	icon: false
         	});
@@ -90,7 +90,7 @@
                 	$(".ui-checkboxradio-label").css("width", "240");
                 }
             });
-            
+
             /******* Check if HTML 5 Local Storage is supported, if not display error. *******/
             if (typeof(Storage) === "undefined") {
                 // Sorry! No Web Storage support..
@@ -98,7 +98,7 @@
             			"as your browser has no Web Storage support. Please switch to a more recent browser version.");
                 return;
             }
-            
+
             $("#carminSaveSettings").click(function () {
                 localStorage.setItem("carminURL", $("#carminURL").val());
                 localStorage.setItem("carminUserName", $("#carminUserName").val());
@@ -109,7 +109,7 @@
                 manageTab("hide", startPipelineTab);
                 manageTab("active", choosePipelineTab);
             });
-            
+
             // info box messages
             $("#carminError").click(function () { $("#carminError").hide(); });
             $("#carminInfo").click(function () { $("#carminInfo").hide(); });
@@ -121,7 +121,7 @@
             $("#open-dialog").button().click(function() { dialog.dialog("open"); });
 
             initCarminClient();
-            
+
         });
     }
 
@@ -150,12 +150,8 @@
             return;
         }
 
-        carminClient = new CarminClient(carminURL, carminAPIKey, {
-            "errorCallback": function(error) {
-                    showError(error.message);
-                }
-        });
-        carminClient.listPipelines(updatePipelines);
+        carminClient = new CarminClient(carminURL, carminAPIKey);
+        carminClient.listPipelines().then(updatePipelines(data), showError(error));
     }
 
     function updatePipelines(pipelineList) {
@@ -169,7 +165,7 @@
         pipelineListEl.empty();
         pipelineListEl.append("<legend>Select a pipeline:</legend>");
         for (var i = 0; i < pipelines.length; i++) {
-            if (property && value && 
+            if (property && value &&
                 (!pipelines[i].properties || pipelines[i].properties[property] !== value))
                 continue;
             pipelineListEl.append(
