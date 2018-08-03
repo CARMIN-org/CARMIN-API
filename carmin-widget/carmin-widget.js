@@ -151,7 +151,7 @@
         }
 
         carminClient = new CarminClient(carminURL, carminAPIKey);
-        carminClient.listPipelines().then(updatePipelines(data), showError(error));
+        carminClient.listPipelines().then(updatePipelines, showError);
     }
 
     function updatePipelines(pipelineList) {
@@ -265,7 +265,7 @@
         startPipelinePaneEl.append("<p>Starting pipeline "+ currentPipeline.name +".</p>");
         var formEl = $("#startPipelineForm");
         formEl.empty();
-        carminClient.describePipeline(currentPipeline.identifier, showPipelineForm);
+        carminClient.describePipeline(currentPipeline.identifier).then(showPipelineForm, showError);
         manageTab("active", startPipelineTab);
     }
 
@@ -293,9 +293,9 @@
             var value = $("#startPipelineForm input#" + parameter.name).val();
             inputValues[parameter.name] = value;
         }
-        carminClient.initAndStart("carminWidget", currentPipeline.identifier, inputValues, function(execution) {
+        carminClient.initAndStart("carminWidget", currentPipeline.identifier, inputValues).then(function(execution) {
             showInfo("Execution " + execution.identifier + " started !");
-        });
+        }, showError);
     }
 
 })();  // We call our anonymous function immediately
