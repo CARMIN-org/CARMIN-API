@@ -16,8 +16,6 @@ paths:
   /platform:
     get:
       summary: Return information about the platform
-      description: 
-        https must be supported in the list of the supported protocols.
       operationId: getPlatformProperties
       security: []
       responses:
@@ -57,18 +55,24 @@ paths:
       description:
         List all execution Ids in the platform which are ordered in decreasing submission time.
         All the executions that were launched by the user must be returned. It is up to the platform to return executions that the user did not launch.
+        Return the executions with indexes ranging from offset to offset+limit-1.
         When studyIdentifier is present, all the executions that the user launched in the study must be returned.
       operationId: listExecutions
       parameters:
       - name: studyIdentifier
+        description: When present, all the executions the user launched for this study must be returned
         in: query
         schema:
           type: string
       - name: offset
+        description: Index of the first execution to be returned. Defaults to 0.
         in: query
         schema:
           type: string
       - name: limit
+        description:
+          Maximum number of exeuctions to be returned.
+          Defaults to the "defaultLimitListExecutions" property in the getPlatformProperties method if present, to 500 otherwise.
         in: query
         schema:
           type: string
@@ -177,11 +181,6 @@ paths:
       operationId: getExecutionResults
       parameters:
       - $ref: '#/components/parameters/PathExecutionIdentifier'
-      - name: protocol
-        in: query
-        description: if not specified the default protocol is https
-        schema:
-          type: string
       responses:
         '200':
           description: successful response
@@ -298,7 +297,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pipeline'
-        default:
+        default: 
+          $ref: '#/components/responses/Error'
+  /pipelines/{pipelineIdentifier}/boutiquesdescriptor:
+    get:
+      summary: Returns the Boutiques descriptor of the pipeline, if available. 
+      operationId: getBoutiquesDescriptor
+      parameters:
+      - name: pipelineIdentifier
+        in: path
+        required: true
+        schema:
+          type: string
+          format: ascii
+      responses:
+        '200':
+          description: successful response
+          content:
+            application/json:
+              schema:
+                $ref: 'http://raw.githubusercontent.com/boutiques/boutiques/0.5.8/tools/python/boutiques/schema/descriptor.schema.json'
+        default: 
           $ref: '#/components/responses/Error'
   /path/{completePath}:
     get:
@@ -447,10 +466,13 @@ components:
           format: int64
         errorMessage:
           type: string
+        errorDetails:
+          description: optional pieces of information about the error(s)
+          type: object
+          additionalProperties: true
     PlatformProperties:
       type: object
       required:
-        - supportedTransferProtocols
         - supportedModules
         - supportedAPIVersion
       properties:
@@ -461,13 +483,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ErrorCodeAndMessage'
-        supportedTransferProtocols:
-          type: array
-          items:
-            type: string
-            enum: ["http", "https", "ftp", "sftp", "ftps", "scp", "webdav"]
-          description:
-            Protocol names must be URL prefixes (e.g. "http", "https", "ftp", "sftp", "ftps", "scp", "webdav"). 
         supportedModules:
           type: array
           items:
@@ -498,6 +513,11 @@ components:
           items:
             type: string
           description: List of optional methods that are not supported by the platform. Must be consistent with the "isKillExecutionSupported" property.
+        studiesSupport:
+          type: boolean
+          description:
+            Whether the platform support the concept of studies, and can filter pipelines and executions from a specific study.
+            Defaults to false.
         defaultStudy:
           type: string
           format: ascii
@@ -509,6 +529,7 @@ components:
           items:
             type: string
           description: Complete list of all properties that can be used to describe the pipelines and to filter them in the "listPipelines" method
+
       additionalProperties: true # allow extensions   
     AuthenticationCredentials:
       type: object
