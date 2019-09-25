@@ -356,7 +356,7 @@ paths:
       responses:
         '200':
           description: successful response. 
-            If the action is "content", the raw file (or a tarball) is returned, with the according mime type. 
+            If the action is "content", the raw file (or a gzipped tarball) is returned, with the according mime type. 
             Otherwise a json response a returned
           content:
             application/json:
@@ -378,10 +378,11 @@ paths:
 
         A request with the content type ("application/carmin+json") allows to upload data encoded in base64.
         The given path must not exist.
-        If the path ends with the "tar.gz" extension, then the base64 content will be decoded at the given path,
+        If the content is an archive, as signified by the "type" property of the json payload,
+        then the base64 content will be decoded at the given path,
         considered as a gzipped tarball, decompressed and extracted as such, and deleted.
         Any file extracted could overwrite an existing one, so it recommended to do this operation in an empty directory.
-        If the other cases, the base64 content will be decoded and created at the given path.
+        If the "type" property indicates it is a file, then the base64 content will be decoded and created at the given path.
 
         All other content (with any other content type) will be considered as a raw file and will override the existing path content if it already exists.
       operationId: uploadPath
@@ -747,7 +748,7 @@ components:
           format: base64
           description:
             If the type is "File", the base64 string will be decoded to a single raw file.
-            If the type is "Archive", the base64 string must corresponds to an encoded zip file that will be decoded to create directory and its content.
+            If the type is "Archive", the base64 string must corresponds to an encoded gzipped tarball that will be decoded to create directory and its content.
         type:
           type: string
           enum:
