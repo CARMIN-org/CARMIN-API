@@ -247,11 +247,13 @@ paths:
   /pipelines:
     get:
       summary: List pipelines
-      description:
-        All the pipelines that the user can execute must be returned.
-        It is up to the platform to return pipelines that the user cannot execute.
+      description: >
+        If an user is identified, the platform must return all the pipelines this user can execute, and it may also return additional pipelines that the user cannot execute.
+        This method can also be used without being identified, in a anonymous way, with the objective of advertising. In the case, the platform may return any number of pipelines and all of them must have the "canExecute" property set to false. A platform can ignore this feature by returning an empty list.
+
         When studyIdentifier is present, all the pipelines that the user can execute in the study must be returned. In this case, execution rights denote the rights to execute the pipeline in the study.
       operationId: listPipelines
+      security: []
       parameters:
       - name: studyIdentifier
         in: query
