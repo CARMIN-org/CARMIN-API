@@ -646,7 +646,7 @@ components:
           description: The timeout in seconds until which the execution is killed and deleted with all its files. 0 or absence means no timeout
         status:
           type: string
-          enum: [Initializing,Ready,Running,Pause,Finished,InitializationFailed,ExecutionFailed,Unknown,Killed]
+          enum: [Initializing,Ready,Running,Paused,Finished,InitializationFailed,ExecutionFailed,Unknown,Killed]
           readOnly: true
           description: The status of the execution. Must always be present in responses.
         inputValues:
